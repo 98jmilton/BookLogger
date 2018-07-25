@@ -1,66 +1,35 @@
 {
   "project_info": {
-    "project_number": "364857319858",
-    "firebase_url": "https://testsongs-a571a.firebaseio.com",
-    "project_id": "testsongs-a571a",
-    "storage_bucket": "testsongs-a571a.appspot.com"
+    "project_number": "301595842143",
+    "firebase_url": "https://librarydatabase-fd173.firebaseio.com",
+    "project_id": "librarydatabase-fd173",
+    "storage_bucket": "librarydatabase-fd173.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:364857319858:android:5d64f79e51708cc4",
+        "mobilesdk_app_id": "1:301595842143:android:5d64f79e51708cc4",
         "android_client_info": {
           "package_name": "com.example.ezmilja.booklogger"
         }
       },
       "oauth_client": [
         {
-          "client_id": "364857319858-rr9d9u4ti54tdoft20ucpqsnvkvkdkfp.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyBLl0S26BliSNIFA_M5r9eC7ThWxHC_fN0"
-        }
-      ],
-      "services": {
-        "analytics_service": {
-          "status": 1
-        },
-        "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:364857319858:android:4980d6fd6c7c73d9",
-        "android_client_info": {
-          "package_name": "com.example.ezmilja.libraryapp"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "364857319858-iu7ugdbiuue10roer0ka3el115146166.apps.googleusercontent.com",
+          "client_id": "301595842143-t7k4r0el86ad464oj1hgkhlo7q7kpnna.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ezmilja.libraryapp",
-            "certificate_hash": "2098f3c766510673c1be8e89013c58b065da74d7"
+            "package_name": "com.example.ezmilja.booklogger",
+            "certificate_hash": "ddfc27dcd6f4146c4efceaa62ce77c4cdc039a34"
           }
         },
         {
-          "client_id": "364857319858-rr9d9u4ti54tdoft20ucpqsnvkvkdkfp.apps.googleusercontent.com",
+          "client_id": "301595842143-rm3qi6ius90tijghkcctg804uvol8pn3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBLl0S26BliSNIFA_M5r9eC7ThWxHC_fN0"
+          "current_key": "AIzaSyB8z5HN7GdBw34xIRi2Zcmhz6t5-F0OtvE"
         }
       ],
       "services": {
@@ -71,7 +40,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "364857319858-rr9d9u4ti54tdoft20ucpqsnvkvkdkfp.apps.googleusercontent.com",
+              "client_id": "301595842143-rm3qi6ius90tijghkcctg804uvol8pn3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
@@ -83,28 +52,28 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:364857319858:android:3f5192377659e250",
+        "mobilesdk_app_id": "1:301595842143:android:4980d6fd6c7c73d9",
         "android_client_info": {
-          "package_name": "net.simplifiedcoding.firebasedatabaseexample"
+          "package_name": "com.example.ezmilja.libraryapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "364857319858-l4q2ouk6kvnm3ompohueu40mlo5sbue4.apps.googleusercontent.com",
+          "client_id": "301595842143-ontfv3elvp7sq9v1tp6v1tt7sg88erdj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "net.simplifiedcoding.firebasedatabaseexample",
-            "certificate_hash": "2098f3c766510673c1be8e89013c58b065da74d7"
+            "package_name": "com.example.ezmilja.libraryapp",
+            "certificate_hash": "e6b0591627211047e46c619aefd6767da9da6e4b"
           }
         },
         {
-          "client_id": "364857319858-rr9d9u4ti54tdoft20ucpqsnvkvkdkfp.apps.googleusercontent.com",
+          "client_id": "301595842143-rm3qi6ius90tijghkcctg804uvol8pn3.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBLl0S26BliSNIFA_M5r9eC7ThWxHC_fN0"
+          "current_key": "AIzaSyB8z5HN7GdBw34xIRi2Zcmhz6t5-F0OtvE"
         }
       ],
       "services": {
@@ -115,7 +84,7 @@
           "status": 2,
           "other_platform_oauth_client": [
             {
-              "client_id": "364857319858-rr9d9u4ti54tdoft20ucpqsnvkvkdkfp.apps.googleusercontent.com",
+              "client_id": "301595842143-rm3qi6ius90tijghkcctg804uvol8pn3.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

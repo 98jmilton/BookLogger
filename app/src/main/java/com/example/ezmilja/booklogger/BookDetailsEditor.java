@@ -181,7 +181,7 @@ public class BookDetailsEditor extends AppCompatActivity
         BookRef.child(bookSISBN).child("Rating").setValue(bookSRating);
         BookRef.child(bookSISBN).child("NumRating").setValue(bookSNumRating);
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        /*StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
         storageRef.child("books/"+bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -195,7 +195,7 @@ public class BookDetailsEditor extends AppCompatActivity
             }
         });
         BookRef.child(bookSISBN).child("ImageAddress").setValue(bookSImg);
-
+        */
 
     }
 }
