@@ -22,7 +22,7 @@ public class RetrieveRoomsJSONTask extends AsyncTask<String, String, JSONObject>
         @Override
         protected JSONObject doInBackground(String... args) {
             JSONObject jsonArray = null;
-            jsonArray = HttpRequestForCoolKids.getJSON("https://www.googleapis.com/books/v1/volumes?q=isbn:" + "9780201379273" );
+            jsonArray = HttpRequestForCoolKids.getJSON("https://www.googleapis.com/books/v1/volumes?q=isbn:" + "9780201379273");
             return jsonArray;
         }
 
