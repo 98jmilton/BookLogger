@@ -48,11 +48,20 @@ public class BookDetailsEditor extends AppCompatActivity
     String bookSImg         ="";
     String bookSRating      ="";
 
+
+
+    public String qrInfo;
+    private final static String ERROR_MESSAGE = "Unable to scan bar code";
+
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference BookRef = database.getReference("/ Books/");
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetails);
+
+        qrInfo = getValue(getIntent());
+
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
@@ -71,6 +80,8 @@ public class BookDetailsEditor extends AppCompatActivity
         final EditText bookPublisher  =findViewById(R.id.bookPublisher);
         final EditText bookNumRating  =findViewById(R.id.bookNumRating);
         final EditText bookRating     =findViewById(R.id.bookRating);
+
+        bookISBN.setText(qrInfo);
 
             choose.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,5 +208,20 @@ public class BookDetailsEditor extends AppCompatActivity
         BookRef.child(bookSISBN).child("ImageAddress").setValue(bookSImg);
         */
 
+    }
+
+
+
+// For QR scanner passing value of scanned item through the Saved instances
+    private String getValue(final Intent intent) {
+        try {
+            final String barCodeString = intent.getExtras().getString(Constants.SCAN_BAR_TEST_KEY);
+
+            return barCodeString != null ? barCodeString : ERROR_MESSAGE;
+
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+        return ERROR_MESSAGE;
     }
 }

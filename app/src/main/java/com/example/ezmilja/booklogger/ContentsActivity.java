@@ -25,9 +25,9 @@ public class ContentsActivity extends AppCompatActivity {
         Typeface myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
         Button btn_books = (Button) findViewById(R.id.btn_books);
         btn_books.setTypeface(myTypeFace1);
-        Button btn_img = (Button) findViewById(R.id.btn_img);
-        btn_books.setTypeface(myTypeFace1);
 
+        Button btn_img = (Button) findViewById(R.id.btn_img);
+        btn_img.setTypeface(myTypeFace1);
 
         TextView textView2 = (TextView) findViewById(R.id.textView2);
         textView2.setTypeface(myTypeFace1);
@@ -46,6 +46,19 @@ public class ContentsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
+        Button btn1 = (Button) findViewById(R.id.btn_check);
+        btn1.setTypeface(myTypeFace1);
+
+        btn1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ContentsActivity.this, ScanActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
     }
 
