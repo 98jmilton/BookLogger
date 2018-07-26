@@ -25,9 +25,12 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
+import static com.example.ezmilja.booklogger.BooksArray.books;
+import static com.example.ezmilja.booklogger.SplashScreen.j;
 
 public class BookDetailsEditor extends AppCompatActivity
 {
+    int k = (int) j;
     private Button btnChoose;
     private ImageView imageView;
     private Uri filePath;
@@ -50,7 +53,7 @@ public class BookDetailsEditor extends AppCompatActivity
 
 
 
-    public String qrInfo;
+    public String qrIsbn;
     private final static String ERROR_MESSAGE = "Unable to scan bar code";
 
 
@@ -60,7 +63,7 @@ public class BookDetailsEditor extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetails);
 
-        qrInfo = getValue(getIntent());
+        qrIsbn = getValue(getIntent());
 
 
         storage = FirebaseStorage.getInstance();
@@ -81,9 +84,26 @@ public class BookDetailsEditor extends AppCompatActivity
         final EditText bookNumRating  =findViewById(R.id.bookNumRating);
         final EditText bookRating     =findViewById(R.id.bookRating);
 
-        bookISBN.setText(qrInfo);
+        /*for(int i = 0;i<j;i++){
+            if(books[i].isbn == qrIsbn){
+                bookName.setText(books[i].bookName);
+                bookAuthor.setText(books[i].author);
+                bookISBN.setText(books[i].isbn);
+                bookMaxCopys.setText(books[i].max_copys);
+                bookDescription.setText(books[i].description);
+                bookNumCopys.setText(books[i].numberOfCopys);
+                bookPage.setText(books[i].page);
+                bookPublisher.setText(books[i].publisher);
+                bookNumRating.setText(books[i].num_rating);
+                bookRating.setText(books[i].rating);
+            }
+            else{System.out.println("Pauls mom gay");}
 
-            choose.setOnClickListener(new View.OnClickListener() {
+        }*/
+
+
+
+        choose.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     chooseImage();
@@ -172,13 +192,6 @@ public class BookDetailsEditor extends AppCompatActivity
 
     }
     private void uploadData() {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-
 
         BookRef.child(bookSISBN).child("BookName").setValue(bookSName);
         BookRef.child(bookSISBN).child("Author").setValue(bookSAuthor);
@@ -192,12 +205,18 @@ public class BookDetailsEditor extends AppCompatActivity
         BookRef.child(bookSISBN).child("Rating").setValue(bookSRating);
         BookRef.child(bookSISBN).child("NumRating").setValue(bookSNumRating);
 
-        /*StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
-        storageRef.child("books/"+bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        storageReference.child("books/"+"Paul").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                bookSISBN=uri.toString();
+                String imageAddress =uri.toString();
+                BookRef.child(bookSISBN).child("ImageAddress").setValue(imageAddress);
+
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -205,8 +224,6 @@ public class BookDetailsEditor extends AppCompatActivity
                 // Handle any errors
             }
         });
-        BookRef.child(bookSISBN).child("ImageAddress").setValue(bookSImg);
-        */
 
     }
 
