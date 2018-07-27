@@ -100,58 +100,6 @@ import static com.example.ezmilja.booklogger.BooksArray.i;
         requestPermission();
 
 
-        try {
-
-
-            JSONObject BookInfoObject = new RetrieveRoomsJSONTask(SplashScreen.this).execute().get();
-
-            JSONArray items = BookInfoObject.getJSONArray("items");
-            JSONObject customerIDD = items.getJSONObject(0).getJSONObject("volumeInfo");
-
-            // For the Title
-            String title = (String) customerIDD.get("title");
-
-            // For the description
-            String description = (String) customerIDD.get("description");
-
-            // For the publisher
-            String publisher = (String) customerIDD.get("publisher");
-
-            // For the pagCount
-            int pageCount = (int) customerIDD.get("pageCount");
-
-            // For the Image link
-            String imageLink = (String) customerIDD.getJSONObject("imageLinks").get("thumbnail");
-
-
-            // For the ISBN Number
-            JSONObject ISBN = customerIDD.getJSONArray("industryIdentifiers").getJSONObject(1);
-            String theISBNNo = (String) ISBN.get("identifier");
-
-
-            // For printing all the authors
-            String a = "";
-            String authors = (String) customerIDD.getJSONArray("authors").get(0);
-            for(int i = 0; i < customerIDD.getJSONArray("authors").length(); i++) {
-                a += (String) customerIDD.getJSONArray("authors").get(i) + " ";
-            }
-
-//
-
-            System.out.println(title + "\n " + description  + "\n " + publisher  + "\n " + pageCount  + "\n " + imageLink  + "\n " + theISBNNo  + "\n " + a );
-
-
-
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-
-            // TODO: PUT THE STUFF HERE TO HANDLE THE DATA NOT FOUND
-
-            e.printStackTrace();
-        }
 
     }
 

@@ -23,14 +23,25 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.IOException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+import static android.widget.Toast.*;
+import static com.example.ezmilja.booklogger.BooksArray.books;
+import static com.example.ezmilja.booklogger.BooksArray.i;
+import static com.example.ezmilja.booklogger.ScanActivity.QRHASSCANNED;
 import static com.example.ezmilja.booklogger.SplashScreen.j;
 
 public class BookDetailsAdder extends AppCompatActivity
 {
     int k = (int) j;
     private Button btnChoose;
+    private Button btn_autofill;
+    private Button Scan;
     private ImageView imageView;
     private Uri filePath;
 
@@ -52,7 +63,7 @@ public class BookDetailsAdder extends AppCompatActivity
 
 
 
-    public String qrIsbn;
+    public static String qrIsbn= "ISBN";
     private final static String ERROR_MESSAGE = "Unable to scan bar code";
 
 
@@ -76,15 +87,12 @@ public class BookDetailsAdder extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetailsadder);
 
-        qrIsbn =  "98383742738"; //getValue(getIntent());
+        qrIsbn = getValue(getIntent());
 
-        if (qrIsbn.length() < 4 ){
-            Toast.makeText(this," QR CODE ISNT SENT YET",Toast.LENGTH_LONG).show();
-
+        if (QRHASSCANNED == "YES") {
+            bookISBN.setText(qrIsbn);
         }
 
-        else
-            {
 
                 storage = FirebaseStorage.getInstance();
                 storageReference = storage.getReference();
@@ -104,8 +112,8 @@ public class BookDetailsAdder extends AppCompatActivity
                  bookNumRating  =findViewById(R.id.bookNumRating);
                  bookRating     =findViewById(R.id.bookRating);
 
-                bookISBN.setText(qrIsbn);
-                Toast.makeText(this,"XXXXXXXXXXXXXX      "+j+"      XXXXXXXXXXXXXX",Toast.LENGTH_LONG).show();
+
+                makeText(this,"XXXXXXXXXXXXXX      "+j+"      XXXXXXXXXXXXXX", LENGTH_LONG).show();
 
 
                 choose.setOnClickListener(new View.OnClickListener() {
@@ -135,26 +143,110 @@ public class BookDetailsAdder extends AppCompatActivity
                     }
                 });
 
-        }
 
 
+        Scan = (Button) findViewById(R.id.btn_scan);
+        Scan.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+        Intent intent = new Intent(BookDetailsAdder.this, ScanActivity.class);
+        startActivity(intent);
 
-//        for(int i = 0;i<j;i++){
-//            if(books[i].isbn == bookISBN.getText().toString()){
-//                bookName.setText(books[i].bookName);
-//                bookAuthor.setText(books[i].author);
-//                bookISBN.setText(books[i].isbn);
-//                bookMaxCopys.setText(books[i].max_copys);
-//                bookDescription.setText(books[i].description);
-//                bookNumCopys.setText(books[i].numberOfCopys);
-//                bookPage.setText(books[i].page);
-//                bookPublisher.setText(books[i].publisher);
-//                bookNumRating.setText(books[i].num_rating);
-//                bookRating.setText(books[i].rating);
-//            }
-//            else{Toast.makeText(this,"Pauls mom gay", Toast.LENGTH_LONG).show();}
+            }
+        });
+
+
+        btn_autofill = (Button) findViewById(R.id.btn_autofill);
+        btn_autofill.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                qrIsbn = bookISBN.getText().toString();
+
+                
+                if ((qrIsbn.matches("[0-9]+") && qrIsbn.length() == 13) ) {
+
+
+                    bookISBN.setText(qrIsbn);
+
+                    try {
+
+
+                        JSONObject BookInfoObject = new RetrieveRoomsJSONTask(BookDetailsAdder.this).execute().get();
+
+                        JSONArray items = BookInfoObject.getJSONArray("items");
+                        JSONObject customerIDD = items.getJSONObject(0).getJSONObject("volumeInfo");
+
+                        // For the Title
+                        String title = (String) customerIDD.get("title");
+
+                        // For the description
+                        String description = (String) customerIDD.get("description");
+
+                        // For the publisher
+                        String publisher = (String) customerIDD.get("publisher");
+
+                        // For the pagCount
+                        int pageCount = (int) customerIDD.get("pageCount");
+                        String pageCountString = Integer.toString(pageCount);
+
+                        // For the Image link
+                        String imageLink = (String) customerIDD.getJSONObject("imageLinks").get("thumbnail");
+
+
+                        // For the ISBN Number
+                        JSONObject ISBN = customerIDD.getJSONArray("industryIdentifiers").getJSONObject(1);
+                        String theISBNNo = (String) ISBN.get("identifier");
+
+
+                        // For printing all the authors
+                        String a = "";
+                        String authors = (String) customerIDD.getJSONArray("authors").get(0);
+                        for(int i = 0; i < customerIDD.getJSONArray("authors").length(); i++) {
+                            a += (String) customerIDD.getJSONArray("authors").get(i) + " ";
+                        }
+
 //
-//        }
+
+                        //  System.out.println(title + "\n " + description  + "\n " + publisher  + "\n " + pageCount  + "\n " + imageLink  + "\n " + theISBNNo  + "\n " + a );
+
+
+                        bookName.setText(title);
+                        bookDescription.setText(description);
+                        bookPublisher.setText(publisher);
+                        bookISBN.setText(theISBNNo);
+                        bookAuthor.setText(a);
+                        bookRating.setText("0");
+                        bookPage.setText(pageCountString);
+                        bookNumRating.setText("0");
+
+
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+
+                        // TODO: PUT THE STUFF HERE TO HANDLE THE DATA NOT FOUND
+
+                        e.printStackTrace();
+                    }
+
+                }
+
+                else{
+
+                    Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
+                }
+
+
+
+
+
+            }
+        });
 
 
 
@@ -197,7 +289,7 @@ public class BookDetailsAdder extends AppCompatActivity
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(BookDetailsAdder.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            makeText(BookDetailsAdder.this, "Uploaded", LENGTH_SHORT).show();
 
                             uploadData();
                         }
@@ -206,7 +298,7 @@ public class BookDetailsAdder extends AppCompatActivity
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(BookDetailsAdder.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            makeText(BookDetailsAdder.this, "Failed "+e.getMessage(), LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {

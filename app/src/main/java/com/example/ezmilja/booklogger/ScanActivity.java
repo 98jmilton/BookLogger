@@ -11,6 +11,7 @@ import me.dm7.barcodescanner.zxing.ZXingScannerView;
 public class ScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
 
     private ZXingScannerView mScannerView;
+    public static String QRHASSCANNED = "";
 
     @Override
     public void onCreate(Bundle state) {
@@ -45,6 +46,7 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
         try {
             final Intent intent = new Intent(ScanActivity.this, BookDetailsAdder.class);
             intent.putExtra(Constants.SCAN_BAR_TEST_KEY, rawResult.getText());
+            QRHASSCANNED = "YES";
             startActivity(intent);
         } catch (Exception e) {
             e.printStackTrace();

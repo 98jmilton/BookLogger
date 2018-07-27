@@ -8,12 +8,14 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import static com.example.ezmilja.booklogger.BookDetailsAdder.qrIsbn;
+
 public class RetrieveRoomsJSONTask extends AsyncTask<String, String, JSONObject> {
 
     private final Context context;
 
 
-
+    String AddtoURL = qrIsbn;
 
         public RetrieveRoomsJSONTask(Context context){
             this.context = context;
@@ -29,7 +31,7 @@ public class RetrieveRoomsJSONTask extends AsyncTask<String, String, JSONObject>
         protected JSONObject doInBackground(String... args) {
             JSONObject jsonArray = null;
 
-            jsonArray = HttpRequestForCoolKids.getJSON("https://www.googleapis.com/books/v1/volumes?q=isbn:" + "9780201379273");
+            jsonArray = HttpRequestForCoolKids.getJSON("https://www.googleapis.com/books/v1/volumes?q=isbn:" + AddtoURL);
             return jsonArray;
         }
 
