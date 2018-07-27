@@ -50,7 +50,7 @@ import static com.example.ezmilja.booklogger.BooksArray.i;
         FirebaseStorage storage;
         final StorageReference storageReference;
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference BookRef = database.getReference("/Books/");
+        final DatabaseReference BookRef = database.getReference("/ Books/");
 
         //Read data from database
         BookRef.addValueEventListener(new ValueEventListener() {
@@ -72,6 +72,17 @@ import static com.example.ezmilja.booklogger.BooksArray.i;
                     String totRating = (String) BookSnapshot.child("Rating").getValue();
                     String publisher = (String) BookSnapshot.child("Rating").getValue();
 
+                    System.out.println(isbn +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(author +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(name +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(description +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(imageAddress +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(maxCopys +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(numCopys +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(numRating +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(page +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(totRating +"XXXXXXXXXXXXXXXXXXX");
+                    System.out.println(publisher +"XXXXXXXXXXXXXXXXXXX");
 
                     books[i] = new Book(isbn, name, imageAddress, author, description, page, publisher, totRating, numCopys, maxCopys, numRating);
                     i++;

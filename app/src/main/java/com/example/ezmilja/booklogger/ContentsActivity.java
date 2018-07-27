@@ -21,32 +21,32 @@ public class ContentsActivity extends AppCompatActivity {
     private void createButton(){
 
         Typeface myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
-        Button btn_books = (Button) findViewById(R.id.btn_bookEditor);
-        btn_books.setTypeface(myTypeFace1);
+        Button btn_booksEditor = (Button) findViewById(R.id.btn_bookAdder);
+        btn_booksEditor.setTypeface(myTypeFace1);
 
-        Button btn_img = (Button) findViewById(R.id.btn_bookList);
-        btn_img.setTypeface(myTypeFace1);
+        Button btn_bookList = (Button) findViewById(R.id.btn_bookList);
+        btn_bookList.setTypeface(myTypeFace1);
 
         TextView textView2 = (TextView) findViewById(R.id.textView2);
         textView2.setTypeface(myTypeFace1);
 
-        btn_books.setOnClickListener(new View.OnClickListener() {
+        btn_booksEditor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ContentsActivity.this, BookDetailsEditor.class);
+                Intent intent = new Intent(ContentsActivity.this, BookDetailsAdder.class);
                 startActivity(intent);
             }
         });
-        btn_img.setOnClickListener(new View.OnClickListener() {
+        btn_bookList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ContentsActivity.this, BookDetailsEditor.class);
+                Intent intent = new Intent(ContentsActivity.this, BookDetailsAdder.class);
                 startActivity(intent);
             }
         });
 
 
-        Button btn1 = (Button) findViewById(R.id.btn_scanner);
+        Button btn1 = (Button) findViewById(R.id.btn_bookList);
         btn1.setTypeface(myTypeFace1);
 
         btn1.setOnClickListener(new View.OnClickListener() {

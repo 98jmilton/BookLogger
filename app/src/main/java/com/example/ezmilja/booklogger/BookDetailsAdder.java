@@ -13,7 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-import java.net.URI;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -25,10 +25,9 @@ import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
-import static com.example.ezmilja.booklogger.BooksArray.books;
 import static com.example.ezmilja.booklogger.SplashScreen.j;
 
-public class BookDetailsEditor extends AppCompatActivity
+public class BookDetailsAdder extends AppCompatActivity
 {
     int k = (int) j;
     private Button btnChoose;
@@ -57,77 +56,108 @@ public class BookDetailsEditor extends AppCompatActivity
     private final static String ERROR_MESSAGE = "Unable to scan bar code";
 
 
+    Button send;
+    Button choose;
+
+    EditText bookName;
+    EditText bookAuthor;
+    EditText bookISBN;
+    EditText bookMaxCopys;
+    EditText bookDescription;
+    EditText bookNumCopys;
+    EditText bookPage;
+    EditText bookPublisher;
+    EditText bookNumRating;
+    EditText bookRating;
+
     FirebaseDatabase database = FirebaseDatabase.getInstance();
     DatabaseReference BookRef = database.getReference("/ Books/");
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bookdetails);
+        setContentView(R.layout.activity_bookdetailsadder);
 
-        qrIsbn = getValue(getIntent());
+        qrIsbn =  "98383742738"; //getValue(getIntent());
 
+        if (qrIsbn.length() < 4 ){
+            Toast.makeText(this," QR CODE ISNT SENT YET",Toast.LENGTH_LONG).show();
 
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        }
 
-        imageView = (ImageView) findViewById(R.id.imgView);
-        Button send = (Button) findViewById(R.id.send);
-        Button choose= (Button) findViewById(R.id.btnChoose);
+        else
+            {
 
-        final EditText bookName       =findViewById(R.id.bookName);
-        final EditText bookAuthor     =findViewById(R.id.bookAuthor);
-        final EditText bookISBN       =findViewById(R.id.bookISBN);
-        final EditText bookMaxCopys   =findViewById(R.id.bookMaxCpys);
-        final EditText bookDescription=findViewById(R.id.bookDescription);
-        final EditText bookNumCopys   =findViewById(R.id.bookNumCpys);
-        final EditText bookPage       =findViewById(R.id.bookPages);
-        final EditText bookPublisher  =findViewById(R.id.bookPublisher);
-        final EditText bookNumRating  =findViewById(R.id.bookNumRating);
-        final EditText bookRating     =findViewById(R.id.bookRating);
+                storage = FirebaseStorage.getInstance();
+                storageReference = storage.getReference();
 
-        /*for(int i = 0;i<j;i++){
-            if(books[i].isbn == qrIsbn){
-                bookName.setText(books[i].bookName);
-                bookAuthor.setText(books[i].author);
-                bookISBN.setText(books[i].isbn);
-                bookMaxCopys.setText(books[i].max_copys);
-                bookDescription.setText(books[i].description);
-                bookNumCopys.setText(books[i].numberOfCopys);
-                bookPage.setText(books[i].page);
-                bookPublisher.setText(books[i].publisher);
-                bookNumRating.setText(books[i].num_rating);
-                bookRating.setText(books[i].rating);
-            }
-            else{System.out.println("Pauls mom gay");}
+                imageView = (ImageView) findViewById(R.id.imgView);
+                send = (Button) findViewById(R.id.send);
+                choose= (Button) findViewById(R.id.btnChoose);
 
-        }*/
+                 bookName       =findViewById(R.id.bookName);
+                 bookAuthor     =findViewById(R.id.bookAuthor);
+                 bookISBN       =findViewById(R.id.bookISBN);
+                 bookMaxCopys   =findViewById(R.id.bookMaxCpys);
+                 bookDescription=findViewById(R.id.bookDescription);
+                 bookNumCopys   =findViewById(R.id.bookNumCpys);
+                 bookPage       =findViewById(R.id.bookPages);
+                 bookPublisher  =findViewById(R.id.bookPublisher);
+                 bookNumRating  =findViewById(R.id.bookNumRating);
+                 bookRating     =findViewById(R.id.bookRating);
+
+                bookISBN.setText(qrIsbn);
+                Toast.makeText(this,"XXXXXXXXXXXXXX      "+j+"      XXXXXXXXXXXXXX",Toast.LENGTH_LONG).show();
 
 
+                choose.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        chooseImage();
+                    }
+                });
 
-        choose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    chooseImage();
-                }
-            });
+                send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        bookSName        = bookName.getText().toString();
+                        bookSAuthor      = bookAuthor.getText().toString();
+                        bookSISBN        = bookISBN.getText().toString();
+                        bookSMaxCopys    = bookMaxCopys.getText().toString();
+                        bookSDescription = bookDescription.getText().toString();
+                        bookSNumCopys    = bookNumCopys.getText().toString();
+                        bookSPage        = bookPage.getText().toString();
+                        bookSPublisher   = bookPublisher.getText().toString();
+                        bookSNumRating   = bookNumRating.getText().toString();
+                        bookSImg         = "oops";
+                        bookSRating      = bookRating.getText().toString();
+                        uploadImage();
+                        j++;
 
-            send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bookSName        = bookName.getText().toString();
-                bookSAuthor      = bookAuthor.getText().toString();
-                bookSISBN        = bookISBN.getText().toString();
-                bookSMaxCopys    = bookMaxCopys.getText().toString();
-                bookSDescription = bookDescription.getText().toString();
-                bookSNumCopys    = bookNumCopys.getText().toString();
-                bookSPage        = bookPage.getText().toString();
-                bookSPublisher   = bookPublisher.getText().toString();
-                bookSNumRating   = bookNumRating.getText().toString();
-                bookSImg         = "oops";
-                bookSRating      = bookRating.getText().toString();
-                uploadImage();
+                    }
+                });
 
-            }
-        });
+        }
+
+
+
+//        for(int i = 0;i<j;i++){
+//            if(books[i].isbn == bookISBN.getText().toString()){
+//                bookName.setText(books[i].bookName);
+//                bookAuthor.setText(books[i].author);
+//                bookISBN.setText(books[i].isbn);
+//                bookMaxCopys.setText(books[i].max_copys);
+//                bookDescription.setText(books[i].description);
+//                bookNumCopys.setText(books[i].numberOfCopys);
+//                bookPage.setText(books[i].page);
+//                bookPublisher.setText(books[i].publisher);
+//                bookNumRating.setText(books[i].num_rating);
+//                bookRating.setText(books[i].rating);
+//            }
+//            else{Toast.makeText(this,"Pauls mom gay", Toast.LENGTH_LONG).show();}
+//
+//        }
+
+
+
 
     }
     private void chooseImage() {
@@ -167,7 +197,7 @@ public class BookDetailsEditor extends AppCompatActivity
                         @Override
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
-                            Toast.makeText(BookDetailsEditor.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BookDetailsAdder.this, "Uploaded", Toast.LENGTH_SHORT).show();
 
                             uploadData();
                         }
@@ -176,7 +206,7 @@ public class BookDetailsEditor extends AppCompatActivity
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             progressDialog.dismiss();
-                            Toast.makeText(BookDetailsEditor.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(BookDetailsAdder.this, "Failed "+e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     })
                     .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
