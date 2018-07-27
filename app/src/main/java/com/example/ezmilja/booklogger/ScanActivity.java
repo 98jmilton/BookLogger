@@ -1,6 +1,5 @@
 package com.example.ezmilja.booklogger;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -8,10 +7,9 @@ import com.google.zxing.Result;
 
 import me.dm7.barcodescanner.zxing.ZXingScannerView;
 
-public class ScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler {
+public class ScanActivity extends AppCompatActivity implements ZXingScannerView.ResultHandler{
 
     private ZXingScannerView mScannerView;
-    public static String QRHASSCANNED = "";
 
     @Override
     public void onCreate(Bundle state) {
@@ -36,22 +34,10 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
     @Override
     public void handleResult(Result rawResult) {
         // Do something with the result here
-        // Log.v("tag", rawResult.getText()); // Prints scan results
-        // Log.v("tag", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
+       // Log.v("tag", rawResult.getText()); // Prints scan results
+       // Log.v("tag", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
 
-
-        //MainMenu.tvresult.setText(rawResult.getText());
-        //locatiovTV.setOnClickListener();
-
-        try {
-            final Intent intent = new Intent(ScanActivity.this, BookDetailsAdder.class);
-            intent.putExtra(Constants.SCAN_BAR_TEST_KEY, rawResult.getText());
-            QRHASSCANNED = "YES";
-            startActivity(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        BookDetailsAdder.bookISBN.setText(rawResult.getText());
         onBackPressed();
 
         // If you would like to resume scanning, call this method below:

@@ -33,7 +33,6 @@ import java.util.concurrent.ExecutionException;
 import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.BooksArray.books;
 import static com.example.ezmilja.booklogger.BooksArray.i;
-import static com.example.ezmilja.booklogger.ScanActivity.QRHASSCANNED;
 import static com.example.ezmilja.booklogger.SplashScreen.j;
 
 public class BookDetailsAdder extends AppCompatActivity
@@ -72,7 +71,7 @@ public class BookDetailsAdder extends AppCompatActivity
 
     EditText bookName;
     EditText bookAuthor;
-    EditText bookISBN;
+   public static EditText bookISBN;
     EditText bookMaxCopys;
     EditText bookDescription;
     EditText bookNumCopys;
@@ -87,11 +86,7 @@ public class BookDetailsAdder extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetailsadder);
 
-        qrIsbn = getValue(getIntent());
 
-        if (QRHASSCANNED == "YES") {
-            bookISBN.setText(qrIsbn);
-        }
 
 
                 storage = FirebaseStorage.getInstance();
@@ -150,8 +145,8 @@ public class BookDetailsAdder extends AppCompatActivity
         {
             @Override
             public void onClick(View view) {
-        Intent intent = new Intent(BookDetailsAdder.this, ScanActivity.class);
-        startActivity(intent);
+                Intent intent = new Intent(BookDetailsAdder.this, ScanActivity.class);
+                startActivity(intent);
 
             }
         });
@@ -196,7 +191,7 @@ public class BookDetailsAdder extends AppCompatActivity
 
 
                         // For the ISBN Number
-                        JSONObject ISBN = customerIDD.getJSONArray("industryIdentifiers").getJSONObject(1);
+                        JSONObject ISBN = customerIDD.getJSONArray("industryIdentifiers").getJSONObject(0);
                         String theISBNNo = (String) ISBN.get("identifier");
 
 
@@ -351,16 +346,5 @@ public class BookDetailsAdder extends AppCompatActivity
 
 
 
-// For QR scanner passing value of scanned item through the Saved instances
-    private String getValue(final Intent intent) {
-        try {
-            final String barCodeString = intent.getExtras().getString(Constants.SCAN_BAR_TEST_KEY);
 
-            return barCodeString != null ? barCodeString : ERROR_MESSAGE;
-
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
-        return ERROR_MESSAGE;
-    }
 }
