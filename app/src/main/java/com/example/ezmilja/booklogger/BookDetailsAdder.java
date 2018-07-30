@@ -1,8 +1,10 @@
 package com.example.ezmilja.booklogger;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -12,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,7 +35,6 @@ import java.util.concurrent.ExecutionException;
 
 import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.BooksArray.books;
-import static com.example.ezmilja.booklogger.BooksArray.i;
 import static com.example.ezmilja.booklogger.SplashScreen.j;
 
 public class BookDetailsAdder extends AppCompatActivity
@@ -41,8 +43,11 @@ public class BookDetailsAdder extends AppCompatActivity
     private Button btnChoose;
     private Button btn_autofill;
     private Button Scan;
+    private Button btnSubmit;
     private ImageView imageView;
     private Uri filePath;
+    private boolean isBook=false;
+    private boolean bookSubmit=false;
 
     private final int PICK_IMAGE_REQUEST = 71;
     FirebaseStorage storage;
@@ -62,7 +67,7 @@ public class BookDetailsAdder extends AppCompatActivity
 
 
 
-    public static String qrIsbn= "ISBN";
+    public static String qrIsbn;
     private final static String ERROR_MESSAGE = "Unable to scan bar code";
 
 
@@ -95,6 +100,7 @@ public class BookDetailsAdder extends AppCompatActivity
                 imageView = (ImageView) findViewById(R.id.imgView);
                 send = (Button) findViewById(R.id.send);
                 choose= (Button) findViewById(R.id.btnChoose);
+                btnSubmit = (Button) findViewById(R.id.btn_submit);
 
                  bookName       =findViewById(R.id.bookName);
                  bookAuthor     =findViewById(R.id.bookAuthor);
@@ -107,8 +113,8 @@ public class BookDetailsAdder extends AppCompatActivity
                  bookNumRating  =findViewById(R.id.bookNumRating);
                  bookRating     =findViewById(R.id.bookRating);
 
-
-                makeText(this,"XXXXXXXXXXXXXX      "+j+"      XXXXXXXXXXXXXX", LENGTH_LONG).show();
+                bookISBN.setText(qrIsbn);
+                Toast.makeText(this,"XXXXXXXXXXXXXX      "+j+"      XXXXXXXXXXXXXX",Toast.LENGTH_LONG).show();
 
 
                 choose.setOnClickListener(new View.OnClickListener() {
@@ -118,26 +124,34 @@ public class BookDetailsAdder extends AppCompatActivity
                     }
                 });
 
-                send.setOnClickListener(new View.OnClickListener() {
+                btnSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        bookSName        = bookName.getText().toString();
-                        bookSAuthor      = bookAuthor.getText().toString();
-                        bookSISBN        = bookISBN.getText().toString();
-                        bookSMaxCopys    = bookMaxCopys.getText().toString();
-                        bookSDescription = bookDescription.getText().toString();
-                        bookSNumCopys    = bookNumCopys.getText().toString();
-                        bookSPage        = bookPage.getText().toString();
-                        bookSPublisher   = bookPublisher.getText().toString();
-                        bookSNumRating   = bookNumRating.getText().toString();
-                        bookSImg         = "oops";
-                        bookSRating      = bookRating.getText().toString();
-                        uploadImage();
-                        j++;
+                        if(!bookSubmit){ Toast.makeText(BookDetailsAdder.this,"Please Submit a book image",LENGTH_LONG).show();}
+                        else {
+                            bookSName = bookName.getText().toString();
+                            bookSAuthor = bookAuthor.getText().toString();
+                            bookSISBN = bookISBN.getText().toString();
+                            bookSMaxCopys = bookMaxCopys.getText().toString();
+                            bookSDescription = bookDescription.getText().toString();
+                            bookSNumCopys = bookNumCopys.getText().toString();
+                            bookSPage = bookPage.getText().toString();
+                            bookSPublisher = bookPublisher.getText().toString();
+                            bookSNumRating = bookNumRating.getText().toString();
+                            bookSImg = "oops";
+                            bookSRating = bookRating.getText().toString();
+                            uploadData();
 
+                        }
                     }
                 });
 
+                send.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        uploadImage();
+                    }
+                });
 
 
         Scan = (Button) findViewById(R.id.btn_scan);
@@ -158,15 +172,41 @@ public class BookDetailsAdder extends AppCompatActivity
             public void onClick(View view) {
 
                 qrIsbn = bookISBN.getText().toString();
+                String bookNum;
+                String qrNum ;
 
-                
-                if ((qrIsbn.matches("[0-9]+") && qrIsbn.length() == 13) ) {
+
+                for (int i = 0; i < j; i++) {
+
+                       bookNum = books[i].isbn;
+                       qrNum = qrIsbn;
+                       if(isBook == true){break;}
+                       if (qrNum.equals(bookNum)) {
+                           isBook = true;
+                           System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                           break;
+                       } else {
+                           //isBook = false;
+                            System.out.println("AAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH");
+                       }
+
+                   }
+
+
+                    if((qrIsbn.matches("[0-9]+")) && (qrIsbn.length() == 13) && (isBook)){
+                        System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH");
+                        makeInfoDialog();
+                   }
+
+
+                 if((qrIsbn.matches("[0-9]+")) && (qrIsbn.length() == 13) && (!isBook)){
+                    System.out.println("PPPPPPPPPPPPPPPPAAAAAAAAUUUUUUULLLLLL");
 
 
                     bookISBN.setText(qrIsbn);
 
                     try {
-
+                        System.out.println("SSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAANNNNNNNNN");
 
                         JSONObject BookInfoObject = new RetrieveRoomsJSONTask(BookDetailsAdder.this).execute().get();
 
@@ -202,7 +242,7 @@ public class BookDetailsAdder extends AppCompatActivity
                             a += (String) customerIDD.getJSONArray("authors").get(i) + " ";
                         }
 
-//
+
 
                         //  System.out.println(title + "\n " + description  + "\n " + publisher  + "\n " + pageCount  + "\n " + imageLink  + "\n " + theISBNNo  + "\n " + a );
 
@@ -285,8 +325,7 @@ public class BookDetailsAdder extends AppCompatActivity
                         public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                             progressDialog.dismiss();
                             makeText(BookDetailsAdder.this, "Uploaded", LENGTH_SHORT).show();
-
-                            uploadData();
+                            bookSubmit=true;
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
@@ -328,7 +367,7 @@ public class BookDetailsAdder extends AppCompatActivity
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
-        storageReference.child("books/"+"Paul").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageReference.child("books/"+bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 String imageAddress =uri.toString();
@@ -344,7 +383,40 @@ public class BookDetailsAdder extends AppCompatActivity
 
     }
 
+    private void makeInfoDialog(){
+        final Dialog dialog = new Dialog(BookDetailsAdder.this);
+        dialog.setContentView(R.layout.popup);
+        dialog.show();
 
+        Typeface myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
+
+        TextView title = (TextView) dialog.findViewById(R.id.title);
+        title.setTypeface(myTypeFace1);
+
+        Button yes= (Button) dialog.findViewById(R.id.yes);
+        Button no = (Button) dialog.findViewById(R.id.no);
+
+        yes.setTypeface(myTypeFace1);
+        no.setTypeface(myTypeFace1);
+
+        yes.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(BookDetailsAdder.this, BookDetailsPage.class);
+                startActivity(intent);
+                //dialog.dismiss();
+            }
+        });
+
+        no.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                dialog.dismiss();
+            }
+        });
+    }
 
 
 }

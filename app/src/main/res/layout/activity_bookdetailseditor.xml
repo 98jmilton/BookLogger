@@ -25,41 +25,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-
-
-                <Button
-                    android:id="@+id/btn_scan"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="20"
-                    android:text="Scan ISBN" />
-
-                <Button
-                    android:id="@+id/btn_autofill"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="20"
-                    android:text="AutoFill Data" />
-
-                <Button
-                    android:id="@+id/btn_submit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="20"
-                    android:text="Submit Book Data" />
-
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
                 <EditText
                     android:id="@+id/bookISBN"
                     android:layout_width="wrap_content"
@@ -68,9 +33,19 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="60"
                     android:hint="ISBN"
-                    android:inputType="textMultiLine" />
+                    android:inputType="textPersonName" />
+
+                <Button
+                    android:id="@+id/btn_delete"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="20"
+                    android:text="Delete Book" />
 
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -165,6 +140,7 @@
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="50"
+                    android:ems="10"
                     android:hint="Total number of this books"
                     android:inputType="textMultiLine" />
 
@@ -214,9 +190,11 @@
 
                 <LinearLayout
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="fill_parent"
                     android:layout_weight="50"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+
+                    >
 
                     <Button
                         android:id="@+id/btnChoose"
@@ -228,13 +206,14 @@
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="8dp"
-                        android:text="Choose Image"
+                        android:text="Choose New  Image"
                         app:layout_constraintBottom_toTopOf="@+id/send"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintVertical_bias="1.0" />
+
 
                     <Button
                         android:id="@+id/send"
@@ -245,7 +224,7 @@
                         android:layout_marginBottom="40dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
-                        android:text="Submit Image"
+                        android:text="Ammend Data"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"

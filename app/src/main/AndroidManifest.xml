@@ -31,6 +31,9 @@
         <activity android:name=".ScanActivity">
 
         </activity>
+        <activity android:name=".BookDetailsPage">
+
+        </activity>
 
     </application>
 
