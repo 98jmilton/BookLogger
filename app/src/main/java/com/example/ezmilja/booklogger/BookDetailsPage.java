@@ -1,9 +1,11 @@
 package com.example.ezmilja.booklogger;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -94,6 +96,18 @@ public class BookDetailsPage extends AppCompatActivity {
                 // Handle any errors
             }
         });
+
+
+
+
+        btn_edit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BookDetailsPage.this, BookDetailsEditor.class);
+                startActivity(intent);
+            }
+        });
+
 
 
     }

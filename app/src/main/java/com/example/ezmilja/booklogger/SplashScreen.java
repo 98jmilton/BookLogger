@@ -46,59 +46,7 @@ import static com.example.ezmilja.booklogger.BooksArray.i;
         Typeface myTypeFace1 = Typeface.createFromAsset(getAssets(), "yourfont.ttf");
         TextView TextView1 = (TextView) findViewById(R.id.TextView1);
         TextView1.setTypeface(myTypeFace1);
-
-        FirebaseStorage storage;
-        final StorageReference storageReference;
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference BookRef = database.getReference("/ Books/");
-
-        //Read data from database
-        BookRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                j= dataSnapshot.getChildrenCount();
-
-                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
-                    String isbn = (String) BookSnapshot.child("ISBN").getValue();
-                    String author = (String) BookSnapshot.child("Author").getValue();
-                    String name = (String) BookSnapshot.child("BookName").getValue();
-                    String description = (String) BookSnapshot.child("Description").getValue();
-                    String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
-                    String maxCopys = (String) BookSnapshot.child("MaxCopys").getValue();
-                    String numCopys = (String) BookSnapshot.child("NumCopys").getValue();
-                    String numRating = (String) BookSnapshot.child("NumRating").getValue();
-                    String page = (String) BookSnapshot.child("Pages").getValue();
-                    String totRating = (String) BookSnapshot.child("Rating").getValue();
-                    String publisher = (String) BookSnapshot.child("Publisher").getValue();
-
-//                    System.out.println(isbn +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(author +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(name +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(description +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(imageAddress +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(maxCopys +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(numCopys +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(numRating +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(page +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(totRating +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(publisher +"XXXXXXXXXXXXXXXXXXX");
-
-                    books[p] = new Book(isbn, name, imageAddress, author, description, page, publisher, totRating, numCopys, maxCopys, numRating);
-                    p++;
-                }
-            }
-
-
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
         requestPermission();
-
-
 
     }
 

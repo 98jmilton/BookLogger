@@ -49,6 +49,7 @@ public class BookDetailsAdder extends AppCompatActivity
     private Uri filePath;
     private boolean isBook=false;
     private boolean bookSubmit=false;
+    private boolean isScanned=false;
 
     private final int PICK_IMAGE_REQUEST = 71;
     FirebaseStorage storage;
@@ -114,9 +115,9 @@ public class BookDetailsAdder extends AppCompatActivity
                  bookNumRating  =findViewById(R.id.bookNumRating);
                  bookRating     =findViewById(R.id.bookRating);
 
-                bookISBN.setText(qrIsbn);
                 Toast.makeText(this,"XXXXXXXXXXXXXX      "+j+"      XXXXXXXXXXXXXX",Toast.LENGTH_LONG).show();
 
+                if(isScanned){bookISBN.setText(qrIsbn);}
 
                 choose.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -155,11 +156,13 @@ public class BookDetailsAdder extends AppCompatActivity
                 });
 
 
+
         Scan = (Button) findViewById(R.id.btn_scan);
         Scan.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view) {
+                isScanned = true;
                 Intent intent = new Intent(BookDetailsAdder.this, ScanActivity.class);
                 startActivity(intent);
 

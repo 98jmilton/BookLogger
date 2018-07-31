@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
@@ -35,6 +36,7 @@ import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import static android.widget.Toast.*;
+import static com.example.ezmilja.booklogger.BookDetailsAdder.qrIsbn;
 import static com.example.ezmilja.booklogger.BooksArray.books;
 import static com.example.ezmilja.booklogger.SplashScreen.j;
 
@@ -49,6 +51,8 @@ public class BookDetailsEditor extends AppCompatActivity
     private Uri filePath;
     private boolean isBook=false;
     private boolean bookSubmit=false;
+
+    private int bookNumber=0;
 
     private final int PICK_IMAGE_REQUEST = 71;
     FirebaseStorage storage;
@@ -83,19 +87,16 @@ public class BookDetailsEditor extends AppCompatActivity
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bookdetailsadder);
-
-
-
+        setContentView(R.layout.activity_bookdetailseditor);
 
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
 
         imageView = (ImageView) findViewById(R.id.imgView);
-        uploadImage = (Button) findViewById(R.id.uploadImage);
-        choose= (Button) findViewById(R.id.btnChoose);
-        btnSubmit = (Button) findViewById(R.id.btn_submit);
-        Delete = (Button) findViewById(R.id.btn_delete);
+        uploadImage =  findViewById(R.id.uploadImage);
+        choose=findViewById(R.id.btnChoose);
+        btnSubmit =  findViewById(R.id.btn_submit);
+        Delete = findViewById(R.id.btn_delete);
 
         bookName       =findViewById(R.id.bookName);
         bookAuthor     =findViewById(R.id.bookAuthor);
@@ -108,12 +109,35 @@ public class BookDetailsEditor extends AppCompatActivity
         bookNumRating  =findViewById(R.id.bookNumRating);
         bookRating     =findViewById(R.id.bookRating);
 
-        choose.setOnClickListener(new View.OnClickListener() {
+        getBook();
+
+        bookName.setText(books[bookNumber].bookName);
+        bookAuthor.setText(books[bookNumber].author);
+        bookISBN.setText(books[bookNumber].isbn);
+        bookMaxCopys.setText(books[bookNumber].max_copys);
+        bookDescription.setText(books[bookNumber].description);
+        bookNumCopys.setText(books[bookNumber].numberOfCopys);
+        bookPage.setText(books[bookNumber].page);
+        bookPublisher.setText(books[bookNumber].publisher);
+        bookNumRating.setText(books[bookNumber].num_rating);
+        bookRating.setText(books[bookNumber].rating);
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        storageReference.child("books/"+books[bookNumber].isbn).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
-            public void onClick(View v) {
-                chooseImage();
+            public void onSuccess(Uri uri) {
+                String imageAddress =uri.toString();
+                Glide.with(BookDetailsEditor.this).load(imageAddress).into(imageView);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
             }
         });
+
 
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,6 +145,17 @@ public class BookDetailsEditor extends AppCompatActivity
                 chooseImage();
             }
         });
+
+        Delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String book =books[bookNumber].isbn;
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DatabaseReference BookRef = database.getReference("/ Books/");
+                BookRef.child(book).setValue(null);
+            }
+        });
+
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,6 +185,9 @@ public class BookDetailsEditor extends AppCompatActivity
                 uploadImage();
             }
         });
+
+
+
 
     }
     private void chooseImage() {
@@ -247,6 +285,14 @@ public class BookDetailsEditor extends AppCompatActivity
         });
 
     }
+    private void getBook(){
+        int k =(int) j;
+        for (int i = 0; i<k; i++){
+            if (books[i].isbn == qrIsbn){
+                i = bookNumber;
+            }
+        }
 
+    }
 
 }
