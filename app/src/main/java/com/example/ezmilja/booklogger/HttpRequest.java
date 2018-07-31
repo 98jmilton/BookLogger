@@ -10,7 +10,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-public class HttpRequestForCoolKids {
+public class HttpRequest {
 
         public static JSONObject getJSON(String url) {
             HttpURLConnection con = null;

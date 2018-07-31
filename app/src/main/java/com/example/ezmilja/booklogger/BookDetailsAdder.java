@@ -36,6 +36,7 @@ import java.util.concurrent.ExecutionException;
 import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.BooksArray.books;
 import static com.example.ezmilja.booklogger.SplashScreen.j;
+import static com.example.ezmilja.booklogger.SplashScreen.p;
 
 public class BookDetailsAdder extends AppCompatActivity
 {
@@ -199,7 +200,7 @@ public class BookDetailsAdder extends AppCompatActivity
                    }
 
 
-                 if((qrIsbn.matches("[0-9]+")) && (qrIsbn.length() == 13) && (!isBook)){
+                 else if((qrIsbn.matches("[0-9]+")) && (qrIsbn.length() == 13) && (!isBook)){
                     System.out.println("PPPPPPPPPPPPPPPPAAAAAAAAUUUUUUULLLLLL");
 
 
@@ -208,7 +209,7 @@ public class BookDetailsAdder extends AppCompatActivity
                     try {
                         System.out.println("SSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAANNNNNNNNN");
 
-                        JSONObject BookInfoObject = new RetrieveRoomsJSONTask(BookDetailsAdder.this).execute().get();
+                        JSONObject BookInfoObject = new RetrieveDataJSON(BookDetailsAdder.this).execute().get();
 
                         JSONArray items = BookInfoObject.getJSONArray("items");
                         JSONObject customerIDD = items.getJSONObject(0).getJSONObject("volumeInfo");
@@ -317,38 +318,45 @@ public class BookDetailsAdder extends AppCompatActivity
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
+            bookSISBN = bookISBN.getText().toString();
+            if ((bookSISBN.matches("[0-9]+")) || (bookSISBN.length() == 13)) {
+                final StorageReference ref = storageReference.child("/books/" + bookSISBN);
+                ref.putFile(filePath)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                progressDialog.dismiss();
+                                makeText(BookDetailsAdder.this, "Uploaded", LENGTH_SHORT).show();
+                                bookSubmit = true;
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                progressDialog.dismiss();
+                                makeText(BookDetailsAdder.this, "Failed " + e.getMessage(), LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                                        .getTotalByteCount());
+                                progressDialog.setMessage("Uploaded " + (int) progress + "%");
+                            }
+                        });
+            } else {
+                makeText(BookDetailsAdder.this, "Upload Failed " , LENGTH_SHORT).show();
+                progressDialog.dismiss();
+                Toast.makeText(this, "Please insert book ISBN", Toast.LENGTH_LONG).show();
 
-            final StorageReference ref = storageReference.child("books/"+ bookSISBN);
-            ref.putFile(filePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            progressDialog.dismiss();
-                            makeText(BookDetailsAdder.this, "Uploaded", LENGTH_SHORT).show();
-                            bookSubmit=true;
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
-                            makeText(BookDetailsAdder.this, "Failed "+e.getMessage(), LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
-                                    .getTotalByteCount());
-                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
-                        }
-                    });
-
+            }
         }
 
     }
     private void uploadData() {
 
+        p++;
         BookRef.child(bookSISBN).child("BookName").setValue(bookSName);
         BookRef.child(bookSISBN).child("Author").setValue(bookSAuthor);
         BookRef.child(bookSISBN).child("ISBN").setValue(bookSISBN);
@@ -372,6 +380,20 @@ public class BookDetailsAdder extends AppCompatActivity
             public void onSuccess(Uri uri) {
                 String imageAddress =uri.toString();
                 BookRef.child(bookSISBN).child("ImageAddress").setValue(imageAddress);
+
+                books[p] = new Book(bookSISBN,bookSName,bookSImg,bookSAuthor,bookSDescription,bookSPage,bookSPublisher,bookSRating,bookSNumCopys,bookSMaxCopys,bookSNumRating);
+
+                bookName.setText("");
+                bookDescription.setText("");
+                bookPublisher.setText("");
+                bookISBN.setText("");
+                bookAuthor.setText("");
+                bookRating.setText("");
+                bookPage.setText("");
+                bookNumRating.setText("");
+
+                Intent intent = new Intent(BookDetailsAdder.this, ContentsActivity.class);
+                startActivity(intent);
 
             }
         }).addOnFailureListener(new OnFailureListener() {

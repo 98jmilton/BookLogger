@@ -36,7 +36,7 @@ import static com.example.ezmilja.booklogger.BooksArray.i;
     public class SplashScreen extends AppCompatActivity {
 
      public static long j=0;
-
+     public static int p=0;
 
     final private int REQUEST_CODE_ASK_PERMISSIONS = 123;
 
@@ -57,7 +57,6 @@ import static com.example.ezmilja.booklogger.BooksArray.i;
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 j= dataSnapshot.getChildrenCount();
-                int i = 0;
 
                 for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
                     String isbn = (String) BookSnapshot.child("ISBN").getValue();
@@ -84,8 +83,8 @@ import static com.example.ezmilja.booklogger.BooksArray.i;
 //                    System.out.println(totRating +"XXXXXXXXXXXXXXXXXXX");
 //                    System.out.println(publisher +"XXXXXXXXXXXXXXXXXXX");
 
-                    books[i] = new Book(isbn, name, imageAddress, author, description, page, publisher, totRating, numCopys, maxCopys, numRating);
-                    i++;
+                    books[p] = new Book(isbn, name, imageAddress, author, description, page, publisher, totRating, numCopys, maxCopys, numRating);
+                    p++;
                 }
             }
 

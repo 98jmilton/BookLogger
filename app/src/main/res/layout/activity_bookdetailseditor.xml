@@ -36,6 +36,15 @@
                     android:inputType="textPersonName" />
 
                 <Button
+                    android:id="@+id/btn_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="20"
+                    android:text="Ammend Data"
+                     />
+                <Button
                     android:id="@+id/btn_delete"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -216,7 +225,7 @@
 
 
                     <Button
-                        android:id="@+id/send"
+                        android:id="@+id/uploadImage"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="true"
@@ -224,7 +233,7 @@
                         android:layout_marginBottom="40dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
-                        android:text="Ammend Data"
+                        android:text="Upload New Image"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"

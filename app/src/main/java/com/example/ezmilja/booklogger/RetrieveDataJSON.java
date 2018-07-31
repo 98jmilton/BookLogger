@@ -1,23 +1,21 @@
 package com.example.ezmilja.booklogger;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
 
 import org.json.JSONObject;
 
 import static com.example.ezmilja.booklogger.BookDetailsAdder.qrIsbn;
 
-public class RetrieveRoomsJSONTask extends AsyncTask<String, String, JSONObject> {
+public class RetrieveDataJSON extends AsyncTask<String, String, JSONObject> {
 
     private final Context context;
 
 
     String AddtoURL = qrIsbn;
 
-        public RetrieveRoomsJSONTask(Context context){
+        public RetrieveDataJSON(Context context){
             this.context = context;
         }
 
@@ -31,7 +29,7 @@ public class RetrieveRoomsJSONTask extends AsyncTask<String, String, JSONObject>
         protected JSONObject doInBackground(String... args) {
             JSONObject jsonArray = null;
 
-            jsonArray = HttpRequestForCoolKids.getJSON("https://www.googleapis.com/books/v1/volumes?q=isbn:" + AddtoURL);
+            jsonArray = HttpRequest.getJSON("https://www.googleapis.com/books/v1/volumes?q=isbn:" + AddtoURL);
             return jsonArray;
         }
 

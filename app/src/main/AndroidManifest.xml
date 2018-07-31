@@ -34,7 +34,9 @@
         <activity android:name=".BookDetailsPage">
 
         </activity>
+        <activity android:name=".BookDetailsEditor">
 
+        </activity>
     </application>
 
 </manifest>

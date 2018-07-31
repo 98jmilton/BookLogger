@@ -1,0 +1,252 @@
+package com.example.ezmilja.booklogger;
+
+
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Typeface;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.concurrent.ExecutionException;
+
+import static android.widget.Toast.*;
+import static com.example.ezmilja.booklogger.BooksArray.books;
+import static com.example.ezmilja.booklogger.SplashScreen.j;
+
+public class BookDetailsEditor extends AppCompatActivity
+{
+    int k = (int) j;
+    private Button choose;
+    private Button btnSubmit;
+    private Button uploadImage;
+    private Button Delete;
+    private ImageView imageView;
+    private Uri filePath;
+    private boolean isBook=false;
+    private boolean bookSubmit=false;
+
+    private final int PICK_IMAGE_REQUEST = 71;
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
+    String bookSName        ="";
+    String bookSAuthor      ="";
+    String bookSISBN        ="";
+    String bookSMaxCopys    ="";
+    String bookSDescription ="";
+    String bookSNumCopys    ="";
+    String bookSPage        ="";
+    String bookSPublisher   ="";
+    String bookSNumRating   ="";
+    String bookSImg         ="";
+    String bookSRating      ="";
+
+
+    EditText bookName;
+    EditText bookAuthor;
+    public static EditText bookISBN;
+    EditText bookMaxCopys;
+    EditText bookDescription;
+    EditText bookNumCopys;
+    EditText bookPage;
+    EditText bookPublisher;
+    EditText bookNumRating;
+    EditText bookRating;
+
+    FirebaseDatabase database = FirebaseDatabase.getInstance();
+    DatabaseReference BookRef = database.getReference("/ Books/");
+
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_bookdetailsadder);
+
+
+
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        imageView = (ImageView) findViewById(R.id.imgView);
+        uploadImage = (Button) findViewById(R.id.uploadImage);
+        choose= (Button) findViewById(R.id.btnChoose);
+        btnSubmit = (Button) findViewById(R.id.btn_submit);
+        Delete = (Button) findViewById(R.id.btn_delete);
+
+        bookName       =findViewById(R.id.bookName);
+        bookAuthor     =findViewById(R.id.bookAuthor);
+        bookISBN       =findViewById(R.id.bookISBN);
+        bookMaxCopys   =findViewById(R.id.bookMaxCpys);
+        bookDescription=findViewById(R.id.bookDescription);
+        bookNumCopys   =findViewById(R.id.bookNumCpys);
+        bookPage       =findViewById(R.id.bookPages);
+        bookPublisher  =findViewById(R.id.bookPublisher);
+        bookNumRating  =findViewById(R.id.bookNumRating);
+        bookRating     =findViewById(R.id.bookRating);
+
+        choose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+
+        choose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(!bookSubmit){ Toast.makeText(BookDetailsEditor.this,"Please Submit a book image",LENGTH_LONG).show();}
+                else {
+                    bookSName = bookName.getText().toString();
+                    bookSAuthor = bookAuthor.getText().toString();
+                    bookSISBN = bookISBN.getText().toString();
+                    bookSMaxCopys = bookMaxCopys.getText().toString();
+                    bookSDescription = bookDescription.getText().toString();
+                    bookSNumCopys = bookNumCopys.getText().toString();
+                    bookSPage = bookPage.getText().toString();
+                    bookSPublisher = bookPublisher.getText().toString();
+                    bookSNumRating = bookNumRating.getText().toString();
+                    bookSImg = "oops";
+                    bookSRating = bookRating.getText().toString();
+                    uploadData();
+
+                }
+            }
+        });
+
+        uploadImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                uploadImage();
+            }
+        });
+
+    }
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null )
+        {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                imageView.setImageBitmap(bitmap);
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+    private void uploadImage() {
+
+        if(filePath != null)
+        {
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setTitle("Uploading...");
+            progressDialog.show();
+
+            final StorageReference ref = storageReference.child("books/"+ bookSISBN);
+            ref.putFile(filePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            progressDialog.dismiss();
+                            makeText(BookDetailsEditor.this, "Uploaded", LENGTH_SHORT).show();
+                            bookSubmit=true;
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            progressDialog.dismiss();
+                            makeText(BookDetailsEditor.this, "Failed "+e.getMessage(), LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                                    .getTotalByteCount());
+                            progressDialog.setMessage("Uploaded "+(int)progress+"%");
+                        }
+                    });
+
+        }
+
+    }
+    private void uploadData() {
+
+        BookRef.child(bookSISBN).child("BookName").setValue(bookSName);
+        BookRef.child(bookSISBN).child("Author").setValue(bookSAuthor);
+        BookRef.child(bookSISBN).child("ISBN").setValue(bookSISBN);
+        BookRef.child(bookSISBN).child("MaxCopys").setValue(bookSMaxCopys);
+        BookRef.child(bookSISBN).child("Description").setValue(bookSDescription);
+        BookRef.child(bookSISBN).child("NumCopys").setValue(bookSNumCopys);
+        BookRef.child(bookSISBN).child("Pages").setValue(bookSPage);
+        BookRef.child(bookSISBN).child("Publisher").setValue(bookSPublisher);
+        BookRef.child(bookSISBN).child("ImageAddress").setValue(bookSImg);
+        BookRef.child(bookSISBN).child("Rating").setValue(bookSRating);
+        BookRef.child(bookSISBN).child("NumRating").setValue(bookSNumRating);
+
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
+        storageReference.child("books/"+bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                String imageAddress =uri.toString();
+                BookRef.child(bookSISBN).child("ImageAddress").setValue(imageAddress);
+
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
+    }
+
+
+}
