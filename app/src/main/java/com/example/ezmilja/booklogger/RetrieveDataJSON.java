@@ -6,14 +6,14 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-import static com.example.ezmilja.booklogger.BookDetailsAdder.qrIsbn;
+import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
 
 public class RetrieveDataJSON extends AsyncTask<String, String, JSONObject> {
 
     private final Context context;
 
 
-    String AddtoURL = qrIsbn;
+    String AddtoURL = currentIsbn;
 
         public RetrieveDataJSON(Context context){
             this.context = context;

@@ -2,7 +2,6 @@ package com.example.ezmilja.booklogger;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -17,72 +16,39 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import static com.example.ezmilja.booklogger.BooksArray.books;
-import static com.example.ezmilja.booklogger.SplashScreen.j;
-import static com.example.ezmilja.booklogger.SplashScreen.p;
-
 public class ContentsActivity extends AppCompatActivity {
+    public static int h=0;
 
-    @Override
+    static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    final static public DatabaseReference BookRef = database.getReference();
+
+    static  String currentIsbn="";
+
+    static FirebaseStorage storage = FirebaseStorage.getInstance();
+    final static public StorageReference storageReference = storage.getReference().child("/ books/");
+   @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contents);
                     createButton();
 
-        FirebaseStorage storage;
-        final StorageReference storageReference;
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        final DatabaseReference BookRef = database.getReference("/ Books/");
+       BookRef.child("/ Books/").addListenerForSingleValueEvent(new ValueEventListener() {
 
-        //Read data from database
-        BookRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                j= dataSnapshot.getChildrenCount();
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
-                    String isbn = (String) BookSnapshot.child("ISBN").getValue();
-                    String author = (String) BookSnapshot.child("Author").getValue();
-                    String name = (String) BookSnapshot.child("BookName").getValue();
-                    String description = (String) BookSnapshot.child("Description").getValue();
-                    String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
-                    String maxCopys = (String) BookSnapshot.child("MaxCopys").getValue();
-                    String numCopys = (String) BookSnapshot.child("NumCopys").getValue();
-                    String numRating = (String) BookSnapshot.child("NumRating").getValue();
-                    String page = (String) BookSnapshot.child("Pages").getValue();
-                    String totRating = (String) BookSnapshot.child("Rating").getValue();
-                    String publisher = (String) BookSnapshot.child("Publisher").getValue();
+               h = (int) dataSnapshot.getChildrenCount();
+               System.out.println(h);
+           }
 
-//                    System.out.println(isbn +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(author +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(name +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(description +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(imageAddress +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(maxCopys +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(numCopys +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(numRating +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(page +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(totRating +"XXXXXXXXXXXXXXXXXXX");
-//                    System.out.println(publisher +"XXXXXXXXXXXXXXXXXXX");
-
-                    books[p] = new Book(isbn, name, imageAddress, author, description, page, publisher, totRating, numCopys, maxCopys, numRating);
-                    p++;
-                }
-            }
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+               // ...
+           }
+       });
 
 
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
-
-
-
-
-    }
-
+   }
 
 
     private void createButton(){

@@ -5,10 +5,12 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
+import android.icu.util.IslamicCalendar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
@@ -17,43 +19,45 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.Firebase;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-
 import static android.widget.Toast.*;
-import static com.example.ezmilja.booklogger.BooksArray.books;
-import static com.example.ezmilja.booklogger.SplashScreen.j;
-import static com.example.ezmilja.booklogger.SplashScreen.p;
+import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
+import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
+import static com.example.ezmilja.booklogger.ContentsActivity.database;
+import static com.example.ezmilja.booklogger.ContentsActivity.h;
+import static com.example.ezmilja.booklogger.ContentsActivity.storageReference;
+
 
 public class BookDetailsAdder extends AppCompatActivity
 {
-    int k = (int) j;
-    private Button btnChoose;
+
+
     private Button btn_autofill;
     private Button Scan;
     private Button btnSubmit;
     private ImageView imageView;
     private Uri filePath;
-    private boolean isBook=false;
     private boolean bookSubmit=false;
     private boolean isScanned=false;
 
     private final int PICK_IMAGE_REQUEST = 71;
-    FirebaseStorage storage;
-    StorageReference storageReference;
+
 
     String bookSName        ="";
     String bookSAuthor      ="";
@@ -67,18 +71,14 @@ public class BookDetailsAdder extends AppCompatActivity
     String bookSImg         ="";
     String bookSRating      ="";
 
-
-
     public static String qrIsbn;
-    private final static String ERROR_MESSAGE = "Unable to scan bar code";
-
+    public static EditText bookISBN;
 
     Button send;
     Button choose;
 
     EditText bookName;
     EditText bookAuthor;
-   public static EditText bookISBN;
     EditText bookMaxCopys;
     EditText bookDescription;
     EditText bookNumCopys;
@@ -87,17 +87,21 @@ public class BookDetailsAdder extends AppCompatActivity
     EditText bookNumRating;
     EditText bookRating;
 
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference BookRef = database.getReference("/ Books/");
+    String title;
+    String description;
+    String publisher;
+    int pageCount;
+    String pageCountString;
+    String imageLink;
+    JSONObject ISBN;
+    String theISBNNo;
+    String a;
+    String authors;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetailsadder);
 
-
-
-
-                storage = FirebaseStorage.getInstance();
-                storageReference = storage.getReference();
 
                 imageView = (ImageView) findViewById(R.id.imgView);
                 send = (Button) findViewById(R.id.send);
@@ -115,8 +119,7 @@ public class BookDetailsAdder extends AppCompatActivity
                  bookNumRating  =findViewById(R.id.bookNumRating);
                  bookRating     =findViewById(R.id.bookRating);
 
-                Toast.makeText(this,"XXXXXXXXXXXXXX      "+j+"      XXXXXXXXXXXXXX",Toast.LENGTH_LONG).show();
-
+                bookISBN.setText("9781847677693");
                 if(isScanned){bookISBN.setText(qrIsbn);}
 
                 choose.setOnClickListener(new View.OnClickListener() {
@@ -175,121 +178,126 @@ public class BookDetailsAdder extends AppCompatActivity
             @Override
             public void onClick(View view) {
 
-                qrIsbn = bookISBN.getText().toString();
-                String bookNum;
-                String qrNum ;
+                currentIsbn = bookISBN.getText().toString();
 
 
-                for (int i = 0; i < j; i++) {
+                try {
+                    System.out.println("SSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAANNNNNNNNN");
 
-                       bookNum = books[i].isbn;
-                       qrNum = qrIsbn;
-                       if(isBook == true){break;}
-                       if (qrNum.equals(bookNum)) {
-                           isBook = true;
-                           System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
-                           break;
-                       } else {
-                           //isBook = false;
-                            System.out.println("AAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH");
-                       }
+                    JSONObject BookInfoObject = new RetrieveDataJSON(BookDetailsAdder.this).execute().get();
 
-                   }
+                    JSONArray items = BookInfoObject.getJSONArray("items");
+                    JSONObject customerIDD = items.getJSONObject(0).getJSONObject("volumeInfo");
 
+                    // For the Title
+                    title = (String) customerIDD.get("title");
 
-                    if((qrIsbn.matches("[0-9]+")) && (qrIsbn.length() == 13) && (isBook)){
-                        System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH");
-                        makeInfoDialog();
-                   }
+                    // For the description
+                    description = (String) customerIDD.get("description");
 
+                    // For the publisher
+                    publisher = (String) customerIDD.get("publisher");
 
-                 else if((qrIsbn.matches("[0-9]+")) && (qrIsbn.length() == 13) && (!isBook)){
-                    System.out.println("PPPPPPPPPPPPPPPPAAAAAAAAUUUUUUULLLLLL");
+                    // For the pagCount
+                    pageCount = (int) customerIDD.get("pageCount");
+                    pageCountString = Integer.toString(pageCount);
+
+                    // For the Image link
+                    imageLink = (String) customerIDD.getJSONObject("imageLinks").get("thumbnail");
 
 
-                    bookISBN.setText(qrIsbn);
-
-                    try {
-                        System.out.println("SSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAANNNNNNNNN");
-
-                        JSONObject BookInfoObject = new RetrieveDataJSON(BookDetailsAdder.this).execute().get();
-
-                        JSONArray items = BookInfoObject.getJSONArray("items");
-                        JSONObject customerIDD = items.getJSONObject(0).getJSONObject("volumeInfo");
-
-                        // For the Title
-                        String title = (String) customerIDD.get("title");
-
-                        // For the description
-                        String description = (String) customerIDD.get("description");
-
-                        // For the publisher
-                        String publisher = (String) customerIDD.get("publisher");
-
-                        // For the pagCount
-                        int pageCount = (int) customerIDD.get("pageCount");
-                        String pageCountString = Integer.toString(pageCount);
-
-                        // For the Image link
-                        String imageLink = (String) customerIDD.getJSONObject("imageLinks").get("thumbnail");
+                    // For the ISBN Number
+                    ISBN = customerIDD.getJSONArray("industryIdentifiers").getJSONObject(0);
+                    theISBNNo = (String) ISBN.get("identifier");
 
 
-                        // For the ISBN Number
-                        JSONObject ISBN = customerIDD.getJSONArray("industryIdentifiers").getJSONObject(0);
-                        String theISBNNo = (String) ISBN.get("identifier");
-
-
-                        // For printing all the authors
-                        String a = "";
-                        String authors = (String) customerIDD.getJSONArray("authors").get(0);
-                        for(int i = 0; i < customerIDD.getJSONArray("authors").length(); i++) {
-                            a += (String) customerIDD.getJSONArray("authors").get(i) + " ";
-                        }
-
-
-
-                        //  System.out.println(title + "\n " + description  + "\n " + publisher  + "\n " + pageCount  + "\n " + imageLink  + "\n " + theISBNNo  + "\n " + a );
-
-
-                        bookName.setText(title);
-                        bookDescription.setText(description);
-                        bookPublisher.setText(publisher);
-                        bookISBN.setText(theISBNNo);
-                        bookAuthor.setText(a);
-                        bookRating.setText("0");
-                        bookPage.setText(pageCountString);
-                        bookNumRating.setText("0");
-
-
-
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    } catch (ExecutionException e) {
-                        e.printStackTrace();
-                    } catch (JSONException e) {
-
-                        // TODO: PUT THE STUFF HERE TO HANDLE THE DATA NOT FOUND
-
-                        e.printStackTrace();
+                    // For printing all the authors
+                    a = "";
+                    authors = (String) customerIDD.getJSONArray("authors").get(0);
+                    for(int i = 0; i < customerIDD.getJSONArray("authors").length(); i++) {
+                        a += (String) customerIDD.getJSONArray("authors").get(i) + " ";
                     }
 
+
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                } catch (JSONException e) {
+
+                    e.printStackTrace();
                 }
 
-                else{
 
-                    Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
-                }
+                final DatabaseReference BookRef2 = database.getReference("/ Books/");
+                BookRef2.addValueEventListener(new ValueEventListener() {
+                    String Number;
 
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
+                            Number = BookSnapshot.getKey();
+                            System.out.println("qrIsbn:"+currentIsbn  + "\n" + "Number:"+Number + "\n");
 
+                            if (Number.equals(currentIsbn)) {
+                                isBook();
+                                System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
+                                break;
+                            } else {
+                                isntBook();
+                                System.out.println("AAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH");
+                            }
+                        }
+                    }
 
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
 
-
+                    }
+                });
             }
+
         });
 
+    }
+
+    public void isBook() {
+
+        if ((currentIsbn.matches("[0-9]+")) && (currentIsbn.length() == 13)) {
+            bookName.setText("");
+            bookDescription.setText("");
+            bookPublisher.setText("");
+            bookAuthor.setText("");
+            bookRating.setText("");
+            bookPage.setText("");
+            bookNumRating.setText("");
+            System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH");
+            makeInfoDialog();
+        }
+    }
 
 
+    public void isntBook(){
+        if((currentIsbn.matches("[0-9]+")) && (currentIsbn.length() == 13)){
+            System.out.println("PPPPPPPPPPPPPPPPAAAAAAAAUUUUUUULLLLLL");
 
+
+            bookISBN.setText(currentIsbn);
+
+
+            bookName.setText(title);
+            bookDescription.setText(description);
+            bookPublisher.setText(publisher);
+            bookISBN.setText(theISBNNo);
+            bookAuthor.setText(a);
+            bookRating.setText("0");
+            bookPage.setText(pageCountString);
+            bookNumRating.setText("0");
+        }
+        else{
+
+            Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
+        }
     }
     private void chooseImage() {
         Intent intent = new Intent();
@@ -359,7 +367,7 @@ public class BookDetailsAdder extends AppCompatActivity
     }
     private void uploadData() {
 
-        p++;
+
         BookRef.child(bookSISBN).child("BookName").setValue(bookSName);
         BookRef.child(bookSISBN).child("Author").setValue(bookSAuthor);
         BookRef.child(bookSISBN).child("ISBN").setValue(bookSISBN);
@@ -372,19 +380,11 @@ public class BookDetailsAdder extends AppCompatActivity
         BookRef.child(bookSISBN).child("Rating").setValue(bookSRating);
         BookRef.child(bookSISBN).child("NumRating").setValue(bookSNumRating);
 
-        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-
-
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-
         storageReference.child("books/"+bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 String imageAddress =uri.toString();
                 BookRef.child(bookSISBN).child("ImageAddress").setValue(imageAddress);
-
-                books[p] = new Book(bookSISBN,bookSName,bookSImg,bookSAuthor,bookSDescription,bookSPage,bookSPublisher,bookSRating,bookSNumCopys,bookSMaxCopys,bookSNumRating);
 
                 bookName.setText("");
                 bookDescription.setText("");
@@ -442,6 +442,7 @@ public class BookDetailsAdder extends AppCompatActivity
             }
         });
     }
+
 
 
 }

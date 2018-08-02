@@ -2,6 +2,7 @@ package com.example.ezmilja.booklogger;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -11,16 +12,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
-import static com.example.ezmilja.booklogger.BookDetailsAdder.qrIsbn;
-import static com.example.ezmilja.booklogger.BooksArray.books;
-import static com.example.ezmilja.booklogger.SplashScreen.j;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
+import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
+
 
 public class BookDetailsPage extends AppCompatActivity {
     TextView bookISBN;
@@ -33,11 +35,6 @@ public class BookDetailsPage extends AppCompatActivity {
     private ImageView bookImage;
     private Button btn_edit;
 
-    FirebaseStorage storage;
-    StorageReference storageReference;
-    FirebaseDatabase database = FirebaseDatabase.getInstance();
-    DatabaseReference BookRef = database.getReference("/ Books/");
-
     private String ISBN = "Not Found";
     private String Name = "Not Found";
     private String Author = "Not Found";
@@ -45,8 +42,8 @@ public class BookDetailsPage extends AppCompatActivity {
     private String Description  = "Not Found";
     private String Rating = "Not Found";
     private String Pages = "Not Found";
-    private int bookNumber=0;
-
+    private String imageAddress ;
+    private URL imageUrl;
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetails);
@@ -58,47 +55,45 @@ public class BookDetailsPage extends AppCompatActivity {
         bookDescription= findViewById(R.id.bookDescription);
         bookRating= findViewById(R.id.bookRating);
         bookPages= findViewById(R.id.bookPages);
-
         bookImage= findViewById(R.id.bookImage);
-
         btn_edit= findViewById(R.id.btn_edit);
-        getBook();
-        ISBN = books[bookNumber].isbn;
-        Name = books[bookNumber].bookName;
-        Author = books[bookNumber].author;
-        Publisher = books[bookNumber].publisher;
-        Description = books[bookNumber].description;
-        Rating = books[bookNumber].rating;
-        Pages = books[bookNumber].page;
 
-        bookISBN.setText("ISBN: "+ ISBN);
-        bookName.setText("Title: "+ Name);
-        bookAuthor.setText("Author: "+ Author);
-        bookPublisher.setText("Publisher: "+ Publisher);
-        bookDescription.setText("Description: "+ Description);
-        bookRating.setText("User Rating: "+ Rating);
-        bookPages.setText("Page Count:"+ Pages);
-
-
-
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
-
-        storageReference.child("books/"+ISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        BookRef.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onSuccess(Uri uri) {
-                String imageAddress =uri.toString();
-                Glide.with(BookDetailsPage.this).load(imageAddress).into(bookImage);
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                for(DataSnapshot BookSnapshot: dataSnapshot.getChildren()) {
+                    ISBN = (String) BookSnapshot.child(currentIsbn).child("ISBN").getValue();
+                    Name = (String) BookSnapshot.child(currentIsbn).child("BookName").getValue();
+                    Author = (String) BookSnapshot.child(currentIsbn).child("Author").getValue();
+                    Publisher = (String) BookSnapshot.child(currentIsbn).child("Publisher").getValue();
+                    Description = (String) BookSnapshot.child(currentIsbn).child("Description").getValue();
+                    Rating = (String) BookSnapshot.child(currentIsbn).child("Rating").getValue();
+                    Pages = (String) BookSnapshot.child(currentIsbn).child("Pages").getValue();
+                    imageAddress = (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
+
+                    bookISBN.setText("ISBN: "+ ISBN);
+                    bookName.setText("Title: "+ Name);
+                    bookAuthor.setText("Author: "+ Author);
+                    bookPublisher.setText("Publisher: "+ Publisher);
+                    bookDescription.setText("Description: "+ Description);
+                    bookRating.setText("User Rating: "+ Rating);
+                    bookPages.setText("Page Count:"+ Pages);
+                    System.out.println("qwepoiqwepoiqwepoi"+imageAddress);
+                    try {
+                        imageUrl =new URL(imageAddress);
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    Glide.with(BookDetailsPage.this).load(imageUrl).into(bookImage);
+                }
             }
-        }).addOnFailureListener(new OnFailureListener() {
+
             @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
-
-
-
 
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,18 +102,5 @@ public class BookDetailsPage extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
-
-    }
-
-    private void getBook(){
-        int k =(int) j;
-        for (int i = 0; i<k; i++){
-            if (books[i].isbn == qrIsbn){
-                i = bookNumber;
-            }
-        }
-
     }
 }

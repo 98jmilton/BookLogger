@@ -33,6 +33,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="60"
                     android:hint="ISBN"
+                    android:ems="13"
                     android:inputType="textPersonName" />
 
                 <Button
