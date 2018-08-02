@@ -58,7 +58,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="15"
+                    android:text="ISBN:"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookISBN"
@@ -66,16 +77,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="60"
-                    android:hint="ISBN"
+                    android:layout_weight="85"
+                    android:="ISBN"
                     android:inputType="textMultiLine" />
 
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100">
 
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Name:"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    />
                 <EditText
                     android:id="@+id/bookName"
                     android:layout_width="wrap_content"
@@ -83,9 +104,19 @@
                     android:layout_marginEnd="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
+                    android:layout_weight="40"
                     android:hint="Name"
                     android:inputType="textMultiLine" />
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Author:"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookAuthor"
@@ -93,7 +124,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
+                    android:layout_weight="40"
                     android:hint="Author"
                     android:inputType="textMultiLine" />
             </LinearLayout>
@@ -101,7 +132,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Publisher:"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookPublisher"
@@ -110,9 +152,20 @@
                     android:layout_marginEnd="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
+                    android:layout_weight="40"
                     android:hint="Publisher"
                     android:inputType="textMultiLine" />
+
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Page Count:"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookPages"
@@ -120,15 +173,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
+                    android:layout_weight="40"
                     android:hint="Page Count"
                     android:inputType="textMultiLine" />
+
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="15"
+                    android:text="Total ratings:"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookRating"
@@ -137,9 +202,19 @@
                     android:layout_marginEnd="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
-                    android:hint="Total Ratings (Default 0)"
+                    android:layout_weight="40"
+                    android:hint="Default 0"
                     android:inputType="textMultiLine" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Times rated:"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookNumRating"
@@ -147,15 +222,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
-                    android:hint="Times Rated (Default 0)"
+                    android:layout_weight="40"
+                    android:hint="Default 0"
                     android:inputType="textMultiLine" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="No: of Copys:"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookMaxCpys"
@@ -164,9 +250,20 @@
                     android:layout_marginEnd="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
-                    android:hint="Total number of this books"
+                    android:layout_weight="45"
+                    android:hint=""
                     android:inputType="textMultiLine" />
+
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="No: available"
+                    android:gravity="center"
+                    android:textSize="16dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookNumCpys"
@@ -174,8 +271,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
-                    android:hint="Number of books not checked out"
+                    android:layout_weight="45"
+                    android:hint=""
                     android:inputType="textMultiLine" />
             </LinearLayout>
 
