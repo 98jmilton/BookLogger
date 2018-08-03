@@ -4,15 +4,20 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.icu.util.IslamicCalendar;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -33,8 +38,12 @@ import com.google.firebase.storage.UploadTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.concurrent.ExecutionException;
 import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
@@ -48,6 +57,11 @@ public class BookDetailsAdder extends AppCompatActivity
 {
 
 
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private Bitmap mImageBitmap;
+    private String mCurrentPhotoPath;
+    private ImageView mImageView;
+
     private Button btn_autofill;
     private Button Scan;
     private Button btnSubmit;
@@ -55,7 +69,7 @@ public class BookDetailsAdder extends AppCompatActivity
     private Uri filePath;
     private boolean bookSubmit=false;
     private boolean isScanned=false;
-
+    private boolean camera=false;
     private final int PICK_IMAGE_REQUEST = 71;
 
 
@@ -98,9 +112,12 @@ public class BookDetailsAdder extends AppCompatActivity
     String a;
     String authors;
 
+    Typeface myTypeFace1;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetailsadder);
+        myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
 
 
                 imageView = (ImageView) findViewById(R.id.imgView);
@@ -125,8 +142,7 @@ public class BookDetailsAdder extends AppCompatActivity
                 choose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        chooseImage();
-                    }
+                        methodChoose();                    }
                 });
 
                 btnSubmit.setOnClickListener(new View.OnClickListener() {
@@ -283,8 +299,6 @@ public class BookDetailsAdder extends AppCompatActivity
 
 
             bookISBN.setText(currentIsbn);
-
-
             bookName.setText(title);
             bookDescription.setText(description);
             bookPublisher.setText(publisher);
@@ -299,39 +313,94 @@ public class BookDetailsAdder extends AppCompatActivity
             Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
         }
     }
+
+    private void methodChoose(){
+    final Dialog dialog = new Dialog(BookDetailsAdder.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.popupcam);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));;
+        dialog.show();
+
+    TextView title = (TextView) dialog.findViewById(R.id.title);
+        title.setTypeface(myTypeFace1);
+
+    Button Camera  = (Button) dialog.findViewById(R.id.Camera);
+    Button Gallery = (Button) dialog.findViewById(R.id.Gallery);
+
+        Camera.setTypeface(myTypeFace1);
+        Gallery.setTypeface(myTypeFace1);
+
+        Camera.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    takeImage();
+                    dialog.dismiss();
+                }
+            });
+
+        Gallery.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View view) {
+                    chooseImage();
+                    dialog.dismiss();
+
+                }
+            });
+
+    }
+
     private void chooseImage() {
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
+
+    private void takeImage(){
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+    }
+
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null )
-        {
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
             filePath = data.getData();
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            catch (IOException e)
-            {
+        }
+
+        else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK
+                && data != null && data.getData() != null) {
+            filePath = data.getData();
+            try {
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                imageView.setImageBitmap(bitmap);
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         }
     }
+
     private void uploadImage() {
 
-        if(filePath != null)
-        {
+        if (filePath != null) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
             bookSISBN = bookISBN.getText().toString();
             if ((bookSISBN.matches("[0-9]+")) || (bookSISBN.length() == 13)) {
-                final StorageReference ref = storageReference.child("/books/" + bookSISBN);
+                final StorageReference ref = storageReference.child(bookSISBN);
                 ref.putFile(filePath)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
@@ -357,7 +426,7 @@ public class BookDetailsAdder extends AppCompatActivity
                             }
                         });
             } else {
-                makeText(BookDetailsAdder.this, "Upload Failed " , LENGTH_SHORT).show();
+                makeText(BookDetailsAdder.this, "Upload Failed ", LENGTH_SHORT).show();
                 progressDialog.dismiss();
                 Toast.makeText(this, "Please insert book ISBN", Toast.LENGTH_LONG).show();
 
@@ -383,8 +452,8 @@ public class BookDetailsAdder extends AppCompatActivity
         storageReference.child("books/"+bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                String imageAddress =uri.toString();
-                BookRef.child(bookSISBN).child("ImageAddress").setValue(imageAddress);
+                 bookSImg =uri.toString();
+                BookRef.child(bookSISBN).child("ImageAddress").setValue(bookSImg);
 
                 bookName.setText("");
                 bookDescription.setText("");
@@ -410,10 +479,10 @@ public class BookDetailsAdder extends AppCompatActivity
 
     private void makeInfoDialog(){
         final Dialog dialog = new Dialog(BookDetailsAdder.this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.popup);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));;
         dialog.show();
-
-        Typeface myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
 
         TextView title = (TextView) dialog.findViewById(R.id.title);
         title.setTypeface(myTypeFace1);

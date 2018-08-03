@@ -1,6 +1,7 @@
 package com.example.ezmilja.booklogger;
 
 import android.content.Intent;
+import android.icu.util.IslamicCalendar;
 import android.net.Uri;
 import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
@@ -71,7 +72,7 @@ public class BookDetailsPage extends AppCompatActivity {
                     Rating = (String) BookSnapshot.child(currentIsbn).child("Rating").getValue();
                     Pages = (String) BookSnapshot.child(currentIsbn).child("Pages").getValue();
                     imageAddress = (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
-
+                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHH"+ ISBN);
                     bookISBN.setText("ISBN: "+ ISBN);
                     bookName.setText("Title: "+ Name);
                     bookAuthor.setText("Author: "+ Author);
@@ -79,7 +80,7 @@ public class BookDetailsPage extends AppCompatActivity {
                     bookDescription.setText("Description: "+ Description);
                     bookRating.setText("User Rating: "+ Rating);
                     bookPages.setText("Page Count:"+ Pages);
-                    System.out.println("qwepoiqwepoiqwepoi"+imageAddress);
+
                     try {
                         imageUrl =new URL(imageAddress);
                     } catch (MalformedURLException e) {

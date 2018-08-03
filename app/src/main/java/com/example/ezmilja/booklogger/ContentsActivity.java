@@ -25,7 +25,7 @@ public class ContentsActivity extends AppCompatActivity {
     static  String currentIsbn="";
 
     static FirebaseStorage storage = FirebaseStorage.getInstance();
-    final static public StorageReference storageReference = storage.getReference().child("/ books/");
+    final static public StorageReference storageReference = storage.getReference();
    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

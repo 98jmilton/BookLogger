@@ -67,8 +67,18 @@ public class BookDetailsEditor extends AppCompatActivity {
     String bookSImg = "";
     String bookSRating = "";
     String imageAddress = "";
-    URL imageUrl;
+    String imageUrl;
 
+    String ISBN;
+    String Name;
+    String Author;
+    String Publisher;
+    String Description;
+    String Rating;
+    String Pages;
+    String MxCopys;
+    String NumRating;
+    String NumCopys;
 
     EditText bookName;
     EditText bookAuthor;
@@ -104,28 +114,47 @@ public class BookDetailsEditor extends AppCompatActivity {
         bookNumRating = findViewById(R.id.bookNumRating);
         bookRating = findViewById(R.id.bookRating);
 
+
         BookRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
 
-                    bookName.setText(BookSnapshot.child(currentIsbn).child("BookName").getValue().toString());
-                    bookAuthor.setText(BookSnapshot.child(currentIsbn).child("Author").getValue().toString());
-                    bookISBN.setText(BookSnapshot.child(currentIsbn).child("Author").getValue().toString());
-                    bookMaxCopys.setText(BookSnapshot.child(currentIsbn).child("MaxCopys").getValue().toString());
-                    bookDescription.setText(BookSnapshot.child(currentIsbn).child("Description").getValue().toString());
-                    bookNumCopys.setText(BookSnapshot.child(currentIsbn).child("NumCopys").getValue().toString());
-                    bookPage.setText(BookSnapshot.child(currentIsbn).child("Pages").getValue().toString());
-                    bookPublisher.setText(BookSnapshot.child(currentIsbn).child("Publisher").getValue().toString());
-                    bookNumRating.setText(BookSnapshot.child(currentIsbn).child("NumRating").getValue().toString());
-                    bookRating.setText(BookSnapshot.child(currentIsbn).child("Rating").getValue().toString());
-                    imageAddress = (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue().toString();
-                    try {
-                        imageUrl = new URL(imageAddress);
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                    Glide.with(BookDetailsEditor.this).load(imageUrl).into(imageView);
+                    ISBN = (String)BookSnapshot.child(currentIsbn).child("ISBN").getValue();
+                    Name = (String) BookSnapshot.child(currentIsbn).child("BookName").getValue();
+                    Author = (String) BookSnapshot.child(currentIsbn).child("Author").getValue();
+                    Publisher = (String) BookSnapshot.child(currentIsbn).child("Publisher").getValue();
+                    Description = (String) BookSnapshot.child(currentIsbn).child("Description").getValue();
+                    Rating = (String) BookSnapshot.child(currentIsbn).child("Rating").getValue();
+                    Pages = (String) BookSnapshot.child(currentIsbn).child("Pages").getValue();
+                    MxCopys = (String) BookSnapshot.child(currentIsbn).child("MaxCopys").getValue();
+                    NumRating = (String) BookSnapshot.child(currentIsbn).child("NumRating").getValue();
+                    NumCopys = (String) BookSnapshot.child(currentIsbn).child("NumCopys").getValue();
+
+                    System.out.println("qwepoiqwepoiqwepoi"+ISBN);
+
+                    bookName.setText(Name);
+                    bookAuthor.setText(Author);
+                    bookISBN.setText(ISBN);
+                    bookMaxCopys.setText(MxCopys);
+                    bookDescription.setText(Description);
+                    bookNumCopys.setText(NumCopys);
+                    bookPage.setText(Pages);
+                    bookPublisher.setText(Publisher);
+                    bookNumRating.setText(NumRating);
+                    bookRating.setText(Rating);
+
+                    storageReference.child("books/"+currentIsbn).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                        @Override
+                        public void onSuccess(Uri uri) {
+                            System.out.println("qwepoiqwepoiqwepoi"+imageAddress);
+                            imageUrl =uri.toString();
+                            Glide.with(BookDetailsEditor.this).load(imageUrl).into(imageView);
+                        }
+                    });
+
+
+
                 }
             }
 
@@ -165,7 +194,6 @@ public class BookDetailsEditor extends AppCompatActivity {
                 bookSPage = bookPage.getText().toString();
                 bookSPublisher = bookPublisher.getText().toString();
                 bookSNumRating = bookNumRating.getText().toString();
-                bookSImg = "oops";
                 bookSRating = bookRating.getText().toString();
                 uploadData();
             }
@@ -210,7 +238,7 @@ public class BookDetailsEditor extends AppCompatActivity {
             progressDialog.show();
             bookSISBN = bookISBN.getText().toString();
             if ((bookSISBN.matches("[0-9]+")) || (bookSISBN.length() == 13)) {
-                final StorageReference ref = storageReference.child("/books/" + bookSISBN);
+                final StorageReference ref = storageReference.child(bookSISBN);
                 ref.putFile(filePath)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
@@ -248,23 +276,24 @@ public class BookDetailsEditor extends AppCompatActivity {
     private void uploadData() {
 
 
-        BookRef.child(bookSISBN).child("BookName").setValue(bookSName);
-        BookRef.child(bookSISBN).child("Author").setValue(bookSAuthor);
-        BookRef.child(bookSISBN).child("ISBN").setValue(bookSISBN);
-        BookRef.child(bookSISBN).child("MaxCopys").setValue(bookSMaxCopys);
-        BookRef.child(bookSISBN).child("Description").setValue(bookSDescription);
-        BookRef.child(bookSISBN).child("NumCopys").setValue(bookSNumCopys);
-        BookRef.child(bookSISBN).child("Pages").setValue(bookSPage);
-        BookRef.child(bookSISBN).child("Publisher").setValue(bookSPublisher);
-        BookRef.child(bookSISBN).child("ImageAddress").setValue(bookSImg);
-        BookRef.child(bookSISBN).child("Rating").setValue(bookSRating);
-        BookRef.child(bookSISBN).child("NumRating").setValue(bookSNumRating);
+        BookRef.child(" Books/").child(bookSISBN).child("BookName").setValue(bookSName);
+        BookRef.child(" Books/").child(bookSISBN).child("Author").setValue(bookSAuthor);
+        BookRef.child(" Books/").child(bookSISBN).child("ISBN").setValue(bookSISBN);
+        BookRef.child(" Books/").child(bookSISBN).child("MaxCopys").setValue(bookSMaxCopys);
+        BookRef.child(" Books/").child(bookSISBN).child("Description").setValue(bookSDescription);
+        BookRef.child(" Books/").child(bookSISBN).child("NumCopys").setValue(bookSNumCopys);
+        BookRef.child(" Books/").child(bookSISBN).child("Pages").setValue(bookSPage);
+        BookRef.child(" Books/").child(bookSISBN).child("Publisher").setValue(bookSPublisher);
+        BookRef.child(" Books/").child(bookSISBN).child("ImageAddress").setValue(bookSImg);
+        BookRef.child(" Books/").child(bookSISBN).child("Rating").setValue(bookSRating);
+        BookRef.child(" Books/").child(bookSISBN).child("NumRating").setValue(bookSNumRating);
 
-        storageReference.child("books/" + bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageReference.child(bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                String imageAddress = uri.toString();
-                BookRef.child(bookSISBN).child("ImageAddress").setValue(imageAddress);
+                bookSImg =uri.toString();
+                System.out.println(bookSImg);
+                BookRef.child(" Books/").child(bookSISBN).child("ImageAddress").setValue(bookSImg);
 
                 bookName.setText("");
                 bookDescription.setText("");

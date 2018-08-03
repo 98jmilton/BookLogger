@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:weightSum="100"
@@ -12,7 +13,10 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Book already present in database. Would you like to go to its details page?"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/common_google_signin_btn_text_dark_disabled"
+        android:text="Choose Image"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Display1"
         android:textColor="@color/colorPrimaryDark"
@@ -24,7 +28,7 @@
         android:layout_height="match_parent"
         >
     <Button
-        android:id="@+id/yes"
+        android:id="@+id/Camera"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -33,12 +37,12 @@
         android:layout_marginBottom="0.5dp"
         android:layout_weight="0.13"
         android:background="@drawable/buttonpopupl"
-        android:text="Yes"
+        android:text="Camera"
         android:textColor="@android:color/background_light"
         />
 
         <Button
-            android:id="@+id/no"
+            android:id="@+id/Gallery"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -47,7 +51,7 @@
             android:layout_marginRight="0.5dp"
             android:layout_marginBottom="0.5dp"
             android:background="@drawable/buttonpopupr"
-            android:text="no"
+            android:text="Gallery"
             android:textColor="@android:color/background_light" />
 
 </LinearLayout></LinearLayout>
