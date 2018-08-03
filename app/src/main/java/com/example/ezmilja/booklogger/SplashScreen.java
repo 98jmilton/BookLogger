@@ -63,9 +63,9 @@ import android.widget.Toast;
 
                     // Show an alert dialog here with request explanation
                     AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-                    builder.setMessage("Camera, Read Contacts and Write External" +
+                    builder.setMessage("Camera, Read and Write External" +
                             " Storage permissions are required to do the task.");
-                    builder.setTitle("Please grant those permissions");
+                    builder.setTitle("Please grant the following permissions");
                     builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
@@ -156,7 +156,7 @@ import android.widget.Toast;
                                 public void run() {
                                     try {
                                         sleep(2000);
-                                        Intent intent = new Intent(getApplicationContext(), ContentsActivity.class);
+                                        Intent intent = new Intent(getApplicationContext(), SplashScreen.class);
                                         startActivity(intent);
                                         finish();
                                     } catch (InterruptedException e) {
