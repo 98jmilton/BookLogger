@@ -114,6 +114,9 @@ public class BookDetailsAdder extends AppCompatActivity
 
     Typeface myTypeFace1;
 
+    private static final int CONTENT_REQUEST=1337;
+    private File output=null;
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetailsadder);
@@ -359,33 +362,52 @@ public class BookDetailsAdder extends AppCompatActivity
     }
 
     private void takeImage(){
-        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-        startActivity(intent);
+
+        Intent i=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        File dir=
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+
+        output=new File(dir, "CameraContentDemo.jpeg");
+        i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(output));
+
+        startActivityForResult(i, CONTENT_REQUEST);
     }
+
+
 
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                imageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK
+//                && data != null && data.getData() != null) {
+//            filePath = data.getData();
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+//                imageView.setImageBitmap(bitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//
+//        else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK
+//                && data != null && data.getData() != null) {
+//            filePath = data.getData();
+//            try {
+//                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+//                imageView.setImageBitmap(bitmap);
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
 
-        else if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK
-                && data != null && data.getData() != null) {
-            filePath = data.getData();
-            try {
-                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
-                imageView.setImageBitmap(bitmap);
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (requestCode == CONTENT_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Intent i = new Intent(Intent.ACTION_VIEW);
+
+                i.setDataAndType(Uri.fromFile(output), "image/jpeg");
+                startActivity(i);
+                finish();
             }
         }
     }
