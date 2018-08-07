@@ -34,7 +34,11 @@
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="20"
-                    android:text="Scan ISBN" />
+                    android:text="Scan ISBN"
+                    android:background="@drawable/buttonleft"
+                    android:textColor="#ffffff"
+
+                    />
 
                 <Button
                     android:id="@+id/btn_autofill"
@@ -43,7 +47,11 @@
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="20"
-                    android:text="AutoFill Data" />
+                    android:text="AutoFill Data"
+                    android:background="@drawable/buttoncenter"
+                    android:textColor="#ffffff"
+
+                    />
 
                 <Button
                     android:id="@+id/btn_submit"
@@ -52,7 +60,11 @@
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="20"
-                    android:text="Submit Book Data" />
+                    android:text="Submit Book Data"
+                    android:background="@drawable/buttonright"
+                    android:textColor="#ffffff"
+
+                    />
 
             </LinearLayout>
             <LinearLayout
@@ -364,7 +376,9 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="1.0" />
+                        app:layout_constraintVertical_bias="1.0"
+                        android:textColor="#ffffff"
+                        android:background="@drawable/mybuttonlarge"/>
 
                     <Button
                         android:id="@+id/send"
@@ -379,7 +393,9 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
-                        app:layout_constraintStart_toStartOf="parent" />
+                        app:layout_constraintStart_toStartOf="parent"
+                        android:textColor="#ffffff"
+                        android:background="@drawable/mybuttonlarge"/>
 
                 </LinearLayout>
 

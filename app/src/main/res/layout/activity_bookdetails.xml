@@ -125,8 +125,6 @@
                     android:textColor="@color/colorPrimary"
                     android:textSize="24sp" />
 
-
-
                 <TextView
                     android:id="@+id/bookPages"
                     android:layout_width="wrap_content"
@@ -153,7 +151,10 @@
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="20"
-                    android:text="Edit Book" />
+                    android:text="Edit Book"
+                    android:background="@drawable/mybuttonlarge"
+                    android:textColor="#ffffff"
+                    />
 
             </LinearLayout>
 

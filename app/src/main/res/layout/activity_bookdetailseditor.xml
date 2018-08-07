@@ -25,16 +25,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/bookISBN"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="2dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_weight="60"
-                    android:hint="ISBN"
-                    android:ems="13"
-                    android:inputType="textPersonName" />
+
 
                 <Button
                     android:id="@+id/btn_submit"
@@ -44,7 +35,9 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="20"
                     android:text="Ammend Data"
-                     />
+                    android:background="@drawable/buttonleft"
+                    android:textColor="#ffffff"
+                    />
                 <Button
                     android:id="@+id/btn_delete"
                     android:layout_width="wrap_content"
@@ -52,15 +45,59 @@
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
                     android:layout_weight="20"
-                    android:text="Delete Book" />
+                    android:text="Delete Book"
+                    android:textColor="#ffffff"
+                    android:background="@drawable/buttonright"
+                    />
 
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100">
 
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="10"
+                    android:text="ISBN:"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"
+                    />
+
+                <EditText
+                    android:id="@+id/bookISBN"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_weight="85"
+                    android:hint="ISBN"
+                    android:inputType="textMultiLine" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Name:"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"
+
+                    />
                 <EditText
                     android:id="@+id/bookName"
                     android:layout_width="wrap_content"
@@ -68,9 +105,28 @@
                     android:layout_marginEnd="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
+                    android:layout_weight="85"
                     android:hint="Name"
                     android:inputType="textMultiLine" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Author:"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookAuthor"
@@ -78,16 +134,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
+                    android:layout_weight="85"
                     android:hint="Author"
                     android:inputType="textMultiLine" />
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100">
 
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Publisher:"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"
+                    />
                 <EditText
                     android:id="@+id/bookPublisher"
                     android:layout_width="wrap_content"
@@ -95,9 +162,28 @@
                     android:layout_marginEnd="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
+                    android:layout_weight="85"
                     android:hint="Publisher"
                     android:inputType="textMultiLine" />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="10"
+                    android:text="Page Count:"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"  />
 
                 <EditText
                     android:id="@+id/bookPages"
@@ -105,15 +191,27 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
+                    android:layout_weight="85"
                     android:hint="Page Count"
                     android:inputType="textMultiLine" />
-            </LinearLayout>
 
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:text="Total ratings:"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"                    />
 
                 <EditText
                     android:id="@+id/bookRating"
@@ -122,9 +220,20 @@
                     android:layout_marginEnd="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
-                    android:hint="Total Ratings (Default 0)"
+                    android:layout_weight="25"
+                    android:hint="Default 0"
                     android:inputType="textMultiLine" />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="25"
+                    android:text="Times rated:"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"                    />
 
                 <EditText
                     android:id="@+id/bookNumRating"
@@ -132,15 +241,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
-                    android:hint="Times Rated (Default 0)"
+                    android:layout_weight="25"
+                    android:hint="Default 0"
                     android:inputType="textMultiLine" />
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="100">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:text="No: of Copys:"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"                    />
 
                 <EditText
                     android:id="@+id/bookMaxCpys"
@@ -149,10 +269,22 @@
                     android:layout_marginEnd="2dp"
                     android:layout_marginStart="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
-                    android:ems="10"
-                    android:hint="Total number of this books"
+                    android:layout_weight="30"
+                    android:hint=""
                     android:inputType="textMultiLine" />
+
+
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="20"
+                    android:text="No: available"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"
+                    />
 
                 <EditText
                     android:id="@+id/bookNumCpys"
@@ -160,16 +292,25 @@
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="2dp"
                     android:layout_marginTop="8dp"
-                    android:layout_weight="50"
-                    android:hint="Number of books not checked out"
+                    android:layout_weight="30"
+                    android:hint=""
                     android:inputType="textMultiLine" />
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
-
+                <TextView
+                    android:id="@+id/textView15"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="5"
+                    android:text="Description"
+                    android:gravity="center"
+                    android:textSize="19dp"
+                    android:layout_marginStart="2dp"
+                    android:layout_marginTop="8dp"
+                    />
                 <EditText
                     android:id="@+id/bookDescription"
                     android:layout_width="wrap_content"
@@ -181,7 +322,6 @@
                     android:hint="Book Description"
                     android:inputType="textMultiLine" />
             </LinearLayout>
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -222,7 +362,9 @@
                         app:layout_constraintHorizontal_bias="0.0"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="1.0" />
+                        app:layout_constraintVertical_bias="1.0"
+                        android:textColor="#ffffff"
+                        android:background="@drawable/mybuttonlarge"/>
 
 
                     <Button
@@ -238,6 +380,8 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
+                        android:textColor="#ffffff"
+                        android:background="@drawable/mybuttonlarge"
                         app:layout_constraintStart_toStartOf="parent" />
 
                 </LinearLayout>
