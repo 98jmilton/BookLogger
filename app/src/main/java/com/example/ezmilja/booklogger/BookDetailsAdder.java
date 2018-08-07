@@ -48,7 +48,6 @@ import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
 import static com.example.ezmilja.booklogger.ContentsActivity.database;
-import static com.example.ezmilja.booklogger.ContentsActivity.h;
 import static com.example.ezmilja.booklogger.ContentsActivity.storageReference;
 
 
@@ -149,7 +148,7 @@ public class BookDetailsAdder extends AppCompatActivity
 
 
 
-        Scan = (Button) findViewById(R.id.btn_scan);
+        Scan = findViewById(R.id.btn_scan);
         Scan.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -162,7 +161,7 @@ public class BookDetailsAdder extends AppCompatActivity
         });
 
 
-        btn_autofill = (Button) findViewById(R.id.btn_autofill);
+        btn_autofill = findViewById(R.id.btn_autofill);
         btn_autofill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

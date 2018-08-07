@@ -1,7 +1,7 @@
 package com.example.ezmilja.booklogger;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.media.Image;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,16 +10,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import static com.example.ezmilja.booklogger.ContentsActivity.books;
-
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolder> {
 
     private Book[] images;
-    Context context;
+    private Context context;
 
-    public  BookAdapter(Book[] books, Context context_){
+    BookAdapter(Book[] books, Context context_){
 
         this.images = books;
         this.context = context_;
@@ -29,24 +28,19 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolde
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.custom_layout, parent, false);
-        ImageViewHolder imageViewHolder = new ImageViewHolder(view);
-        return imageViewHolder;
+        return new ImageViewHolder(view);
     }
 
     @SuppressLint("SetTextI18n")
     @Override
-    public void onBindViewHolder(ImageViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
 
         Glide.with(this.context)
                 .load(books[position].imageAddress)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(holder.getImage());
 
-
-
-
-
-        holder.BookDetails.setText( books[position].bookName +"\n \n"+ books[position].author);
+        holder.BookDetails.setText( books[position].bookName +"\n"+ books[position].author+"\n"+ books[position].genre);
     }
 
     @Override
@@ -59,12 +53,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolde
         ImageView BookImage;
         TextView BookDetails;
 
-        public ImageViewHolder(View itemView) {
+        ImageViewHolder(View itemView) {
             super(itemView);
             BookImage = itemView.findViewById(R.id.imageViewCustom);
             BookDetails = itemView.findViewById(R.id.bookDetails);
-
         }
-        public ImageView getImage(){ return this.BookImage;}
+
+        public ImageView getImage(){
+            return this.BookImage;
+        }
     }
 }

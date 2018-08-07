@@ -18,80 +18,68 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 public class ContentsActivity extends AppCompatActivity {
-    public static int h=0;
+
     static int j;
     static FirebaseDatabase database = FirebaseDatabase.getInstance();
     final static public DatabaseReference BookRef = database.getReference();
 
     static  String currentIsbn="";
     int i = 0;
-    public static Book[] books = new Book[j];
+    public static Book[] books;
     static FirebaseStorage storage = FirebaseStorage.getInstance();
     final static public StorageReference storageReference = storage.getReference();
    @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_contents);
-                    createButton();
+       super.onCreate(savedInstanceState);
+       setContentView(R.layout.activity_contents);
+       createButton();
 
        FirebaseDatabase database = FirebaseDatabase.getInstance();
-       DatabaseReference BookRef = database.getReference("/ Books/");
+       DatabaseReference BookRef = database.getReference("/Books/");
 
-
-
-
-       //Read data from database
        BookRef.addValueEventListener(new ValueEventListener() {
            @Override
-           public void onDataChange(DataSnapshot dataSnapshot) {
-               j = (int) dataSnapshot.getChildrenCount();
-
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               j= (int) dataSnapshot.getChildrenCount();
            }
-
        @Override
        public void onCancelled(@NonNull DatabaseError databaseError) {
 
        }
    });
-       BookRef.child("/ Books/").addListenerForSingleValueEvent(new ValueEventListener() {
 
-           @Override
-           public void onDataChange(DataSnapshot dataSnapshot) {
-
-               h = (int) dataSnapshot.getChildrenCount();
-               System.out.println(h);
-           }
-
-           @Override
-           public void onCancelled(DatabaseError databaseError) {
-               // ...
-           }
-       });
-
+       books = new Book[j];
        BookRef.addValueEventListener(new ValueEventListener() {
-           String Number;
+           int i = 0;
+
            @Override
-           public void onDataChange(DataSnapshot dataSnapshot) {
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               j= (int) dataSnapshot.getChildrenCount();
+               books = new Book[j];
+               System.out.println("EEEEEEEEEEEEE\nHHHHHHHHHHHHH");
+
                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
 
-                       String name         = (String) BookSnapshot.child ("BookName")    .getValue();
-                       String imageAddress = (String) BookSnapshot.child ("ImageAddress").getValue();
-                       String author       = (String) BookSnapshot.child ("Author")      .getValue();
-                       String genre        = (String) BookSnapshot.child ("Genre")       .getValue();
+                   String bookName     = (String) BookSnapshot.child("BookName").getValue();
+                   String author       = (String) BookSnapshot.child("Author").getValue();
+                   String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
+                   String genre        = (String) BookSnapshot.child("Genre").getValue();
 
-                       books[i] = new Book(name, imageAddress, author, genre);
-                       i++;
-                   }
+                   books[i] = new Book(bookName, imageAddress, author, genre);
+                   i++;
+
+                   System.out.println("REEEEEEEEEEEEEEE");
                }
-
+           }
 
            @Override
-           public void onCancelled(DatabaseError databaseError) {
+           public void onCancelled(@NonNull DatabaseError databaseError) {
 
            }
        });
-   }
 
+       System.out.println("");
+   }
 
     private void createButton(){
 
@@ -112,27 +100,13 @@ public class ContentsActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         btn_bookList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ContentsActivity.this, BookDetailsAdder.class);
-                startActivity(intent);
-            }
-        });
-
-
-        Button btn1 = (Button) findViewById(R.id.btn_bookList);
-        btn1.setTypeface(myTypeFace1);
-
-        btn1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
                 Intent intent = new Intent(ContentsActivity.this, BookList.class);
                 startActivity(intent);
             }
         });
-
-
     }
-
 }

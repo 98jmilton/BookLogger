@@ -34,7 +34,6 @@ public class BookDetailsPage extends AppCompatActivity {
     TextView bookRating;
     TextView bookPages;
     private ImageView bookImage;
-    private Button btn_edit;
 
     private String ISBN = "Not Found";
     private String Name = "Not Found";
@@ -57,7 +56,6 @@ public class BookDetailsPage extends AppCompatActivity {
         bookRating= findViewById(R.id.bookRating);
         bookPages= findViewById(R.id.bookPages);
         bookImage= findViewById(R.id.bookImage);
-        btn_edit= findViewById(R.id.btn_edit);
 
         BookRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -96,6 +94,7 @@ public class BookDetailsPage extends AppCompatActivity {
             }
         });
 
+        Button btn_edit = findViewById(R.id.btn_edit);
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

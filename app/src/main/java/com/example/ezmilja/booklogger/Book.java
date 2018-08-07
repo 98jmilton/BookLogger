@@ -4,9 +4,9 @@ public class Book {
     public String bookName;
     public String imageAddress;
     public String author;
-    public String description;
+    public String genre;
 
-    public Book(String bookName, String imageAddress, String author, String genre){
+     Book(String bookName, String imageAddress, String author, String genre){
 
         this.bookName =bookName;
         this.imageAddress = imageAddress;
