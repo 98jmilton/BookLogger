@@ -22,22 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BookDetailsAdder">
-
-        </activity>
-        <activity android:name=".ContentsActivity">
-
-        </activity>
-
-        <activity android:name=".ScanActivity">
-
-        </activity>
-        <activity android:name=".BookDetailsPage">
-
-        </activity>
-        <activity android:name=".BookDetailsEditor">
-
-        </activity>
+        <activity android:name=".BookDetailsAdder"></activity>
+        <activity android:name=".ContentsActivity"></activity>
+        <activity android:name=".ScanActivity"></activity>
+        <activity android:name=".BookDetailsPage"></activity>
+        <activity android:name=".BookDetailsEditor"></activity>
+        <activity android:name=".BookList"></activity>
     </application>
 
 </manifest>

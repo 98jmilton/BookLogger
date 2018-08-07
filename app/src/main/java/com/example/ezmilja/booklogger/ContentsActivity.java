@@ -2,6 +2,7 @@ package com.example.ezmilja.booklogger;
 
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -18,12 +19,13 @@ import com.google.firebase.storage.StorageReference;
 
 public class ContentsActivity extends AppCompatActivity {
     public static int h=0;
-
+    static int j;
     static FirebaseDatabase database = FirebaseDatabase.getInstance();
     final static public DatabaseReference BookRef = database.getReference();
 
     static  String currentIsbn="";
-
+    int i = 0;
+    public static Book[] books = new Book[j];
     static FirebaseStorage storage = FirebaseStorage.getInstance();
     final static public StorageReference storageReference = storage.getReference();
    @Override
@@ -32,6 +34,25 @@ public class ContentsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_contents);
                     createButton();
 
+       FirebaseDatabase database = FirebaseDatabase.getInstance();
+       DatabaseReference BookRef = database.getReference("/ Books/");
+
+
+
+
+       //Read data from database
+       BookRef.addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               j = (int) dataSnapshot.getChildrenCount();
+
+           }
+
+       @Override
+       public void onCancelled(@NonNull DatabaseError databaseError) {
+
+       }
+   });
        BookRef.child("/ Books/").addListenerForSingleValueEvent(new ValueEventListener() {
 
            @Override
@@ -47,20 +68,41 @@ public class ContentsActivity extends AppCompatActivity {
            }
        });
 
+       BookRef.addValueEventListener(new ValueEventListener() {
+           String Number;
+           @Override
+           public void onDataChange(DataSnapshot dataSnapshot) {
+               for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
 
+                       String name         = (String) BookSnapshot.child ("BookName")    .getValue();
+                       String imageAddress = (String) BookSnapshot.child ("ImageAddress").getValue();
+                       String author       = (String) BookSnapshot.child ("Author")      .getValue();
+                       String genre        = (String) BookSnapshot.child ("Genre")       .getValue();
+
+                       books[i] = new Book(name, imageAddress, author, genre);
+                       i++;
+                   }
+               }
+
+
+           @Override
+           public void onCancelled(DatabaseError databaseError) {
+
+           }
+       });
    }
 
 
     private void createButton(){
 
         Typeface myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
-        Button btn_booksEditor = (Button) findViewById(R.id.btn_bookAdder);
+        Button btn_booksEditor = findViewById(R.id.btn_bookAdder);
         btn_booksEditor.setTypeface(myTypeFace1);
 
-        Button btn_bookList = (Button) findViewById(R.id.btn_bookList);
+        Button btn_bookList = findViewById(R.id.btn_bookList);
         btn_bookList.setTypeface(myTypeFace1);
 
-        TextView textView2 = (TextView) findViewById(R.id.textView2);
+        TextView textView2 = findViewById(R.id.textView2);
         textView2.setTypeface(myTypeFace1);
 
         btn_booksEditor.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +127,7 @@ public class ContentsActivity extends AppCompatActivity {
         btn1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(ContentsActivity.this, ScanActivity.class);
+                Intent intent = new Intent(ContentsActivity.this, BookList.class);
                 startActivity(intent);
             }
         });

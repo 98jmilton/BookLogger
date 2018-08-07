@@ -15,10 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
-
-
-
     public class SplashScreen extends AppCompatActivity {
 
      public static long j=0;
