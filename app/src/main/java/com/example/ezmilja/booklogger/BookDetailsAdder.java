@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
@@ -55,7 +56,7 @@ public class BookDetailsAdder extends AppCompatActivity
 {
     static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    Button btn_autofill,Scan,btnSubmit,send,choose;
+    Button btn_autofill,Scan,btnSubmit,send,choose,btnCamera;
     ImageView imageView;
     private Uri filePath;
     private boolean bookSubmit=false;
@@ -71,8 +72,12 @@ public class BookDetailsAdder extends AppCompatActivity
     JSONObject ISBN;
     Typeface myTypeFace1;
 
-    private static final int CONTENT_REQUEST=1337;
-    private File output=null;
+    private static int CONTENT_REQUEST=1337;
+    private File output;
+
+    String realPath;
+
+    boolean PhotoTaken = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -84,7 +89,7 @@ public class BookDetailsAdder extends AppCompatActivity
                 send = (Button) findViewById(R.id.send);
                 choose= (Button) findViewById(R.id.btnChoose);
                 btnSubmit = (Button) findViewById(R.id.btn_submit);
-
+                btnCamera= (Button) findViewById(R.id.btncamera);
                  bookName       =findViewById(R.id.bookName);
                  bookAuthor     =findViewById(R.id.bookAuthor);
                  bookISBN       =findViewById(R.id.bookISBN);
@@ -102,9 +107,17 @@ public class BookDetailsAdder extends AppCompatActivity
                 choose.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        methodChoose();                    }
+                        chooseImage();
+                    }
                 });
 
+                btnCamera.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View view) {
+                        takeImage();
+                    }
+                });
                 btnSubmit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -274,44 +287,10 @@ public class BookDetailsAdder extends AppCompatActivity
         }
     }
 
-    private void methodChoose(){
-    final Dialog dialog = new Dialog(BookDetailsAdder.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.popupcam);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));;
-        dialog.show();
 
-    TextView title = (TextView) dialog.findViewById(R.id.title);
-        title.setTypeface(myTypeFace1);
-
-    Button Camera  = (Button) dialog.findViewById(R.id.Camera);
-    Button Gallery = (Button) dialog.findViewById(R.id.Gallery);
-
-        Camera.setTypeface(myTypeFace1);
-        Gallery.setTypeface(myTypeFace1);
-
-        Camera.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    takeImage();
-                    dialog.dismiss();
-                }
-            });
-
-        Gallery.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View view) {
-                    chooseImage();
-                    dialog.dismiss();
-
-                }
-            });
-
-    }
 
     private void chooseImage() {
+        PhotoTaken = false;
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -319,15 +298,13 @@ public class BookDetailsAdder extends AppCompatActivity
     }
 
     private void takeImage(){
-
         Intent i=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         File dir=
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM);
+                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
 
         output=new File(dir, "CameraContentDemo.jpeg");
         i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(output));
-
-        startActivityForResult(i, CONTENT_REQUEST);
+        startActivity(i);
     }
 
 
@@ -336,23 +313,32 @@ public class BookDetailsAdder extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_REQUEST ) {
-            filePath = data.getData();
+
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
+
+          filePath = data.getData();
+
+
+            realPath = ImageFilePath.getPath(BookDetailsAdder.this, data.getData());
+//                realPath = RealPathUtil.getRealPathFromURI_API19(this, data.getData());
+
+            Toast.makeText(BookDetailsAdder.this,"onActivityResult: file path : " + realPath,LENGTH_LONG).show();
+
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                // Log.d(TAG, String.valueOf(bitmap));
+
+
                 imageView.setImageBitmap(bitmap);
+                imageView.setVisibility(View.VISIBLE);
+
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-        }
+            }}
 
-        else if (requestCode == CONTENT_REQUEST ){
-            if( resultCode == RESULT_OK) {
-            Intent i = new Intent(Intent.ACTION_VIEW);
-            i.setDataAndType(Uri.fromFile(output), "image/jpeg");
-            startActivity(i);
-            //filePath = Uri.fromFile(output);
-            finish();}
+
+         else {
+            Toast.makeText(this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
         }
 
 
