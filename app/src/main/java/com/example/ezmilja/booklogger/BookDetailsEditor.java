@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -34,18 +35,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static android.widget.Toast.*;
-import static com.example.ezmilja.booklogger.BookDetailsAdder.qrIsbn;
 import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
 import static com.example.ezmilja.booklogger.ContentsActivity.storageReference;
-import static com.example.ezmilja.booklogger.SplashScreen.j;
 
 public class BookDetailsEditor extends AppCompatActivity {
-    int k = (int) j;
-    private Button choose;
-    private Button btnSubmit;
-    private Button uploadImage;
-    private Button Delete;
+    private Button choose,btnSubmit,uploadImage,Delete;
     private ImageView imageView;
     private Uri filePath;
     private boolean isBook = false;
@@ -55,34 +50,12 @@ public class BookDetailsEditor extends AppCompatActivity {
 
     private final int PICK_IMAGE_REQUEST = 71;
 
-    String bookSName = "";
-    String bookSAuthor = "";
-    String bookSISBN = "";
-    String bookSMaxCopys = "";
-    String bookSDescription = "";
-    String bookSNumCopys = "";
-    String bookSPage = "";
-    String bookSPublisher = "";
-    String bookSNumRating = "";
-    String bookSImg = "";
-    String bookSRating = "";
-    String imageAddress = "";
+    String urlstring,bookSName,bookSAuthor,bookSISBN,bookSMaxCopys,bookSDescription,bookSNumCopys,bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSRating,imageAddress,ISBN,Name,Author,Publisher,Description,Rating,Pages,MxCopys,NumRating,NumCopys;
     URL imageUrl;
 
-    String ISBN;
-    String Name;
-    String Author;
-    String Publisher;
-    String Description;
-    String Rating;
-    String Pages;
-    String MxCopys;
-    String NumRating;
-    String NumCopys;
-
+    public static TextView bookISBN;
     EditText bookName;
     EditText bookAuthor;
-    public static EditText bookISBN;
     EditText bookMaxCopys;
     EditText bookDescription;
     EditText bookNumCopys;
@@ -103,9 +76,10 @@ public class BookDetailsEditor extends AppCompatActivity {
         btnSubmit = findViewById(R.id.btn_submit);
         Delete = findViewById(R.id.btn_delete);
 
+        bookISBN = findViewById(R.id.bookISBN);
+
         bookName = findViewById(R.id.bookName);
         bookAuthor = findViewById(R.id.bookAuthor);
-        bookISBN = findViewById(R.id.bookISBN);
         bookMaxCopys = findViewById(R.id.bookMaxCpys);
         bookDescription = findViewById(R.id.bookDescription);
         bookNumCopys = findViewById(R.id.bookNumCpys);
@@ -172,15 +146,22 @@ public class BookDetailsEditor extends AppCompatActivity {
         Delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String book = qrIsbn;
-                BookRef.child(book).removeValue();
+                String book = currentIsbn;
+
+                BookRef.child("/Books/").child(book).removeValue();
+
+                Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+                finish();
+                startActivity(intent);
             }
+
         });
 
 
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                currentIsbn = bookISBN.getText().toString();
 
                 bookSName = bookName.getText().toString();
                 bookSAuthor = bookAuthor.getText().toString();
@@ -193,15 +174,20 @@ public class BookDetailsEditor extends AppCompatActivity {
                 bookSNumRating = bookNumRating.getText().toString();
                 bookSRating = bookRating.getText().toString();
                 uploadData();
-            }
 
-        });
+
+        }});
 
         uploadImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                uploadImage();
-            }
+                currentIsbn = bookISBN.getText().toString();
+                if (currentIsbn.length() == 13) {
+                    uploadImage();
+                }
+                else{
+                    Toast.makeText(BookDetailsEditor.this,"Please enter a 13 digit ISBN" ,LENGTH_LONG).show();
+                }            }
         });
     }
 
@@ -272,45 +258,61 @@ public class BookDetailsEditor extends AppCompatActivity {
 
     private void uploadData() {
 
+        urlstring = String.valueOf(imageUrl);
 
-        BookRef.child(bookSISBN).child("BookName").setValue(bookSName);
-        BookRef.child(bookSISBN).child("Author").setValue(bookSAuthor);
-        BookRef.child(bookSISBN).child("ISBN").setValue(bookSISBN);
-        BookRef.child(bookSISBN).child("MaxCopys").setValue(bookSMaxCopys);
-        BookRef.child(bookSISBN).child("Description").setValue(bookSDescription);
-        BookRef.child(bookSISBN).child("NumCopys").setValue(bookSNumCopys);
-        BookRef.child(bookSISBN).child("Pages").setValue(bookSPage);
-        BookRef.child(bookSISBN).child("Publisher").setValue(bookSPublisher);
-        BookRef.child(bookSISBN).child("ImageAddress").setValue(bookSImg);
-        BookRef.child(bookSISBN).child("Rating").setValue(bookSRating);
-        BookRef.child(bookSISBN).child("NumRating").setValue(bookSNumRating);
+        BookRef.child("/Books/").child(currentIsbn).child("BookName").setValue(bookSName);
+        BookRef.child("/Books/").child(currentIsbn).child("Author").setValue(bookSAuthor);
+        BookRef.child("/Books/").child(currentIsbn).child("ISBN").setValue(currentIsbn);
+        BookRef.child("/Books/").child(currentIsbn).child("MaxCopys").setValue(bookSMaxCopys);
+        BookRef.child("/Books/").child(currentIsbn).child("Description").setValue(bookSDescription);
+        BookRef.child("/Books/").child(currentIsbn).child("NumCopys").setValue(bookSNumCopys);
+        BookRef.child("/Books/").child(currentIsbn).child("Pages").setValue(bookSPage);
+        BookRef.child("/Books/").child(currentIsbn).child("Publisher").setValue(bookSPublisher);
+        BookRef.child("/Books/").child(currentIsbn).child("Rating").setValue(bookSRating);
+        BookRef.child("/Books/").child(currentIsbn).child("NumRating").setValue(bookSNumRating);
+        BookRef.child("/Books/").child(currentIsbn).child("ImageAddress").setValue(urlstring);
+        if(bookSubmit) {
+            storageReference.child(currentIsbn).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    bookSImg = uri.toString();
+                    System.out.println("qedpqwjdpqwpowj" + bookSImg);
+                    BookRef.child("/Books/").child(currentIsbn).child("ImageAddress").setValue(bookSImg);
 
-        storageReference.child(bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                bookSImg =uri.toString();
-                System.out.println(bookSImg);
-                BookRef.child("/Books/").child(bookSISBN).child("ImageAddress").setValue(bookSImg);
+                    bookName.setText("");
+                    bookDescription.setText("");
+                    bookPublisher.setText("");
+                    bookISBN.setText("");
+                    bookAuthor.setText("");
+                    bookRating.setText("");
+                    bookPage.setText("");
+                    bookNumRating.setText("");
 
-                bookName.setText("");
-                bookDescription.setText("");
-                bookPublisher.setText("");
-                bookISBN.setText("");
-                bookAuthor.setText("");
-                bookRating.setText("");
-                bookPage.setText("");
-                bookNumRating.setText("");
+                    Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+                    startActivity(intent);
+                    finish();
 
-                Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
-                startActivity(intent);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        }
+        else{bookName.setText("");
+            bookDescription.setText("");
+            bookPublisher.setText("");
+            bookISBN.setText("");
+            bookAuthor.setText("");
+            bookRating.setText("");
+            bookPage.setText("");
+            bookNumRating.setText("");
 
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+            Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
     }
 }

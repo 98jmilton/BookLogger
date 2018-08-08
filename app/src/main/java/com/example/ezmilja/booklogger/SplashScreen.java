@@ -15,10 +15,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 import android.widget.Toast;
 
-    public class SplashScreen extends AppCompatActivity {
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
 
-     public static long j=0;
+import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
+
+public class SplashScreen extends AppCompatActivity {
+
      public static int p=0;
+    public static int h=0;
 
         private static final int MY_PERMISSIONS_REQUEST_CODE = 123;
 
@@ -37,7 +43,20 @@ import android.widget.Toast;
         mActivity = SplashScreen.this;
 
         checkPermission();
+        BookRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                h = (int) dataSnapshot.getChildrenCount();
+                System.out.println(h);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // ...
+            }
+        });
     }
 
         protected void checkPermission(){

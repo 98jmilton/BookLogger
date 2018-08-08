@@ -17,6 +17,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+import static com.example.ezmilja.booklogger.SplashScreen.h;
+
 public class ContentsActivity extends AppCompatActivity {
 
     static int j;
@@ -24,7 +26,6 @@ public class ContentsActivity extends AppCompatActivity {
     final static public DatabaseReference BookRef = database.getReference();
 
     static  String currentIsbn="";
-    int i = 0;
     public static Book[] books;
     static FirebaseStorage storage = FirebaseStorage.getInstance();
     final static public StorageReference storageReference = storage.getReference();
@@ -33,6 +34,8 @@ public class ContentsActivity extends AppCompatActivity {
        super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_contents);
        createButton();
+
+       books = new Book[1000];
 
        FirebaseDatabase database = FirebaseDatabase.getInstance();
        DatabaseReference BookRef = database.getReference("/Books/");
@@ -48,16 +51,12 @@ public class ContentsActivity extends AppCompatActivity {
        }
    });
 
-       books = new Book[j];
+
        BookRef.addValueEventListener(new ValueEventListener() {
            int i = 0;
 
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               j= (int) dataSnapshot.getChildrenCount();
-               books = new Book[j];
-               System.out.println("EEEEEEEEEEEEE\nHHHHHHHHHHHHH");
-
                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
 
                    String bookName     = (String) BookSnapshot.child("BookName").getValue();
