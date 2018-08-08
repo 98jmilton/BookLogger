@@ -56,7 +56,6 @@ public class ContentsActivity extends AppCompatActivity {
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                j= (int) dataSnapshot.getChildrenCount();
                books = new Book[j];
-               System.out.println("EEEEEEEEEEEEE\nHHHHHHHHHHHHH");
 
                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
 
@@ -65,10 +64,8 @@ public class ContentsActivity extends AppCompatActivity {
                    String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
                    String genre        = (String) BookSnapshot.child("Genre").getValue();
 
-                   books[i] = new Book(bookName, imageAddress, author, genre);
+                   books[i] = new Book(bookName, author, imageAddress,genre);
                    i++;
-
-                   System.out.println("REEEEEEEEEEEEEEE");
                }
            }
 
