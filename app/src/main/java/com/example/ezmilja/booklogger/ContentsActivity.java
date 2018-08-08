@@ -17,8 +17,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import static com.example.ezmilja.booklogger.SplashScreen.h;
-
 public class ContentsActivity extends AppCompatActivity {
 
     static int j;
