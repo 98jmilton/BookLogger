@@ -7,7 +7,7 @@ public class Book {
     public String author;
     public String genre;
 
-    Book(String bookName, String imageAddress, String author, String genre){
+    Book(String bookName, String imageAddress, String author, String genre) {
 
         this.bookName =bookName;
         this.imageAddress = imageAddress;
