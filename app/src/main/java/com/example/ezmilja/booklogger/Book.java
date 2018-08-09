@@ -2,28 +2,18 @@ package com.example.ezmilja.booklogger;
 
 public class Book {
 
-    public String bookName;
-    public String imageAddress;
-    public String author;
-    public String genre;
+    public String isbnX;
+    public String bookNameX;
+    public String imageAddressX;
+    public String authorX;
+    public String genreX;
 
-    Book(String bookName, String imageAddress, String author, String genre){
+    Book(String isbn,String bookName, String author, String imageAddress,String genre) {
 
-        this.bookName =bookName;
-        this.imageAddress = imageAddress;
-        this.author = author;
-        this.author = genre;
-    }
-
-    public String getName() {
-        return bookName;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public String getGenre() {
-        return genre;
+        this.isbnX=isbn;
+        this.bookNameX =bookName;
+        this.imageAddressX = imageAddress;
+        this.authorX = author;
+        this.genreX = genre;
     }
 }

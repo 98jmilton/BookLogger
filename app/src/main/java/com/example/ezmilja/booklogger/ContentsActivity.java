@@ -56,15 +56,15 @@ public class ContentsActivity extends AppCompatActivity {
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
 
+                   String isbn         = (String) BookSnapshot.child("ISBN").getValue();
                    String bookName     = (String) BookSnapshot.child("BookName").getValue();
                    String author       = (String) BookSnapshot.child("Author").getValue();
                    String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
                    String genre        = (String) BookSnapshot.child("Genre").getValue();
 
-                   books[i] = new Book(bookName, imageAddress, author, genre);
+                   books[i] = new Book(isbn ,bookName, author, imageAddress, genre);
+                   System.out.println(books[i].bookNameX+"XXXXXXXXXXX"+ books[i].authorX);
                    i++;
-
-                   System.out.println("REEEEEEEEEEEEEEE");
                }
            }
 
