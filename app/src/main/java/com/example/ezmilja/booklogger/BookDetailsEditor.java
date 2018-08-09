@@ -50,19 +50,11 @@ public class BookDetailsEditor extends AppCompatActivity {
 
     private final int PICK_IMAGE_REQUEST = 71;
 
-    String urlstring,bookSName,bookSAuthor,bookSISBN,bookSMaxCopys,bookSDescription,bookSNumCopys,bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSRating,imageAddress,ISBN,Name,Author,Publisher,Description,Rating,Pages,MxCopys,NumRating,NumCopys;
+    String urlstring,bookSName,bookSAuthor,bookSISBN,bookSMaxCopys,bookSDescription,bookSNumCopys,bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSGenre,bookSRating,Genre,imageAddress,ISBN,Name,Author,Publisher,Description,Rating,Pages,MxCopys,NumRating,NumCopys;
     URL imageUrl;
 
     public static TextView bookISBN;
-    EditText bookName;
-    EditText bookAuthor;
-    EditText bookMaxCopys;
-    EditText bookDescription;
-    EditText bookNumCopys;
-    EditText bookPage;
-    EditText bookPublisher;
-    EditText bookNumRating;
-    EditText bookRating;
+    EditText bookName,bookGenre,bookAuthor, bookMaxCopys, bookDescription, bookNumCopys, bookPage, bookPublisher, bookNumRating, bookRating;
 
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,17 +86,18 @@ public class BookDetailsEditor extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
 
-                    ISBN = (String)BookSnapshot.child(currentIsbn).child("ISBN").getValue();
-                    Name = (String) BookSnapshot.child(currentIsbn).child("BookName").getValue();
-                    Author = (String) BookSnapshot.child(currentIsbn).child("Author").getValue();
-                    Publisher = (String) BookSnapshot.child(currentIsbn).child("Publisher").getValue();
-                    Description = (String) BookSnapshot.child(currentIsbn).child("Description").getValue();
-                    Rating = (String) BookSnapshot.child(currentIsbn).child("Rating").getValue();
-                    Pages = (String) BookSnapshot.child(currentIsbn).child("Pages").getValue();
-                    MxCopys = (String) BookSnapshot.child(currentIsbn).child("MaxCopys").getValue();
-                    NumRating = (String) BookSnapshot.child(currentIsbn).child("NumRating").getValue();
-                    NumCopys = (String) BookSnapshot.child(currentIsbn).child("NumCopys").getValue();
-                    imageAddress = (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
+                    ISBN =          (String)BookSnapshot.child(currentIsbn).child("ISBN").getValue();
+                    Name =          (String) BookSnapshot.child(currentIsbn).child("BookName").getValue();
+                    Author =        (String) BookSnapshot.child(currentIsbn).child("Author").getValue();
+                    Publisher =     (String) BookSnapshot.child(currentIsbn).child("Publisher").getValue();
+                    Description =   (String) BookSnapshot.child(currentIsbn).child("Description").getValue();
+                    Rating =        (String) BookSnapshot.child(currentIsbn).child("Rating").getValue();
+                    Pages =         (String) BookSnapshot.child(currentIsbn).child("Pages").getValue();
+                    MxCopys =       (String) BookSnapshot.child(currentIsbn).child("MaxCopys").getValue();
+                    NumRating =     (String) BookSnapshot.child(currentIsbn).child("NumRating").getValue();
+                    NumCopys =      (String) BookSnapshot.child(currentIsbn).child("NumCopys").getValue();
+                    imageAddress =  (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
+                    Genre =         (String) BookSnapshot.child(currentIsbn).child("Genre").getValue();
 
                     System.out.println("qwepoiqwepoiqwepoi"+ISBN);
 
@@ -118,6 +111,7 @@ public class BookDetailsEditor extends AppCompatActivity {
                     bookPublisher.setText(Publisher);
                     bookNumRating.setText(NumRating);
                     bookRating.setText(Rating);
+                    bookGenre.setText(Genre);
 
                     try {
                         imageUrl =new URL(imageAddress);
@@ -173,6 +167,7 @@ public class BookDetailsEditor extends AppCompatActivity {
                 bookSPublisher = bookPublisher.getText().toString();
                 bookSNumRating = bookNumRating.getText().toString();
                 bookSRating = bookRating.getText().toString();
+                bookSGenre = bookGenre.getText().toString();
                 uploadData();
 
 
@@ -271,6 +266,8 @@ public class BookDetailsEditor extends AppCompatActivity {
         BookRef.child("/Books/").child(currentIsbn).child("Rating").setValue(bookSRating);
         BookRef.child("/Books/").child(currentIsbn).child("NumRating").setValue(bookSNumRating);
         BookRef.child("/Books/").child(currentIsbn).child("ImageAddress").setValue(urlstring);
+        BookRef.child("/Books/").child(currentIsbn).child("Genre").setValue(urlstring);
+
         if(bookSubmit) {
             storageReference.child(currentIsbn).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
@@ -287,6 +284,7 @@ public class BookDetailsEditor extends AppCompatActivity {
                     bookRating.setText("");
                     bookPage.setText("");
                     bookNumRating.setText("");
+                    bookGenre.setText("");
 
                     Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
                     startActivity(intent);
@@ -308,6 +306,7 @@ public class BookDetailsEditor extends AppCompatActivity {
             bookRating.setText("");
             bookPage.setText("");
             bookNumRating.setText("");
+            bookGenre.setText("");
 
             Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
             startActivity(intent);

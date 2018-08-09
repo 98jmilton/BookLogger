@@ -63,11 +63,11 @@ public class BookDetailsAdder extends AppCompatActivity
     private final int PICK_IMAGE_REQUEST = 71;
     public static String qrIsbn;
     public static EditText bookISBN;
-    String bookSName,bookSAuthor,bookSISBN,bookSMaxCopys,bookSDescription,bookSNumCopys,bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSRating="";
+    String bookSName,bookSAuthor,bookSISBN,bookSMaxCopys,bookSDescription,bookSNumCopys,bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSGenre,bookSRating="";
     String theISBNNo,a,authors,title,description,publisher,pageCountString,imageLink,Imageaddress;
     int pageCount;
     Uri file;
-    EditText bookName,bookAuthor,bookMaxCopys,bookDescription,bookNumCopys,bookPage,bookPublisher,bookNumRating,bookRating;
+    EditText bookName,bookAuthor,bookMaxCopys,bookDescription,bookNumCopys,bookPage,bookPublisher,bookNumRating,bookRating,bookGenre;
     JSONObject ISBN;
     Typeface myTypeFace1;
 
@@ -99,6 +99,7 @@ public class BookDetailsAdder extends AppCompatActivity
                  bookPublisher  =findViewById(R.id.bookPublisher);
                  bookNumRating  =findViewById(R.id.bookNumRating);
                  bookRating     =findViewById(R.id.bookRating);
+                 bookGenre      =findViewById(R.id.bookGenre);
 
                 bookISBN.setText("9780131479418");
                 if(isScanned){bookISBN.setText(qrIsbn);}
@@ -122,17 +123,18 @@ public class BookDetailsAdder extends AppCompatActivity
                     public void onClick(View view) {
                         if(!bookSubmit){ Toast.makeText(BookDetailsAdder.this,"Please Submit a book image",LENGTH_LONG).show();}
                         else {
-                            bookSName = bookName.getText().toString();
-                            bookSAuthor = bookAuthor.getText().toString();
-                            bookSISBN = bookISBN.getText().toString();
-                            bookSMaxCopys = bookMaxCopys.getText().toString();
+                            bookSName        = bookName.getText().toString();
+                            bookSAuthor      = bookAuthor.getText().toString();
+                            bookSISBN        = bookISBN.getText().toString();
+                            bookSMaxCopys    = bookMaxCopys.getText().toString();
                             bookSDescription = bookDescription.getText().toString();
-                            bookSNumCopys = bookNumCopys.getText().toString();
-                            bookSPage = bookPage.getText().toString();
-                            bookSPublisher = bookPublisher.getText().toString();
-                            bookSNumRating = bookNumRating.getText().toString();
-                            bookSImg = "oops";
-                            bookSRating = bookRating.getText().toString();
+                            bookSNumCopys    = bookNumCopys.getText().toString();
+                            bookSPage        = bookPage.getText().toString();
+                            bookSPublisher   = bookPublisher.getText().toString();
+                            bookSNumRating   = bookNumRating.getText().toString();
+                            bookSImg         = "oops";
+                            bookSRating      = bookRating.getText().toString();
+                            bookSGenre       =bookGenre.getText().toString();
                             uploadData();
 
                         }
@@ -260,6 +262,7 @@ public class BookDetailsAdder extends AppCompatActivity
             bookRating.setText("");
             bookPage.setText("");
             bookNumRating.setText("");
+            bookGenre.setText("");
             System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH");
             makeInfoDialog();
         }
@@ -279,6 +282,7 @@ public class BookDetailsAdder extends AppCompatActivity
             bookRating.setText("0");
             bookPage.setText(pageCountString);
             bookNumRating.setText("0");
+
         }
         else{
 
@@ -399,6 +403,7 @@ public class BookDetailsAdder extends AppCompatActivity
         BookRef.child("/Books/").child(bookSISBN).child("ImageAddress").setValue(bookSImg);
         BookRef.child("/Books/").child(bookSISBN).child("Rating").setValue(bookSRating);
         BookRef.child("/Books/").child(bookSISBN).child("NumRating").setValue(bookSNumRating);
+        BookRef.child("/Books/").child(bookSISBN).child("Genre").setValue(bookSGenre);
 
         storageReference.child(bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
@@ -415,6 +420,7 @@ public class BookDetailsAdder extends AppCompatActivity
                 bookRating.setText("");
                 bookPage.setText("");
                 bookNumRating.setText("");
+                bookGenre.setText("");
 
                 Intent intent = new Intent(BookDetailsAdder.this, ContentsActivity.class);
                 startActivity(intent);

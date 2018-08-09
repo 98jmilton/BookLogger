@@ -33,6 +33,7 @@ public class BookDetailsPage extends AppCompatActivity {
     TextView bookDescription;
     TextView bookRating;
     TextView bookPages;
+    TextView bookGenre;
     private ImageView bookImage;
 
     private String ISBN = "Not Found";
