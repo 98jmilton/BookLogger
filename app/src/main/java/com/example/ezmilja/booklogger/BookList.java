@@ -1,5 +1,6 @@
 package com.example.ezmilja.booklogger;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,5 +20,5 @@ public class BookList extends AppCompatActivity {
 
         adapter = new BookAdapter(this);
         rv.setAdapter(adapter);
-    }
+        }
 }

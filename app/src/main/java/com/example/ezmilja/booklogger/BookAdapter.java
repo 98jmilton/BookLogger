@@ -2,6 +2,7 @@ package com.example.ezmilja.booklogger;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,7 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import static com.example.ezmilja.booklogger.ContentsActivity.books;
+import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
@@ -47,17 +51,13 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolde
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Toast.makeText(view.getContext(), "Recycle Click" + position, Toast.LENGTH_SHORT).show();
+                        currentIsbn=books[position].isbnX;
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, BookDetailsPage.class);
+                        context.startActivity(intent);
                     }
                 });
 
-                holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        Toast.makeText(v.getContext(), "Recycle Click Long BOI" + position, Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                });
             }
 
         }
@@ -66,6 +66,10 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolde
              System.out.println("Null Error = " + e );
          }
 
+    }
+
+    private void toDetails() {
+        toDetails();
     }
 
     @Override
