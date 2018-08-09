@@ -35,15 +35,14 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolde
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder,final int position) {
 
-        //BookAdapter.bind(items.get(position), clickListener);
         try {
-            if (books[position].imageAddress != null) {
+            if (books[position].imageAddressX != null) {
                 Glide.with(this.context)
-                        .load(books[position].imageAddress)
+                        .load(books[position].imageAddressX)
                         .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(holder.getImage());
 
-                holder.BookDetails.setText(books[position].bookName + "\n" + books[position].author + "\n" + books[position].genre);
+                holder.BookDetails.setText(books[position].bookNameX+ "\n" + books[position].authorX + "\n" + books[position].genreX);
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
