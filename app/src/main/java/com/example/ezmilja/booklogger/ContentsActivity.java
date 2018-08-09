@@ -33,7 +33,6 @@ public class ContentsActivity extends AppCompatActivity {
        setContentView(R.layout.activity_contents);
        createButton();
 
-       books = new Book[1000];
 
        FirebaseDatabase database = FirebaseDatabase.getInstance();
        DatabaseReference BookRef = database.getReference("/Books/");
@@ -42,12 +41,14 @@ public class ContentsActivity extends AppCompatActivity {
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                j= (int) dataSnapshot.getChildrenCount();
+               books = new Book[j];
            }
        @Override
        public void onCancelled(@NonNull DatabaseError databaseError) {
 
        }
-   });
+
+       });
 
 
        BookRef.addValueEventListener(new ValueEventListener() {
