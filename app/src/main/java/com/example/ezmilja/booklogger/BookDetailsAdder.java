@@ -48,7 +48,6 @@ import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
 import static com.example.ezmilja.booklogger.ContentsActivity.database;
-import static com.example.ezmilja.booklogger.ContentsActivity.h;
 import static com.example.ezmilja.booklogger.ContentsActivity.storageReference;
 
 
