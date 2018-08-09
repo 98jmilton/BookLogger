@@ -5,14 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
-    android:paddingBottom="10dp">
+    android:paddingBottom="10dp"
+    android:clickable="true"
+    >
 
     <ImageView
         android:id="@+id/imageViewCustom"
         android:layout_width="10dp"
         android:layout_height="120dp"
         android:layout_weight="1"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        />
 
         <TextView
             android:id="@+id/bookDetails"
@@ -23,6 +26,6 @@
             android:layout_marginTop="20dp"
             android:layout_weight="1"
             android:fontFamily="@assets/yourfont.ttf"
-            android:textSize="30sp" />
+            android:textSize="20sp" />
 
 </LinearLayout>
