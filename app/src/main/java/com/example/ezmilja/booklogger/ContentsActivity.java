@@ -33,7 +33,6 @@ public class ContentsActivity extends AppCompatActivity {
        setContentView(R.layout.activity_contents);
        createButton();
 
-
        FirebaseDatabase database = FirebaseDatabase.getInstance();
        DatabaseReference BookRef = database.getReference("/Books/");
 
@@ -46,8 +45,7 @@ public class ContentsActivity extends AppCompatActivity {
        @Override
        public void onCancelled(@NonNull DatabaseError databaseError) {
 
-       }
-
+           }
        });
 
 
