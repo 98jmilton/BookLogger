@@ -4,19 +4,14 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.icu.util.IslamicCalendar;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -24,10 +19,9 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.firebase.client.Firebase;
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -40,9 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
@@ -53,9 +46,8 @@ import static com.example.ezmilja.booklogger.ContentsActivity.storageReference;
 
 public class BookDetailsAdder extends AppCompatActivity
 {
-    static final int REQUEST_IMAGE_CAPTURE = 1;
 
-    Button btn_autofill,Scan,btnSubmit,send,choose,btnCamera;
+    Button btn_autofill,Scan,btnSubmit,send,choose, btn_AutoImage;
     ImageView imageView;
     private Uri filePath;
     private boolean bookSubmit=false;
@@ -63,94 +55,106 @@ public class BookDetailsAdder extends AppCompatActivity
     private final int PICK_IMAGE_REQUEST = 71;
     public static String qrIsbn;
     public static EditText bookISBN;
-    String bookSName,bookSAuthor,bookSISBN,bookSMaxCopys,bookSDescription,bookSNumCopys,bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSGenre,bookSRating="";
-    String theISBNNo,a,authors,title,description,publisher,pageCountString,imageLink,Imageaddress;
+    String bookSName,urlstring,bookSAuthor,bookSMaxCopys,bookSDescription,bookSNumCopys,bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSGenre,bookSRating="";
+    String theISBNNo,a,authors,title,description,publisher,pageCountString;
     int pageCount;
-    Uri file;
+    URL imageUrl;
     EditText bookName,bookAuthor,bookMaxCopys,bookDescription,bookNumCopys,bookPage,bookPublisher,bookNumRating,bookRating,bookGenre;
     JSONObject ISBN;
     Typeface myTypeFace1;
 
-    private static int CONTENT_REQUEST=1337;
-    private File output;
-
     String realPath;
 
-    boolean PhotoTaken = false;
+    boolean Autoimage = false;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetailsadder);
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
         myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
 
 
-                imageView = (ImageView) findViewById(R.id.imgView);
-                send = (Button) findViewById(R.id.send);
-                choose= (Button) findViewById(R.id.btnChoose);
-                btnSubmit = (Button) findViewById(R.id.btn_submit);
-                btnCamera= (Button) findViewById(R.id.btncamera);
-                 bookName       =findViewById(R.id.bookName);
-                 bookAuthor     =findViewById(R.id.bookAuthor);
-                 bookISBN       =findViewById(R.id.bookISBN);
-                 bookMaxCopys   =findViewById(R.id.bookMaxCpys);
-                 bookDescription=findViewById(R.id.bookDescription);
-                 bookNumCopys   =findViewById(R.id.bookNumCpys);
-                 bookPage       =findViewById(R.id.bookPages);
-                 bookPublisher  =findViewById(R.id.bookPublisher);
-                 bookNumRating  =findViewById(R.id.bookNumRating);
-                 bookRating     =findViewById(R.id.bookRating);
-                 bookGenre      =findViewById(R.id.bookGenre);
+        imageView      =findViewById(R.id.imgView);
+        send           =findViewById(R.id.send);
+        choose         =findViewById(R.id.btnChoose);
+        btnSubmit      =findViewById(R.id.btn_submit);
+        btn_AutoImage =findViewById(R.id.btncamera);
+        bookName       =findViewById(R.id.bookName);
+        bookAuthor     =findViewById(R.id.bookAuthor);
+        bookISBN       =findViewById(R.id.bookISBN);
+        bookMaxCopys   =findViewById(R.id.bookMaxCpys);
+        bookDescription=findViewById(R.id.bookDescription);
+        bookNumCopys   =findViewById(R.id.bookNumCpys);
+        bookPage       =findViewById(R.id.bookPages);
+        bookPublisher  =findViewById(R.id.bookPublisher);
+        bookNumRating  =findViewById(R.id.bookNumRating);
+        bookRating     =findViewById(R.id.bookRating);
+        bookGenre      =findViewById(R.id.bookGenre);
 
-                bookISBN.setText("9780131479418");
-                if(isScanned){bookISBN.setText(qrIsbn);}
+        if(isScanned){bookISBN.setText(qrIsbn);}
 
-                choose.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        chooseImage();
-                    }
-                });
+        choose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
 
-                btnCamera.setOnClickListener(new View.OnClickListener() {
+        btn_AutoImage.setOnClickListener(new View.OnClickListener() {
 
-                    @Override
-                    public void onClick(View view) {
-                        takeImage();
-                    }
-                });
-                btnSubmit.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        if(!bookSubmit){ Toast.makeText(BookDetailsAdder.this,"Please Submit a book image",LENGTH_LONG).show();}
-                        else {
-                            bookSName        = bookName.getText().toString();
-                            bookSAuthor      = bookAuthor.getText().toString();
-                            bookSISBN        = bookISBN.getText().toString();
-                            bookSMaxCopys    = bookMaxCopys.getText().toString();
-                            bookSDescription = bookDescription.getText().toString();
-                            bookSNumCopys    = bookNumCopys.getText().toString();
-                            bookSPage        = bookPage.getText().toString();
-                            bookSPublisher   = bookPublisher.getText().toString();
-                            bookSNumRating   = bookNumRating.getText().toString();
-                            bookSImg         = "oops";
-                            bookSRating      = bookRating.getText().toString();
-                            bookSGenre       =bookGenre.getText().toString();
-                            uploadData();
+            @Override
+            public void onClick(View view) {
+                currentIsbn = bookISBN.getText().toString();
+                if (currentIsbn.length() == 13) {
+                    Glide.with(BookDetailsAdder.this).load(imageUrl).into(imageView);
+                    Autoimage = true;
+                }
+                else{
+                    Toast.makeText(BookDetailsAdder.this,"Please enter a 13 digit ISBN" ,LENGTH_LONG).show();
 
-                        }
-                    }
-                });
+                }
+            }
+        });
+        btnSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentIsbn = bookISBN.getText().toString();
+                if(!bookSubmit && (currentIsbn.length() == 13)){ Toast.makeText(BookDetailsAdder.this,"Please Submit a book image",LENGTH_LONG).show();}
+                else {
+                    bookSName = bookName.getText().toString();
+                    bookSAuthor = bookAuthor.getText().toString();
+                    currentIsbn = bookISBN.getText().toString();
+                    bookSMaxCopys = bookMaxCopys.getText().toString();
+                    bookSDescription = bookDescription.getText().toString();
+                    bookSNumCopys = bookNumCopys.getText().toString();
+                    bookSPage = bookPage.getText().toString();
+                    bookSPublisher = bookPublisher.getText().toString();
+                    bookSNumRating = bookNumRating.getText().toString();
+                    bookSImg = "oops";
+                    bookSRating = bookRating.getText().toString();
+                    bookSGenre = bookGenre.getText().toString();
+                    uploadData();
 
-                send.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        uploadImage();
-                    }
-                });
+                }
+            }
+        });
+
+        send.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                currentIsbn = bookISBN.getText().toString();
+                if (currentIsbn.length() == 13) {
+                    uploadImage();
+                }
+                else{
+                    Toast.makeText(BookDetailsAdder.this,"Please enter a 13 digit ISBN" ,LENGTH_LONG).show();
+                }
+            }
+        });
 
 
 
-        Scan = (Button) findViewById(R.id.btn_scan);
+        Scan = findViewById(R.id.btn_scan);
         Scan.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -163,12 +167,17 @@ public class BookDetailsAdder extends AppCompatActivity
         });
 
 
-        btn_autofill = (Button) findViewById(R.id.btn_autofill);
+        btn_autofill = findViewById(R.id.btn_autofill);
         btn_autofill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 currentIsbn = bookISBN.getText().toString();
+                try {
+                    imageUrl = new URL("http://www.piniswiss.com/wp-content/uploads/2013/05/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef-300x199.png");
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
 
 
                 try {
@@ -192,7 +201,7 @@ public class BookDetailsAdder extends AppCompatActivity
                     pageCountString = Integer.toString(pageCount);
 
                     // For the Image link
-                    imageLink = (String) customerIDD.getJSONObject("imageLinks").get("thumbnail");
+                    imageUrl = new URL((String) customerIDD.getJSONObject("imageLinks").get("thumbnail"));
 
 
                     // For the ISBN Number
@@ -214,6 +223,8 @@ public class BookDetailsAdder extends AppCompatActivity
                     e.printStackTrace();
                 } catch (JSONException e) {
 
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
                     e.printStackTrace();
                 }
 
@@ -246,6 +257,7 @@ public class BookDetailsAdder extends AppCompatActivity
 
                     }
                 });
+
             }
 
         });
@@ -254,7 +266,7 @@ public class BookDetailsAdder extends AppCompatActivity
 
     public void isBook() {
 
-        if ((currentIsbn.matches("[0-9]+")) && (currentIsbn.length() == 13)) {
+        if (currentIsbn.length() == 13) {
             bookName.setText("");
             bookDescription.setText("");
             bookPublisher.setText("");
@@ -266,10 +278,14 @@ public class BookDetailsAdder extends AppCompatActivity
             System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH");
             makeInfoDialog();
         }
+        else{
+
+            Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void isntBook(){
-        if((currentIsbn.matches("[0-9]+")) && (currentIsbn.length() == 13)){
+        if(currentIsbn.length() == 13){
             System.out.println("PPPPPPPPPPPPPPPPAAAAAAAAUUUUUUULLLLLL");
 
 
@@ -277,12 +293,10 @@ public class BookDetailsAdder extends AppCompatActivity
             bookName.setText(title);
             bookDescription.setText(description);
             bookPublisher.setText(publisher);
-            bookISBN.setText(theISBNNo);
             bookAuthor.setText(a);
             bookRating.setText("0");
             bookPage.setText(pageCountString);
             bookNumRating.setText("0");
-
         }
         else{
 
@@ -293,23 +307,11 @@ public class BookDetailsAdder extends AppCompatActivity
 
 
     private void chooseImage() {
-        PhotoTaken = false;
         Intent intent = new Intent();
         intent.setType("image/*");
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), PICK_IMAGE_REQUEST);
     }
-
-    private void takeImage(){
-        Intent i=new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File dir=
-                Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-
-        output=new File(dir, "CameraContentDemo.jpeg");
-        i.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(output));
-        startActivity(i);
-    }
-
 
 
 
@@ -318,29 +320,22 @@ public class BookDetailsAdder extends AppCompatActivity
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null && data.getData() != null) {
-
-          filePath = data.getData();
-
-
+            filePath = data.getData();
             realPath = ImageFilePath.getPath(BookDetailsAdder.this, data.getData());
 //                realPath = RealPathUtil.getRealPathFromURI_API19(this, data.getData());
-
             Toast.makeText(BookDetailsAdder.this,"onActivityResult: file path : " + realPath,LENGTH_LONG).show();
 
             try {
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
                 // Log.d(TAG, String.valueOf(bitmap));
-
-
                 imageView.setImageBitmap(bitmap);
                 imageView.setVisibility(View.VISIBLE);
-
             } catch (IOException e) {
                 e.printStackTrace();
             }}
 
 
-         else {
+        else {
             Toast.makeText(this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
         }
 
@@ -348,14 +343,14 @@ public class BookDetailsAdder extends AppCompatActivity
     }
 
     private void uploadImage() {
-
-        if (filePath != null) {
+        currentIsbn = bookISBN.getText().toString();
+        if ((filePath != null && !Autoimage) && (currentIsbn.length() == 13)) {
             final ProgressDialog progressDialog = new ProgressDialog(this);
             progressDialog.setTitle("Uploading...");
             progressDialog.show();
-            bookSISBN = bookISBN.getText().toString();
-            if ((bookSISBN.matches("[0-9]+")) || (bookSISBN.length() == 13)) {
-                final StorageReference ref = storageReference.child(bookSISBN);
+            currentIsbn = bookISBN.getText().toString();
+            if ((currentIsbn.length() == 13)) {
+                final StorageReference ref = storageReference.child(currentIsbn);
                 ref.putFile(filePath)
                         .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                             @Override
@@ -380,58 +375,87 @@ public class BookDetailsAdder extends AppCompatActivity
                                 progressDialog.setMessage("Uploaded " + (int) progress + "%");
                             }
                         });
-            } else {
+            }
+
+            else {
                 makeText(BookDetailsAdder.this, "Upload Failed ", LENGTH_SHORT).show();
                 progressDialog.dismiss();
                 Toast.makeText(this, "Please insert book ISBN", Toast.LENGTH_LONG).show();
 
             }
         }
+        else if ((Autoimage) && (currentIsbn.length() == 13)){
+            bookSubmit = true;
+            urlstring = String.valueOf(imageUrl);
+            String BOOKISBNPLEASE = String.valueOf(bookISBN.getText());
+
+            System.out.println("SSKSKSKSKSKSKSKSKSSKSKSKSKSSK" + BOOKISBNPLEASE);
+            System.out.println("YUUUUUUUUUUUUURRRRRRRRRTTTTTTTTTTTT " + currentIsbn);
+
+            makeText(BookDetailsAdder.this, "Uploaded", LENGTH_SHORT).show();
+
+        }
 
     }
     private void uploadData() {
+        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
 
+        BookRef.child("/Books/").child(currentIsbn).child("BookName").setValue(bookSName);
+        BookRef.child("/Books/").child(currentIsbn).child("Author").setValue(bookSAuthor);
+        BookRef.child("/Books/").child(currentIsbn).child("ISBN").setValue(currentIsbn);
+        BookRef.child("/Books/").child(currentIsbn).child("MaxCopys").setValue(bookSMaxCopys);
+        BookRef.child("/Books/").child(currentIsbn).child("Description").setValue(bookSDescription);
+        BookRef.child("/Books/").child(currentIsbn).child("NumCopys").setValue(bookSNumCopys);
+        BookRef.child("/Books/").child(currentIsbn).child("Pages").setValue(bookSPage);
+        BookRef.child("/Books/").child(currentIsbn).child("Publisher").setValue(bookSPublisher);
+        BookRef.child("/Books/").child(currentIsbn).child("Rating").setValue(bookSRating);
+        BookRef.child("/Books/").child(currentIsbn).child("NumRating").setValue(bookSNumRating);
+        BookRef.child("/Books/").child(currentIsbn).child("ImageAddress").setValue(urlstring);
+        BookRef.child("/Books/").child(currentIsbn).child("Genre").setValue(bookSGenre);
 
-        BookRef.child("/Books/").child(bookSISBN).child("BookName").setValue(bookSName);
-        BookRef.child("/Books/").child(bookSISBN).child("Author").setValue(bookSAuthor);
-        BookRef.child("/Books/").child(bookSISBN).child("ISBN").setValue(bookSISBN);
-        BookRef.child("/Books/").child(bookSISBN).child("MaxCopys").setValue(bookSMaxCopys);
-        BookRef.child("/Books/").child(bookSISBN).child("Description").setValue(bookSDescription);
-        BookRef.child("/Books/").child(bookSISBN).child("NumCopys").setValue(bookSNumCopys);
-        BookRef.child("/Books/").child(bookSISBN).child("Pages").setValue(bookSPage);
-        BookRef.child("/Books/").child(bookSISBN).child("Publisher").setValue(bookSPublisher);
-        BookRef.child("/Books/").child(bookSISBN).child("ImageAddress").setValue(bookSImg);
-        BookRef.child("/Books/").child(bookSISBN).child("Rating").setValue(bookSRating);
-        BookRef.child("/Books/").child(bookSISBN).child("NumRating").setValue(bookSNumRating);
-        BookRef.child("/Books/").child(bookSISBN).child("Genre").setValue(bookSGenre);
+        if(!Autoimage) {
+            storageReference.child(currentIsbn).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                @Override
+                public void onSuccess(Uri uri) {
+                    bookSImg = uri.toString();
+                    System.out.println("qedpqwjdpqwpowj" + bookSImg);
+                    BookRef.child("/Books/").child(currentIsbn).child("ImageAddress").setValue(bookSImg);
 
-        storageReference.child(bookSISBN).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-            @Override
-            public void onSuccess(Uri uri) {
-                 bookSImg =uri.toString();
-                System.out.println("qedpqwjdpqwpowj"+bookSImg);
-                BookRef.child("/Books/").child(bookSISBN).child("ImageAddress").setValue(bookSImg);
+                    bookName.setText("");
+                    bookDescription.setText("");
+                    bookPublisher.setText("");
+                    bookISBN.setText("");
+                    bookAuthor.setText("");
+                    bookRating.setText("");
+                    bookPage.setText("");
+                    bookNumRating.setText("");
+                    bookGenre.setText("");
 
-                bookName.setText("");
-                bookDescription.setText("");
-                bookPublisher.setText("");
-                bookISBN.setText("");
-                bookAuthor.setText("");
-                bookRating.setText("");
-                bookPage.setText("");
-                bookNumRating.setText("");
-                bookGenre.setText("");
+                    Intent intent = new Intent(BookDetailsAdder.this, ContentsActivity.class);
+                    finish();
+                    startActivity(intent);
 
-                Intent intent = new Intent(BookDetailsAdder.this, ContentsActivity.class);
-                startActivity(intent);
-
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        }
+        else{bookName.setText("");
+            bookDescription.setText("");
+            bookPublisher.setText("");
+            bookISBN.setText("");
+            bookAuthor.setText("");
+            bookRating.setText("");
+            bookPage.setText("");
+            bookNumRating.setText("");
+            bookGenre.setText("");
+            Intent intent = new Intent(BookDetailsAdder.this, ContentsActivity.class);
+            startActivity(intent);
+            finish();
+        }
 
     }
 
@@ -440,7 +464,7 @@ public class BookDetailsAdder extends AppCompatActivity
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.popup);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));;
-        dialog.show();
+        if (!Autoimage){dialog.show();}
 
         TextView title = (TextView) dialog.findViewById(R.id.title);
         title.setTypeface(myTypeFace1);

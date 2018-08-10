@@ -44,6 +44,7 @@ public class BookDetailsPage extends AppCompatActivity {
     private String Rating = "Not Found";
     private String Pages = "Not Found";
     private String imageAddress ;
+    private String Genre = "Not Found";
     private URL imageUrl;
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -57,6 +58,7 @@ public class BookDetailsPage extends AppCompatActivity {
         bookRating= findViewById(R.id.bookRating);
         bookPages= findViewById(R.id.bookPages);
         bookImage= findViewById(R.id.bookImage);
+        bookGenre = findViewById(R.id.bookGenre);
 
         BookRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -71,7 +73,9 @@ public class BookDetailsPage extends AppCompatActivity {
                     Rating = (String) BookSnapshot.child(currentIsbn).child("Rating").getValue();
                     Pages = (String) BookSnapshot.child(currentIsbn).child("Pages").getValue();
                     imageAddress = (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
+                    Genre = (String) BookSnapshot.child(currentIsbn).child("Genre").getValue();
                     System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHH"+ ISBN);
+
                     bookISBN.setText("ISBN: "+ ISBN);
                     bookName.setText("Title: "+ Name);
                     bookAuthor.setText("Author: "+ Author);
@@ -79,6 +83,8 @@ public class BookDetailsPage extends AppCompatActivity {
                     bookDescription.setText("Description: "+ Description);
                     bookRating.setText("User Rating: "+ Rating);
                     bookPages.setText("Page Count:"+ Pages);
+                    bookGenre.setText("Genre:"+ Genre);
+
 
                     try {
                         imageUrl =new URL(imageAddress);

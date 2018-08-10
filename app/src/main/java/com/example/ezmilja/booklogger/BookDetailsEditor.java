@@ -79,6 +79,7 @@ public class BookDetailsEditor extends AppCompatActivity {
         bookPublisher = findViewById(R.id.bookPublisher);
         bookNumRating = findViewById(R.id.bookNumRating);
         bookRating = findViewById(R.id.bookRating);
+        bookGenre = findViewById(R.id.bookGenre);
 
 
         BookRef.addValueEventListener(new ValueEventListener() {

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -62,8 +63,15 @@ public class ContentsActivity extends AppCompatActivity {
                    String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
                    String genre        = (String) BookSnapshot.child("Genre").getValue();
 
+                   try{
                    books[i] = new Book(isbn ,bookName, author, imageAddress, genre);
-                   System.out.println(books[i].bookNameX+"XXXXXXXXXXX"+ books[i].authorX);
+                   }
+                   catch (ArrayIndexOutOfBoundsException e){
+                       e.printStackTrace();
+                       Toast.makeText(ContentsActivity.this,"Book data updated ",Toast.LENGTH_LONG).show();
+
+                   }
+//                   System.out.println(books[i].bookNameX+"XXXXXXXXXXX"+ books[i].authorX);
                    i++;
                }
            }
