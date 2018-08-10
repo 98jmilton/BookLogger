@@ -74,7 +74,6 @@ public class BookDetailsPage extends AppCompatActivity {
                     Pages = (String) BookSnapshot.child(currentIsbn).child("Pages").getValue();
                     imageAddress = (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
                     Genre = (String) BookSnapshot.child(currentIsbn).child("Genre").getValue();
-                    System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHHH"+ ISBN);
 
                     bookISBN.setText("ISBN: "+ ISBN);
                     bookName.setText("Title: "+ Name);

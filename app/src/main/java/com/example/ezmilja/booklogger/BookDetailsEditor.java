@@ -267,14 +267,13 @@ public class BookDetailsEditor extends AppCompatActivity {
         BookRef.child("/Books/").child(currentIsbn).child("Rating").setValue(bookSRating);
         BookRef.child("/Books/").child(currentIsbn).child("NumRating").setValue(bookSNumRating);
         BookRef.child("/Books/").child(currentIsbn).child("ImageAddress").setValue(urlstring);
-        BookRef.child("/Books/").child(currentIsbn).child("Genre").setValue(urlstring);
+        BookRef.child("/Books/").child(currentIsbn).child("Genre").setValue(bookSGenre);
 
         if(bookSubmit) {
             storageReference.child(currentIsbn).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                 @Override
                 public void onSuccess(Uri uri) {
                     bookSImg = uri.toString();
-                    System.out.println("qedpqwjdpqwpowj" + bookSImg);
                     BookRef.child("/Books/").child(currentIsbn).child("ImageAddress").setValue(bookSImg);
 
                     bookName.setText("");

@@ -67,11 +67,11 @@ public class ContentsActivity extends AppCompatActivity {
                    books[i] = new Book(isbn ,bookName, author, imageAddress, genre);
                    }
                    catch (ArrayIndexOutOfBoundsException e){
-                       e.printStackTrace();
-                       Toast.makeText(ContentsActivity.this,"Book data updated ",Toast.LENGTH_LONG).show();
+
+                           Toast.makeText(ContentsActivity.this, "Database updated ", Toast.LENGTH_LONG).show();
+                       return;
 
                    }
-//                   System.out.println(books[i].bookNameX+"XXXXXXXXXXX"+ books[i].authorX);
                    i++;
                }
            }
@@ -82,7 +82,6 @@ public class ContentsActivity extends AppCompatActivity {
            }
        });
 
-       System.out.println("");
    }
 
     private void createButton(){
