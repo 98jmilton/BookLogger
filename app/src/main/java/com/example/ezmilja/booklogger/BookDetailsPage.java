@@ -21,8 +21,8 @@ import com.google.firebase.database.ValueEventListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
+import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 
 
 public class BookDetailsPage extends AppCompatActivity {

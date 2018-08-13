@@ -21,13 +21,10 @@ import com.google.firebase.storage.StorageReference;
 public class ContentsActivity extends AppCompatActivity {
 
     static int j;
-    static FirebaseDatabase database = FirebaseDatabase.getInstance();
-    final static public DatabaseReference BookRef = database.getReference();
 
     static  String currentIsbn="";
     public static Book[] books;
-    static FirebaseStorage storage = FirebaseStorage.getInstance();
-    final static public StorageReference storageReference = storage.getReference();
+
    @Override
     protected void onCreate(Bundle savedInstanceState) {
        super.onCreate(savedInstanceState);

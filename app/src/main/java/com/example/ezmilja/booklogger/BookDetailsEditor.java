@@ -35,9 +35,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static android.widget.Toast.*;
-import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
-import static com.example.ezmilja.booklogger.ContentsActivity.storageReference;
+import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
+import static com.example.ezmilja.booklogger.SplashScreen.storageReference;
 
 public class BookDetailsEditor extends AppCompatActivity {
     private Button choose,btnSubmit,uploadImage,Delete;

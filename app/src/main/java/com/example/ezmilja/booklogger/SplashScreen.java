@@ -17,13 +17,20 @@ import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import static com.example.ezmilja.booklogger.ContentsActivity.BookRef;
 
 public class SplashScreen extends AppCompatActivity {
+    static FirebaseDatabase database = FirebaseDatabase.getInstance();
+    final static public DatabaseReference BookRef = database.getReference();
+    static FirebaseStorage storage = FirebaseStorage.getInstance();
+    final static public StorageReference storageReference = storage.getReference();
 
-     public static int p=0;
+    public static int p=0;
     public static int h=0;
 
         private static final int MY_PERMISSIONS_REQUEST_CODE = 123;

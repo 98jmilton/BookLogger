@@ -11,12 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 import static com.example.ezmilja.booklogger.ContentsActivity.books;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
-
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolder> {
 
