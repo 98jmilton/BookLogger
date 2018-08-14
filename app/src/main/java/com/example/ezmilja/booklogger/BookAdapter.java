@@ -22,9 +22,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.example.ezmilja.booklogger.ContentsActivity.books;
+
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolder> {
 
-    private Book[] books;
+
     private ArrayList bookList;
     private Context context;
     private ArrayList filteredData;
@@ -33,8 +35,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolde
 
     BookAdapter(Context context_, ArrayList bookList) {
 
-        this.context  = context_;
-        this.bookList = bookList;
+        this.context      = context_;
+        this.bookList     = bookList;
         this.filteredData = bookList;
     }
 
@@ -48,37 +50,6 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.ImageViewHolde
     @SuppressLint("SetTextI18n")
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder,final int position) {
-
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference BookRef = database.getReference("/Books/");
-        BookRef.addValueEventListener(new ValueEventListener() {
-            int i = 0;
-
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
-
-                    String isbn         = (String) BookSnapshot.child("ISBN").getValue();
-                    String bookName     = (String) BookSnapshot.child("BookName").getValue();
-                    String author       = (String) BookSnapshot.child("Author").getValue();
-                    String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
-                    String genre        = (String) BookSnapshot.child("Genre").getValue();
-
-                    try {
-                        books[i] = new Book(isbn, bookName, author, imageAddress, genre);
-                    }
-                    catch (ArrayIndexOutOfBoundsException e) {
-                        return;
-                    }
-                    i++;
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        });
 
         try {
             if (books[position].imageAddressX != null) {
