@@ -62,7 +62,7 @@ public class BookDetailsEditor extends AppCompatActivity {
         setContentView(R.layout.activity_bookdetailseditor);
 
 
-        imageView = (ImageView) findViewById(R.id.imgView);
+        imageView = findViewById(R.id.imgView);
         uploadImage = findViewById(R.id.uploadImage);
         choose = findViewById(R.id.btnChoose);
         btnSubmit = findViewById(R.id.btn_submit);

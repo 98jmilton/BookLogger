@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@drawable/border"
     android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:clickable="true"
+    android:focusable="true"
     >
 
     <ImageView
@@ -17,15 +19,15 @@
         tools:ignore="ContentDescription"
         />
 
-        <TextView
-            android:id="@+id/bookDetails"
-            android:showAsAction="ifRoom"
-            android:layout_width="10dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1"
-            android:fontFamily="@assets/yourfont.ttf"
-            android:textSize="20sp" />
+    <TextView
+        android:id="@+id/bookDetails"
+        android:showAsAction="ifRoom"
+        android:layout_width="10dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="20dp"
+        android:layout_weight="1"
+        android:fontFamily="@assets/yourfont.ttf"
+        android:textSize="17sp" />
 
 </LinearLayout>
