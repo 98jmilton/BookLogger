@@ -15,7 +15,7 @@
         android:weightSum="100"
         >
         <SearchView
-            android:id="@+id/searchbarboi"
+            android:id="@+id/search_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="2dp"

@@ -22,10 +22,10 @@ public class Book {
     }
 
     public String getAuthor() {
-        return bookNameX;
+        return authorX;
     }
 
     public String getGenre() {
-        return bookNameX;
+        return genreX;
     }
 }

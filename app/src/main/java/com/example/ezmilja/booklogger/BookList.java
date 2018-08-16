@@ -79,7 +79,7 @@ public class BookList extends AppCompatActivity {
 
             }
         });
-        searchView = findViewById(R.id.searchbarboi);
+        searchView = findViewById(R.id.search_view);
         searchView.setIconified(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -148,7 +148,7 @@ public class BookList extends AppCompatActivity {
                 holder = (ViewHolder) vi.getTag();
             }
 
-            holder.bookDetails.setText(myBook.getName());
+            holder.bookDetails.setText(myBook.getName()+"\n\n"+myBook.getAuthor());
 
             if (myBook.imageAddressX != null) {
                 Glide.with(context).load(myBook.imageAddressX).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
