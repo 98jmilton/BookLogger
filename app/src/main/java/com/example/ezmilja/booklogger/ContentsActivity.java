@@ -46,38 +46,7 @@ public class ContentsActivity extends AppCompatActivity {
            }
        });
 
-       BookRef.addValueEventListener(new ValueEventListener() {
-           int i = 0;
 
-           @Override
-           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
-
-                   String isbn         = (String) BookSnapshot.child("ISBN").getValue();
-                   String bookName     = (String) BookSnapshot.child("BookName").getValue();
-                   String author       = (String) BookSnapshot.child("Author").getValue();
-                   String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
-                   String genre        = (String) BookSnapshot.child("Genre").getValue();
-
-                   try{
-                       listViewList.add(book= new Book(isbn,bookName,author,imageAddress,genre));
-                       books[i] = new Book(isbn ,bookName, author, imageAddress, genre);
-                   }
-                   catch (ArrayIndexOutOfBoundsException e){
-
-                           Toast.makeText(ContentsActivity.this, "Database updated ", Toast.LENGTH_LONG).show();
-                       return;
-
-                   }
-                   i++;
-               }
-           }
-
-           @Override
-           public void onCancelled(@NonNull DatabaseError databaseError) {
-
-           }
-       });
 
    }
 

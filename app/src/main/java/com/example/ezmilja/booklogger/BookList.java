@@ -3,6 +3,7 @@ package com.example.ezmilja.booklogger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +15,21 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.ezmilja.booklogger.ContentsActivity.books;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
+import static com.example.ezmilja.booklogger.ContentsActivity.j;
+import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 
 public class BookList extends AppCompatActivity {
     public static Book book;
@@ -32,9 +43,45 @@ public class BookList extends AppCompatActivity {
         setContentView(R.layout.activity_book_list);
 
         listView = findViewById(R.id.list_view);
-        makeListView();
 
+        BookRef.child("/Books/").addValueEventListener(new ValueEventListener() {
+
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                int i = 0;
+                int k= 0;
+                listViewList.clear();
+                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
+                    k= (int) dataSnapshot.getChildrenCount();
+
+                    String isbn         = (String) BookSnapshot.child("ISBN").getValue();
+                    String bookName     = (String) BookSnapshot.child("BookName").getValue();
+                    String author       = (String) BookSnapshot.child("Author").getValue();
+                    String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
+                    String genre        = (String) BookSnapshot.child("Genre").getValue();
+
+                    try{
+                        if(isbn!=null && bookName!=null && author!=null && imageAddress!=null && genre!=null){
+                            listViewList.add(book= new Book(isbn,bookName,author,imageAddress,genre));
+                            if(i==k-1)makeListView();
+                            i++;
+                        }
+                    }
+                    catch (ArrayIndexOutOfBoundsException e){
+                        return;
+
+                    }
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         searchView = findViewById(R.id.searchbarboi);
+        searchView.setIconified(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
