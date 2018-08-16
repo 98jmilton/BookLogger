@@ -87,7 +87,7 @@ public class BookDetailsEditor extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
 
-                    ISBN =          (String)BookSnapshot.child(currentIsbn).child("ISBN").getValue();
+                    ISBN =          (String) BookSnapshot.child(currentIsbn).child("ISBN").getValue();
                     Name =          (String) BookSnapshot.child(currentIsbn).child("BookName").getValue();
                     Author =        (String) BookSnapshot.child(currentIsbn).child("Author").getValue();
                     Publisher =     (String) BookSnapshot.child(currentIsbn).child("Publisher").getValue();
@@ -102,20 +102,21 @@ public class BookDetailsEditor extends AppCompatActivity {
 
                     System.out.println("qwepoiqwepoiqwepoi"+ISBN);
 
-                    bookName.setText(Name);
-                    bookAuthor.setText(Author);
-                    bookISBN.setText(ISBN);
-                    bookMaxCopys.setText(MxCopys);
-                    bookDescription.setText(Description);
-                    bookNumCopys.setText(NumCopys);
-                    bookPage.setText(Pages);
-                    bookPublisher.setText(Publisher);
-                    bookNumRating.setText(NumRating);
-                    bookRating.setText(Rating);
-                    bookGenre.setText(Genre);
 
                     try {
-                        imageUrl =new URL(imageAddress);
+                        if(ISBN !=null && Name !=null && Author !=null && Publisher !=null&&Description !=null&&Rating !=null&&Pages !=null&&imageAddress !=null&&Genre!=null ){
+                            bookName.setText(Name);
+                            bookAuthor.setText(Author);
+                            bookISBN.setText(ISBN);
+                            bookMaxCopys.setText(MxCopys);
+                            bookDescription.setText(Description);
+                            bookNumCopys.setText(NumCopys);
+                            bookPage.setText(Pages);
+                            bookPublisher.setText(Publisher);
+                            bookNumRating.setText(NumRating);
+                            bookRating.setText(Rating);
+                            bookGenre.setText(Genre);
+                            imageUrl =new URL(imageAddress);}
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
