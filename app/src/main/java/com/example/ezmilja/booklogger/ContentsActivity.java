@@ -67,6 +67,7 @@ public class ContentsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent( ContentsActivity.this, BookDetailsAdder.class);
                 startActivity(intent);
+                ContentsActivity.this.finish();
             }
         });
 
@@ -75,6 +76,7 @@ public class ContentsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent( ContentsActivity.this, BookList.class);
                 startActivity(intent);
+                ContentsActivity.this.finish();
             }
         });
     }
