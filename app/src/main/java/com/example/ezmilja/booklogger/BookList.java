@@ -71,7 +71,6 @@ public class BookList extends AppCompatActivity {
                         return;
 
                     }
-
                 }
             }
 
@@ -163,9 +162,9 @@ public class BookList extends AppCompatActivity {
                         Context context = view.getContext();
                         Intent intent = new Intent(context, BookDetailsPage.class);
                         context.startActivity(intent);
+                        BookList.this.finish();
                     }
                 });
-
             }
             catch (NullPointerException e) {
                 e.printStackTrace();
@@ -202,7 +201,6 @@ public class BookList extends AppCompatActivity {
                         } else if (b.getAuthor().toUpperCase()
                                 .contains(constraint.toString().toUpperCase())) {
                             nBookList.add(b);
-
                         }
                     }
                     showList = nBookList;
@@ -223,5 +221,13 @@ public class BookList extends AppCompatActivity {
                 }
             }
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.finish();
+        Intent intent = new Intent( this, ContentsActivity.class);
+        startActivity(intent);
     }
 }
