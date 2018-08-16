@@ -15,12 +15,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import static com.example.ezmilja.booklogger.BookList.listViewList;
+import static com.example.ezmilja.booklogger.BookList.book;
 
 public class ContentsActivity extends AppCompatActivity {
 
     static int j;
 
-    static  String currentIsbn="";
+    static String currentIsbn="";
     public static Book[] books;
 
    @Override
@@ -58,7 +60,8 @@ public class ContentsActivity extends AppCompatActivity {
                    String genre        = (String) BookSnapshot.child("Genre").getValue();
 
                    try{
-                   books[i] = new Book(isbn ,bookName, author, imageAddress, genre);
+                       listViewList.add(book= new Book(isbn,bookName,author,imageAddress,genre));
+                       books[i] = new Book(isbn ,bookName, author, imageAddress, genre);
                    }
                    catch (ArrayIndexOutOfBoundsException e){
 
@@ -93,7 +96,7 @@ public class ContentsActivity extends AppCompatActivity {
         btn_booksEditor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ContentsActivity.this, BookDetailsAdder.class);
+                Intent intent = new Intent( ContentsActivity.this, BookDetailsAdder.class);
                 startActivity(intent);
             }
         });
@@ -101,7 +104,7 @@ public class ContentsActivity extends AppCompatActivity {
         btn_bookList.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ContentsActivity.this, BookList.class);
+                Intent intent = new Intent( ContentsActivity.this, BookList.class);
                 startActivity(intent);
             }
         });

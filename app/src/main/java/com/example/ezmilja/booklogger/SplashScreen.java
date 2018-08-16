@@ -23,8 +23,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-
 public class SplashScreen extends AppCompatActivity {
+
     static FirebaseDatabase database = FirebaseDatabase.getInstance();
     final static public DatabaseReference BookRef = database.getReference();
     static FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -32,17 +32,16 @@ public class SplashScreen extends AppCompatActivity {
 
     public static int p=0;
     public static int h=0;
+    private static final int MY_PERMISSIONS_REQUEST_CODE = 123;
+    private Context mContext;
+    private Activity mActivity;
 
-        private static final int MY_PERMISSIONS_REQUEST_CODE = 123;
-
-        private Context mContext;
-        private Activity mActivity;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         Typeface myTypeFace1 = Typeface.createFromAsset(getAssets(), "yourfont.ttf");
-        TextView TextView1 = (TextView) findViewById(R.id.TextView1);
+        TextView TextView1 = findViewById(R.id.TextView1);
         TextView1.setTypeface(myTypeFace1);
 
         // Get the application context
@@ -56,7 +55,6 @@ public class SplashScreen extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 h = (int) dataSnapshot.getChildrenCount();
-                System.out.println(h);
             }
 
             @Override
@@ -138,28 +136,47 @@ public class SplashScreen extends AppCompatActivity {
             }
         }
 
-        @Override
-        public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
-            switch (requestCode){
-                case MY_PERMISSIONS_REQUEST_CODE:{
-                    // When request is cancelled, the results array are empty
-                    if(
-                            (grantResults.length >0) &&
-                                    (grantResults[0]
-                                            + grantResults[1]
-                                            + grantResults[2]
-                                            == PackageManager.PERMISSION_GRANTED
-                                    )
-                            ){
-                        // Permissions are granted
-                        Toast.makeText(mContext,"Permissions granted.",Toast.LENGTH_SHORT).show();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults){
+        switch (requestCode){
+            case MY_PERMISSIONS_REQUEST_CODE:{
+                // When request is cancelled, the results array are empty
+                if(
+                        (grantResults.length >0) &&
+                                (grantResults[0]
+                                        + grantResults[1]
+                                        + grantResults[2]
+                                        == PackageManager.PERMISSION_GRANTED
+                                )
+                        ){
+                    // Permissions are granted
+                    Toast.makeText(mContext,"Permissions granted.",Toast.LENGTH_SHORT).show();
+
+                    Thread myThread = new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                sleep(2000);
+                                Intent intent = new Intent(getApplicationContext(), ContentsActivity.class);
+                                startActivity(intent);
+                                finish();
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    };
+                    myThread.start();
+                }else
+                    {
+                    // Permissions are denied
+                    Toast.makeText(mContext,"Permissions denied.",Toast.LENGTH_SHORT).show();
 
                         Thread myThread = new Thread() {
                             @Override
                             public void run() {
                                 try {
                                     sleep(2000);
-                                    Intent intent = new Intent(getApplicationContext(), ContentsActivity.class);
+                                    Intent intent = new Intent(getApplicationContext(), SplashScreen.class);
                                     startActivity(intent);
                                     finish();
                                 } catch (InterruptedException e) {
@@ -168,30 +185,10 @@ public class SplashScreen extends AppCompatActivity {
                             }
                         };
                         myThread.start();
-                    }else
-                        {
-                        // Permissions are denied
-                        Toast.makeText(mContext,"Permissions denied.",Toast.LENGTH_SHORT).show();
-
-                            Thread myThread = new Thread() {
-                                @Override
-                                public void run() {
-                                    try {
-                                        sleep(2000);
-                                        Intent intent = new Intent(getApplicationContext(), SplashScreen.class);
-                                        startActivity(intent);
-                                        finish();
-                                    } catch (InterruptedException e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            };
-                            myThread.start();
-                    }
-                    return;
                 }
             }
         }
+    }
 }
 
 

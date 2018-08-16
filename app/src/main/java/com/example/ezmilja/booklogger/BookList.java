@@ -1,71 +1,180 @@
 package com.example.ezmilja.booklogger;
 
-import android.app.SearchManager;
 import android.content.Context;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
+import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.SearchView;
+import android.widget.TextView;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import java.util.ArrayList;
+import java.util.List;
+import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
 
 public class BookList extends AppCompatActivity {
-    private SearchView searchView;
-    private ArrayList bookList = new ArrayList<>();
+    public static Book book;
+    SearchView searchView;
+    private BookList.CustomAdapter customAdapter;
+    public static ArrayList<Book> listViewList =new ArrayList<>();
+    private ListView listView;
 
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
-        RecyclerView rv = findViewById(R.id.recycler_view);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        rv.setHasFixedSize(true);
-        rv.setLayoutManager(layoutManager);
+        listView = findViewById(R.id.list_view);
+        makeListView();
 
-        BookAdapter adapter = new BookAdapter(this, bookList);
-        rv.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.searchmenu, menu);
-
-        // Associate searchable configuration with the SearchView
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        searchView = (SearchView) menu.findItem(R.id.searchlist).getActionView();
-        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-        searchView.setMaxWidth(Integer.MAX_VALUE);
-
-        // listening to search query text change
+        searchView = findViewById(R.id.searchbarboi);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public boolean onQueryTextSubmit(String query) {
-                // filter recycler view when query submitted
-                //BookAdapter.getFilter().filter(query);
+            public boolean onQueryTextSubmit(String s) {
                 return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String query) {
-                // filter recycler view when text is changed
-                //BookAdapter.getFilter().filter(query);
+            public boolean onQueryTextChange(String s) {
+                customAdapter.getFilter().filter(s);
                 return false;
             }
         });
-        return true;
     }
 
-    @Override
-    public void onBackPressed() {
-        // close search view on back button pressed
-        if (!searchView.isIconified()) {
-            searchView.setIconified(true);
-            return;
+    private void makeListView(){
+
+        listView = findViewById(R.id.list_view);
+
+        customAdapter = new BookList.CustomAdapter(BookList.this, listViewList);
+        listView.setAdapter(customAdapter);
+    }
+
+    class CustomAdapter extends BaseAdapter implements Filterable {
+
+        BookFilter bookFilter;
+        Context context;
+        List<Book> showList;
+
+        public CustomAdapter(Context context, List<Book> items) {
+            this.context = context;
+            this.showList = items;
         }
-        super.onBackPressed();
-    }
 
+        private class ViewHolder {
+            TextView bookDetails;
+            ImageView image;
+        }
+
+        @Override
+        public int getCount() {return showList.size();}
+
+        @Override
+        public Object getItem(int position) {return showList.get(position);}
+
+        @Override
+        public long getItemId(int position) {return showList.get(position).hashCode();}
+
+        @Override
+        public View getView(final int position, final View view, ViewGroup parent) {
+
+            View vi = view;
+            final ViewHolder holder;
+            LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            final Book myBook = showList.get(position);
+
+            if (view == null) {
+
+                vi = inflater.inflate(R.layout.custom_layout, null);
+                holder = new ViewHolder();
+                holder.bookDetails = vi.findViewById(R.id.bookDetails);
+                holder.image = vi.findViewById(R.id.imageViewCustom);
+                vi.setTag(holder);
+            } else {
+                holder = (ViewHolder) vi.getTag();
+            }
+
+            holder.bookDetails.setText(myBook.getName());
+
+            if (myBook.imageAddressX != null) {
+                Glide.with(context).load(myBook.imageAddressX).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
+            }
+            try {
+                view.setOnClickListener(new View.OnClickListener() {
+
+                    @Override
+                    public void onClick(View v) {
+                        currentIsbn = myBook.isbnX;
+                        Context context = view.getContext();
+                        Intent intent = new Intent(context, BookDetailsPage.class);
+                        context.startActivity(intent);
+                    }
+                });
+
+            }
+            catch (NullPointerException e) {
+                e.printStackTrace();
+            }
+            return vi;
+        }
+
+        @Override
+        public Filter getFilter() {
+            if (bookFilter == null)
+                bookFilter = new BookFilter();
+            return bookFilter;
+        }
+
+        class BookFilter extends Filter {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                FilterResults results = new FilterResults();
+                // We implement here the filter logic
+                if (constraint == null || constraint.length() < 1) {
+                    // No filter implemented we return all the list
+                    showList = listViewList;
+                    results.values = showList;
+                    results.count = showList.size();
+                } else {
+                    // We perform filtering operation
+                    List<Book> nBookList = new ArrayList<Book>();
+
+                    for (Book b : listViewList) {
+                        if (b.getName().toUpperCase()
+                                .contains(constraint.toString().toUpperCase())) {
+                            nBookList.add(b);
+                        } else if (b.getAuthor().toUpperCase()
+                                .contains(constraint.toString().toUpperCase())) {
+                            nBookList.add(b);
+
+                        }
+                    }
+                    showList = nBookList;
+                    results.values = nBookList;
+                    results.count = nBookList.size();
+                }
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence charSequence, FilterResults results) {
+                // Now we have to inform the adapter about the new list filtered
+                if (results.count == 0) {
+                    notifyDataSetInvalidated();
+                } else {
+                    showList = (List<Book>) results.values;
+                    notifyDataSetChanged();
+                }
+            }
+        }
+    }
 }
