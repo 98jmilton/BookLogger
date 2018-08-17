@@ -28,20 +28,6 @@ public class ContentsActivity extends AppCompatActivity {
        super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_contents);
        createButton();
-
-       FirebaseDatabase database = FirebaseDatabase.getInstance();
-       DatabaseReference BookRef = database.getReference("/Books/");
-
-       BookRef.addValueEventListener(new ValueEventListener() {
-           @Override
-           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               j= (int) dataSnapshot.getChildrenCount();
-               books = new Book[j];
-           }
-       @Override
-       public void onCancelled(@NonNull DatabaseError databaseError) {
-           }
-       });
    }
 
     private void createButton(){

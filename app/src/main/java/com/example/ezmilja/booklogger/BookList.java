@@ -38,16 +38,15 @@ public class BookList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
-
         //Pull books from database
         BookRef.child("/Books/").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int i = 0;
-                int k= 0;
+                int k;
                 listViewList.clear();
                 for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
-                    k= (int) dataSnapshot.getChildrenCount();
+                    k = (int) dataSnapshot.getChildrenCount();
 
                     String isbn         = (String) BookSnapshot.child("ISBN").getValue();
                     String bookName     = (String) BookSnapshot.child("BookName").getValue();
@@ -201,6 +200,7 @@ public class BookList extends AppCompatActivity {
                 }
                 return results;
             }
+
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults results) {
                 // Now we have to inform the adapter about the new list filtered

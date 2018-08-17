@@ -288,8 +288,8 @@ public class BookDetailsEditor extends AppCompatActivity {
                     bookGenre.setText("");
 
                     Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
-                    startActivity(intent);
                     finish();
+                    startActivity(intent);
 
                 }
             }).addOnFailureListener(new OnFailureListener() {
