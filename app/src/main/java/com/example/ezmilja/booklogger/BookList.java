@@ -51,6 +51,7 @@ public class BookList extends AppCompatActivity {
                 int i = 0;
                 int k= 0;
                 listViewList.clear();
+
                 for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
                     k= (int) dataSnapshot.getChildrenCount();
 
