@@ -466,11 +466,11 @@ public class BookDetailsAdder extends AppCompatActivity
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));;
         if (!Autoimage){dialog.show();}
 
-        TextView title = (TextView) dialog.findViewById(R.id.title);
+        TextView title = dialog.findViewById(R.id.title);
         title.setTypeface(myTypeFace1);
 
-        Button yes= (Button) dialog.findViewById(R.id.yes);
-        Button no = (Button) dialog.findViewById(R.id.no);
+        Button yes= dialog.findViewById(R.id.yes);
+        Button no = dialog.findViewById(R.id.no);
 
         yes.setTypeface(myTypeFace1);
         no.setTypeface(myTypeFace1);

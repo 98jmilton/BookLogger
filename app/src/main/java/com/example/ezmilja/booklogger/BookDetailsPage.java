@@ -127,7 +127,7 @@ public class BookDetailsPage extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
-        Intent intent = new Intent( this, ContentsActivity.class);
+        Intent intent = new Intent( this, BookList.class);
         startActivity(intent);
     }
 }

@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.SearchView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -26,9 +25,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.example.ezmilja.booklogger.ContentsActivity.books;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
-import static com.example.ezmilja.booklogger.ContentsActivity.j;
 import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 
 public class BookList extends AppCompatActivity {
@@ -36,16 +33,14 @@ public class BookList extends AppCompatActivity {
     SearchView searchView;
     private BookList.CustomAdapter customAdapter;
     public static ArrayList<Book> listViewList =new ArrayList<>();
-    private ListView listView;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
-        listView = findViewById(R.id.list_view);
 
+        //Pull books from database
         BookRef.child("/Books/").addValueEventListener(new ValueEventListener() {
-
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int i = 0;
@@ -62,24 +57,21 @@ public class BookList extends AppCompatActivity {
                     String genre        = (String) BookSnapshot.child("Genre").getValue();
 
                     try{
-                        if(isbn!=null && bookName!=null && author!=null && imageAddress!=null && genre!=null){
-                            listViewList.add(book= new Book(isbn,bookName,author,imageAddress,genre));
-                            if(i==k-1)makeListView();
-                            i++;
-                        }
+                        listViewList.add(book= new Book(isbn,bookName,author,imageAddress,genre));
+                        if(i==k-1) makeListView();
                     }
                     catch (ArrayIndexOutOfBoundsException e){
                         return;
-
                     }
+                    i++;
                 }
             }
-
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
-
             }
         });
+
+        //Search for books
         searchView = findViewById(R.id.search_view);
         searchView.setIconified(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -98,8 +90,7 @@ public class BookList extends AppCompatActivity {
 
     private void makeListView(){
 
-        listView = findViewById(R.id.list_view);
-
+        ListView listView = findViewById(R.id.list_view);
         customAdapter = new BookList.CustomAdapter(BookList.this, listViewList);
         listView.setAdapter(customAdapter);
     }
@@ -110,7 +101,7 @@ public class BookList extends AppCompatActivity {
         Context context;
         List<Book> showList;
 
-        public CustomAdapter(Context context, List<Book> items) {
+        CustomAdapter(Context context, List<Book> items) {
             this.context = context;
             this.showList = items;
         }
@@ -129,6 +120,7 @@ public class BookList extends AppCompatActivity {
         @Override
         public long getItemId(int position) {return showList.get(position).hashCode();}
 
+        //Fill layout with image, name and author
         @Override
         public View getView(final int position, final View view, ViewGroup parent) {
 
@@ -150,13 +142,13 @@ public class BookList extends AppCompatActivity {
             }
 
             holder.bookDetails.setText(myBook.getName()+"\n\n"+myBook.getAuthor());
-
             if (myBook.imageAddressX != null) {
                 Glide.with(context).load(myBook.imageAddressX).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
             }
+
+            //Books move to their own details page when clicked
             try {
                 view.setOnClickListener(new View.OnClickListener() {
-
                     @Override
                     public void onClick(View v) {
                         currentIsbn = myBook.isbnX;
@@ -173,6 +165,7 @@ public class BookList extends AppCompatActivity {
             return vi;
         }
 
+        //Filter from search method
         @Override
         public Filter getFilter() {
             if (bookFilter == null)
@@ -181,7 +174,6 @@ public class BookList extends AppCompatActivity {
         }
 
         class BookFilter extends Filter {
-
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
@@ -210,7 +202,6 @@ public class BookList extends AppCompatActivity {
                 }
                 return results;
             }
-
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults results) {
                 // Now we have to inform the adapter about the new list filtered

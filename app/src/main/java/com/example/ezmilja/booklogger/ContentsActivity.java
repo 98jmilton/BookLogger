@@ -40,12 +40,8 @@ public class ContentsActivity extends AppCompatActivity {
            }
        @Override
        public void onCancelled(@NonNull DatabaseError databaseError) {
-
            }
        });
-
-
-
    }
 
     private void createButton(){

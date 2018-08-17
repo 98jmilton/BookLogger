@@ -27,17 +27,17 @@
             </intent-filter>
 
         </activity>
-        <activity android:name=".BookDetailsAdder"/>
+        <activity android:name=".BookDetailsAdder"  />
 
-        <activity android:name=".ContentsActivity"/>
+        <activity android:name=".ContentsActivity"  />
 
-        <activity android:name=".ScanActivity"/>
+        <activity android:name=".ScanActivity"      />
 
-        <activity android:name=".BookDetailsPage"/>
+        <activity android:name=".BookDetailsPage"   />
 
-        <activity android:name=".BookDetailsEditor"/>
+        <activity android:name=".BookDetailsEditor" />
 
-        <activity android:name=".BookList"/>
+        <activity android:name=".BookList"          />
 
     </application>
 
