@@ -103,8 +103,14 @@ public class BookDetailsPage extends AppCompatActivity {
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
-                    Glide.with(BookDetailsPage.this).load(imageUrl).into(bookImage);
-
+                    try {
+                        Glide.with(BookDetailsPage.this).load(imageUrl).into(bookImage);
+                    }
+                    catch (IllegalArgumentException e){
+                      //  e.printStackTrace();
+                        Intent intent = new Intent(BookDetailsPage.this, ContentsActivity.class);
+                        startActivity(intent);
+                    }
                 }
             }
 
