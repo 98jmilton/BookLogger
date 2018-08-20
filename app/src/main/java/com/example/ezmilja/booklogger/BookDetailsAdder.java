@@ -228,7 +228,6 @@ public class BookDetailsAdder extends AppCompatActivity
 
 
                 final DatabaseReference BookRef2 = BookRef.child("/Books/");
-                System.out.println("SSSSSSSSSSSSSSSSSSEEEEEEEEEEEEEEEEEEEAAAAAAAAAAAAAAAAANNNNNNNNN");
 
                 BookRef2.addValueEventListener(new ValueEventListener() {
                     String Number;
@@ -241,11 +240,9 @@ public class BookDetailsAdder extends AppCompatActivity
 
                             if (Number.equals(currentIsbn)) {
                                 isBook();
-                                System.out.println("EEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE");
                                 break;
                             } else {
                                 isntBook();
-                                System.out.println("AAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHH");
                             }
                         }
                     }
@@ -273,7 +270,6 @@ public class BookDetailsAdder extends AppCompatActivity
             bookPage.setText("");
             bookNumRating.setText("");
             bookGenre.setText("");
-            System.out.println("WWWWWWWWWWWWWWWWWWWWWWWWAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHHHHHHHHHHHHHHHHHHHHHHH");
             makeInfoDialog();
         }
         else{
@@ -284,8 +280,6 @@ public class BookDetailsAdder extends AppCompatActivity
 
     public void isntBook(){
         if(currentIsbn.length() == 13){
-            System.out.println("PPPPPPPPPPPPPPPPAAAAAAAAUUUUUUULLLLLL");
-
 
             bookISBN.setText(currentIsbn);
             bookName.setText(title);
@@ -386,9 +380,6 @@ public class BookDetailsAdder extends AppCompatActivity
             bookSubmit = true;
             urlstring = String.valueOf(imageUrl);
             String BOOKISBNPLEASE = String.valueOf(bookISBN.getText());
-
-            System.out.println("SSKSKSKSKSKSKSKSKSSKSKSKSKSSK" + BOOKISBNPLEASE);
-            System.out.println("YUUUUUUUUUUUUURRRRRRRRRTTTTTTTTTTTT " + currentIsbn);
 
             makeText(BookDetailsAdder.this, "Uploaded", LENGTH_SHORT).show();
 

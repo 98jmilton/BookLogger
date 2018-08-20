@@ -45,7 +45,6 @@ public class BookDetailsEditor extends AppCompatActivity {
     private Button choose,btnSubmit,uploadImage,Delete;
     private ImageView imageView;
     private Uri filePath;
-    private boolean isBook = false;
     private boolean bookSubmit = false;
     static boolean isDeleted;
     Typeface myTypeFace1;
@@ -105,8 +104,6 @@ public class BookDetailsEditor extends AppCompatActivity {
                     imageAddress =  (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
                     Genre =         (String) BookSnapshot.child(currentIsbn).child("Genre").getValue();
 
-                    System.out.println("qwepoiqwepoiqwepoi"+ISBN);
-
 
                     try {
                         if(ISBN !=null && Name !=null && Author !=null && Publisher !=null&&Description !=null&&Rating !=null&&Pages !=null&&imageAddress !=null&&Genre!=null ){
@@ -125,7 +122,17 @@ public class BookDetailsEditor extends AppCompatActivity {
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
-                    Glide.with(BookDetailsEditor.this).load(imageUrl).into(imageView);
+                    try
+                    {
+                        Glide.with(BookDetailsEditor.this).load(imageUrl).into(imageView);
+                    }
+                    catch (IllegalArgumentException e){
+                        //e.printStackTrace();
+                        // Returns to the Contents activity if this error happens
+                        Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+                        startActivity(intent);
+
+                    }
 
                 }
             }
