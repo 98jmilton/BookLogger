@@ -16,17 +16,21 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static com.example.ezmilja.booklogger.BookDetailsEditor.isDeleted;
+
 public class ContentsActivity extends AppCompatActivity {
 
-    static int j;
-
-    static String currentIsbn="";
+       static String currentIsbn="";
     public static Book[] books;
 
    @Override
     protected void onCreate(Bundle savedInstanceState) {
        super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_contents);
+
+      if  (isDeleted == true){   Toast.makeText(this,"Book deleted from database",LENGTH_LONG).show();}
+
        createButton();
    }
 

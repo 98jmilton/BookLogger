@@ -32,7 +32,6 @@ import com.google.firebase.storage.UploadTask;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -432,6 +431,7 @@ public class BookDetailsAdder extends AppCompatActivity
                     bookGenre.setText("");
 
                     Intent intent = new Intent(BookDetailsAdder.this, ContentsActivity.class);
+
                     finish();
                     startActivity(intent);
 
@@ -454,6 +454,7 @@ public class BookDetailsAdder extends AppCompatActivity
             bookGenre.setText("");
             Intent intent = new Intent(BookDetailsAdder.this, ContentsActivity.class);
             startActivity(intent);
+            Toast.makeText(this,"Book added to database",LENGTH_LONG).show();
             finish();
         }
 

@@ -1,15 +1,20 @@
 package com.example.ezmilja.booklogger;
 
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,10 +26,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
@@ -45,6 +47,8 @@ public class BookDetailsEditor extends AppCompatActivity {
     private Uri filePath;
     private boolean isBook = false;
     private boolean bookSubmit = false;
+    static boolean isDeleted;
+    Typeface myTypeFace1;
 
     private int bookNumber = 0;
 
@@ -60,6 +64,7 @@ public class BookDetailsEditor extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetailseditor);
+        myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
 
 
         imageView = findViewById(R.id.imgView);
@@ -140,15 +145,11 @@ public class BookDetailsEditor extends AppCompatActivity {
         });
 
         Delete.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View v) {
-                String book = currentIsbn;
-
-                BookRef.child("/Books/").child(book).removeValue();
-
-                Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
-                finish();
-                startActivity(intent);
+            public void onClick(View view) {
+                System.out.println("DELETE IS CLICKED");
+                 makeDeleteDialog();
             }
 
         });
@@ -185,6 +186,50 @@ public class BookDetailsEditor extends AppCompatActivity {
                 else{
                     Toast.makeText(BookDetailsEditor.this,"Please enter a 13 digit ISBN" ,LENGTH_LONG).show();
                 }            }
+        });
+    }
+
+    private void makeDeleteDialog(){
+        System.out.println("I AM IN DELETEDIALOG VOID");
+
+        final Dialog deletedialog = new Dialog(BookDetailsEditor.this);
+        deletedialog.setContentView(R.layout.deleterequest);
+        deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+          TextView title = deletedialog.findViewById(R.id.title);
+          title.setTypeface(myTypeFace1);
+
+          Button yes= deletedialog.findViewById(R.id.yes);
+          Button no = deletedialog.findViewById(R.id.no);
+
+          yes.setTypeface(myTypeFace1);
+          no.setTypeface(myTypeFace1);
+            deletedialog.show();
+
+          yes.setOnClickListener(new View.OnClickListener() {
+
+              @Override
+              public void onClick(View view) {
+                  String book = currentIsbn;
+                  System.out.println("I AM IN DELETEDIALOG yes");
+
+                  BookRef.child("/Books/").child(book).removeValue();
+
+                  Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+                  isDeleted = true;
+                  finish();
+                  startActivity(intent);
+              }
+          });
+
+          no.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                System.out.println("I AM IN DELETEDIALOG no");
+
+                deletedialog.dismiss();
+            }
         });
     }
 
