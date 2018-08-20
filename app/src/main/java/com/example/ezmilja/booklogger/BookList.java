@@ -86,8 +86,8 @@ public class BookList extends AppCompatActivity {
         });
     }
 
+    //Set up ListView and adapter
     private void makeListView(){
-
         ListView listView = findViewById(R.id.list_view);
         customAdapter = new BookList.CustomAdapter(BookList.this, listViewList);
         listView.setAdapter(customAdapter);
@@ -144,7 +144,7 @@ public class BookList extends AppCompatActivity {
                 Glide.with(context).load(myBook.imageAddressX).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
             }
 
-            //Books move to their own details page when clicked
+            //go to each book's own details page when clicked
             try {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -201,9 +201,9 @@ public class BookList extends AppCompatActivity {
                 return results;
             }
 
+            // Now we have to inform the adapter about the new list filtered
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults results) {
-                // Now we have to inform the adapter about the new list filtered
                 if (results.count == 0) {
                     notifyDataSetInvalidated();
                 } else {

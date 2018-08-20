@@ -2,19 +2,12 @@ package com.example.ezmilja.booklogger;
 
 import android.content.Intent;
 import android.graphics.Typeface;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import static android.widget.Toast.LENGTH_LONG;
 import static com.example.ezmilja.booklogger.BookDetailsEditor.isDeleted;
@@ -29,11 +22,13 @@ public class ContentsActivity extends AppCompatActivity {
        super.onCreate(savedInstanceState);
        setContentView(R.layout.activity_contents);
 
-      if  (isDeleted == true){   Toast.makeText(this,"Book deleted from database",LENGTH_LONG).show();}
+       //Notify when book is deleted from database
+      if  (isDeleted){   Toast.makeText(this,"Book deleted from database",LENGTH_LONG).show();}
 
        createButton();
    }
 
+   //Buttons to navigate to other activities
     private void createButton(){
 
         Typeface myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
