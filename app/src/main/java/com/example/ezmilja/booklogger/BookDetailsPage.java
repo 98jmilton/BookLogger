@@ -71,11 +71,14 @@ public class BookDetailsPage extends AppCompatActivity {
                     Genre = (String) dataSnapshot.child(currentIsbn).child("Genre").getValue();
 
 
-                if (Rating != null && NumRating != null) {
+                if (Rating == null && NumRating == null) {
                     done = "Not yet rated";
                 } else {
+                    if(Integer.valueOf(NumRating)==0){done = "Not yet rated";}
+                    else{
                     int maths = Integer.valueOf(Rating) / Integer.valueOf(NumRating);
                     done = String.valueOf(maths);
+                }
                 }
 
                 try {
