@@ -53,7 +53,6 @@ public class SplashScreen extends AppCompatActivity {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-
                 h = (int) dataSnapshot.getChildrenCount();
             }
 
@@ -185,7 +184,7 @@ public class SplashScreen extends AppCompatActivity {
                             }
                         };
                         myThread.start();
-                }
+                    }
             }
         }
     }

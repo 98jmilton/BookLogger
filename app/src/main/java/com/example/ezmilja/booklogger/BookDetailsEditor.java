@@ -14,7 +14,6 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -65,15 +64,12 @@ public class BookDetailsEditor extends AppCompatActivity {
         setContentView(R.layout.activity_bookdetailseditor);
         myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
 
-
         imageView = findViewById(R.id.imgView);
         uploadImage = findViewById(R.id.uploadImage);
         choose = findViewById(R.id.btnChoose);
         btnSubmit = findViewById(R.id.btn_submit);
         Delete = findViewById(R.id.btn_delete);
-
         bookISBN = findViewById(R.id.bookISBN);
-
         bookName = findViewById(R.id.bookName);
         bookAuthor = findViewById(R.id.bookAuthor);
         bookMaxCopys = findViewById(R.id.bookMaxCpys);
@@ -104,7 +100,6 @@ public class BookDetailsEditor extends AppCompatActivity {
                     imageAddress =  (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
                     Genre =         (String) BookSnapshot.child(currentIsbn).child("Genre").getValue();
 
-
                     try {
                         if(ISBN !=null && Name !=null && Author !=null && Publisher !=null&&Description !=null&&Rating !=null&&Pages !=null&&imageAddress !=null&&Genre!=null ){
                             bookName.setText(Name);
@@ -120,7 +115,7 @@ public class BookDetailsEditor extends AppCompatActivity {
                             bookGenre.setText(Genre);
                             imageUrl =new URL(imageAddress);}
                     } catch (MalformedURLException e) {
-                        e.printStackTrace();
+                        //e.printStackTrace();
                     }
                     try
                     {
@@ -131,9 +126,7 @@ public class BookDetailsEditor extends AppCompatActivity {
                         // Returns to the Contents activity if this error happens
                         Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
                         startActivity(intent);
-
                     }
-
                 }
             }
 
@@ -142,7 +135,6 @@ public class BookDetailsEditor extends AppCompatActivity {
 
             }
         });
-
 
         choose.setOnClickListener(new View.OnClickListener() {
             @Override
