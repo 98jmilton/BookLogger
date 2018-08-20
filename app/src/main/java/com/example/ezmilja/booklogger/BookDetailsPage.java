@@ -36,16 +36,7 @@ public class BookDetailsPage extends AppCompatActivity {
     TextView bookGenre;
     private ImageView bookImage;
 
-    private String ISBN = "Not Found";
-    private String Name = "Not Found";
-    private String Author = "Not Found";
-    private String Publisher = "Not Found";
-    private String Description  = "Not Found";
-    private String Rating = "404";
-    private String NumRating = "404";
-    private String Pages = "Not Found";
-    private String imageAddress ;
-    private String Genre = "Not Found";
+    private String ISBN,Name,Author,Publisher,Description ,Rating,NumRating,Pages,imageAddress,Genre;
     private URL imageUrl;
     private String done;
 
@@ -64,32 +55,30 @@ public class BookDetailsPage extends AppCompatActivity {
         bookImage= findViewById(R.id.bookImage);
         bookGenre = findViewById(R.id.bookGenre);
 
-        BookRef.addValueEventListener(new ValueEventListener() {
+        BookRef.child("/Books/").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                for(DataSnapshot BookSnapshot: dataSnapshot.getChildren()) {
-                    ISBN = (String) BookSnapshot.child(currentIsbn).child("ISBN").getValue();
-                    Name = (String) BookSnapshot.child(currentIsbn).child("BookName").getValue();
-                    Author = (String) BookSnapshot.child(currentIsbn).child("Author").getValue();
-                    Publisher = (String) BookSnapshot.child(currentIsbn).child("Publisher").getValue();
-                    Description = (String) BookSnapshot.child(currentIsbn).child("Description").getValue();
-                    Rating = (String) BookSnapshot.child(currentIsbn).child("Rating").getValue();
-                    NumRating = (String) BookSnapshot.child(currentIsbn).child("NumRating").getValue();
-                    Pages = (String) BookSnapshot.child(currentIsbn).child("Pages").getValue();
-                    imageAddress = (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
-                    Genre = (String) BookSnapshot.child(currentIsbn).child("Genre").getValue();
+                    ISBN = (String) dataSnapshot.child(currentIsbn).child("ISBN").getValue();
+                    Name = (String) dataSnapshot.child(currentIsbn).child("BookName").getValue();
+                    Author = (String) dataSnapshot.child(currentIsbn).child("Author").getValue();
+                    Publisher = (String) dataSnapshot.child(currentIsbn).child("Publisher").getValue();
+                    Description = (String) dataSnapshot.child(currentIsbn).child("Description").getValue();
+                    Rating = (String) dataSnapshot.child(currentIsbn).child("Rating").getValue();
+                    NumRating = (String) dataSnapshot.child(currentIsbn).child("NumRating").getValue();
+                    Pages = (String) dataSnapshot.child(currentIsbn).child("Pages").getValue();
+                    imageAddress = (String) dataSnapshot.child(currentIsbn).child("ImageAddress").getValue();
+                    Genre = (String) dataSnapshot.child(currentIsbn).child("Genre").getValue();
 
 
-                    if(Rating == "404" || NumRating == "404") {
-                        int maths = Integer.valueOf(Rating) / Integer.valueOf(NumRating);
-                        done = String.valueOf(maths);
-                    }
-                    else{
-                        done = "Not yet rated";
-                    }
+                if (Rating != null && NumRating != null) {
+                    done = "Not yet rated";
+                } else {
+                    int maths = Integer.valueOf(Rating) / Integer.valueOf(NumRating);
+                    done = String.valueOf(maths);
+                }
 
-                    try {
+                try {
                         if(ISBN !=null && Name !=null && Author !=null && Publisher !=null&&Description !=null&&Rating !=null&&Pages !=null&&imageAddress !=null&&Genre!=null ){
                             bookISBN.setText("ISBN: "+ ISBN);
                             bookName.setText("Title: "+ Name);
@@ -112,7 +101,7 @@ public class BookDetailsPage extends AppCompatActivity {
                         startActivity(intent);
                     }
                 }
-            }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -125,6 +114,7 @@ public class BookDetailsPage extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(BookDetailsPage.this, BookDetailsEditor.class);
+                finish();
                 startActivity(intent);
             }
         });
@@ -134,6 +124,7 @@ public class BookDetailsPage extends AppCompatActivity {
         super.onBackPressed();
         this.finish();
         Intent intent = new Intent( this, BookList.class);
+        finish();
         startActivity(intent);
     }
 }

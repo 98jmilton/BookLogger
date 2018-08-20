@@ -82,26 +82,26 @@ public class BookDetailsEditor extends AppCompatActivity {
         bookGenre = findViewById(R.id.bookGenre);
 
 
-        BookRef.addValueEventListener(new ValueEventListener() {
+        BookRef.child("/Books/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
 
-                    ISBN =          (String) BookSnapshot.child(currentIsbn).child("ISBN").getValue();
-                    Name =          (String) BookSnapshot.child(currentIsbn).child("BookName").getValue();
-                    Author =        (String) BookSnapshot.child(currentIsbn).child("Author").getValue();
-                    Publisher =     (String) BookSnapshot.child(currentIsbn).child("Publisher").getValue();
-                    Description =   (String) BookSnapshot.child(currentIsbn).child("Description").getValue();
-                    Rating =        (String) BookSnapshot.child(currentIsbn).child("Rating").getValue();
-                    Pages =         (String) BookSnapshot.child(currentIsbn).child("Pages").getValue();
-                    MxCopys =       (String) BookSnapshot.child(currentIsbn).child("MaxCopys").getValue();
-                    NumRating =     (String) BookSnapshot.child(currentIsbn).child("NumRating").getValue();
-                    NumCopys =      (String) BookSnapshot.child(currentIsbn).child("NumCopys").getValue();
-                    imageAddress =  (String) BookSnapshot.child(currentIsbn).child("ImageAddress").getValue();
-                    Genre =         (String) BookSnapshot.child(currentIsbn).child("Genre").getValue();
+                    ISBN =          (String) dataSnapshot.child(currentIsbn).child("ISBN").getValue();
+                    Name =          (String) dataSnapshot.child(currentIsbn).child("BookName").getValue();
+                    Author =        (String) dataSnapshot.child(currentIsbn).child("Author").getValue();
+                    Publisher =     (String) dataSnapshot.child(currentIsbn).child("Publisher").getValue();
+                    Description =   (String) dataSnapshot.child(currentIsbn).child("Description").getValue();
+                    Rating =        (String) dataSnapshot.child(currentIsbn).child("Rating").getValue();
+                    Pages =         (String) dataSnapshot.child(currentIsbn).child("Pages").getValue();
+                    MxCopys =       (String) dataSnapshot.child(currentIsbn).child("MaxCopys").getValue();
+                    NumRating =     (String) dataSnapshot.child(currentIsbn).child("NumRating").getValue();
+                    NumCopys =      (String) dataSnapshot.child(currentIsbn).child("NumCopys").getValue();
+                    imageAddress =  (String) dataSnapshot.child(currentIsbn).child("ImageAddress").getValue();
+                    Genre =         (String) dataSnapshot.child(currentIsbn).child("Genre").getValue();
+
 
                     try {
-                        if(ISBN !=null && Name !=null && Author !=null && Publisher !=null&&Description !=null&&Rating !=null&&Pages !=null&&imageAddress !=null&&Genre!=null ){
+                        if(ISBN != null && Name != null && Author != null && Publisher != null && Description != null && Rating != null && Pages != null && MxCopys != null && NumRating != null && NumCopys != null && imageAddress != null && Genre != null){
                             bookName.setText(Name);
                             bookAuthor.setText(Author);
                             bookISBN.setText(ISBN);
@@ -114,21 +114,16 @@ public class BookDetailsEditor extends AppCompatActivity {
                             bookRating.setText(Rating);
                             bookGenre.setText(Genre);
                             imageUrl =new URL(imageAddress);}
+                            else{makeOopsDialog();}
                     } catch (MalformedURLException e) {
                         //e.printStackTrace();
                     }
-                    try
-                    {
+
                         Glide.with(BookDetailsEditor.this).load(imageUrl).into(imageView);
-                    }
-                    catch (IllegalArgumentException e){
-                        //e.printStackTrace();
-                        // Returns to the Contents activity if this error happens
-                        Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
-                        startActivity(intent);
-                    }
+
+
                 }
-            }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -230,6 +225,37 @@ public class BookDetailsEditor extends AppCompatActivity {
                 deletedialog.dismiss();
             }
         });
+    }
+
+    private void makeOopsDialog(){
+        System.out.println("I AM IN OopsDialog VOID");
+
+        final Dialog deletedialog = new Dialog(BookDetailsEditor.this);
+        deletedialog.setContentView(R.layout.oopsdialog);
+        deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        TextView title = deletedialog.findViewById(R.id.title);
+        TextView oops = deletedialog.findViewById(R.id.oops);
+        Button back = deletedialog.findViewById(R.id.back);
+
+        back.setTypeface(myTypeFace1);
+        title.setTypeface(myTypeFace1);
+        oops.setTypeface(myTypeFace1);
+
+        deletedialog.show();
+
+        back.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View view) {
+                System.out.println("I AM IN return dialog yes");
+                Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+                finish();
+                startActivity(intent);
+            }
+        });
+
+
     }
 
     private void chooseImage() {
@@ -363,7 +389,7 @@ public class BookDetailsEditor extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
-        Intent intent = new Intent( this, ContentsActivity.class);
+        Intent intent = new Intent( this, BookList.class);
         startActivity(intent);
     }
 }

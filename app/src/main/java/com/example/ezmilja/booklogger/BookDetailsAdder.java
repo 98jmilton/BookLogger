@@ -229,7 +229,7 @@ public class BookDetailsAdder extends AppCompatActivity
 
                 final DatabaseReference BookRef2 = BookRef.child("/Books/");
 
-                BookRef2.addValueEventListener(new ValueEventListener() {
+                BookRef2.addListenerForSingleValueEvent(new ValueEventListener() {
                     String Number;
 
                     @Override

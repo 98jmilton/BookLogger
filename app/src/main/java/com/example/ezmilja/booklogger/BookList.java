@@ -3,6 +3,7 @@ package com.example.ezmilja.booklogger;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
@@ -32,7 +33,8 @@ public class BookList extends AppCompatActivity {
     SearchView searchView;
     private BookList.CustomAdapter customAdapter;
     public static ArrayList<Book> listViewList =new ArrayList<>();
-
+    private final Handler handler = new Handler();
+    int welp = 0;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
@@ -45,6 +47,7 @@ public class BookList extends AppCompatActivity {
                 int k;
                 listViewList.clear();
 
+                if (welp == 1)doTheRefresh();
                 for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
                     k = (int) dataSnapshot.getChildrenCount();
 
@@ -55,14 +58,20 @@ public class BookList extends AppCompatActivity {
                     String genre        = (String) BookSnapshot.child("Genre").getValue();
 
                     try{
-                        listViewList.add(book= new Book(isbn,bookName,author,imageAddress,genre));
-                        if(i==k-1) makeListView();
+                        if(isbn!=null && bookName!=null && author!=null && imageAddress!=null && genre!=null){
+                            listViewList.add(book= new Book(isbn,bookName,author,imageAddress,genre));
+                            if(i==k-1){
+
+                                makeListView();}
+                            i++;
+                        }
                     }
                     catch (ArrayIndexOutOfBoundsException e){
                         return;
+
                     }
-                    i++;
                 }
+                welp++;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -71,7 +80,6 @@ public class BookList extends AppCompatActivity {
 
         //Search for books
         searchView = findViewById(R.id.search_view);
-        searchView.setIconified(false);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -85,9 +93,16 @@ public class BookList extends AppCompatActivity {
             }
         });
     }
+    private void doTheRefresh() {
 
-    //Set up ListView and adapter
+        listViewList.clear();
+        welp = 0;
+        Intent intent = new Intent( BookList.this, BookList.class);
+        startActivity(intent);
+
+    }
     private void makeListView(){
+
         ListView listView = findViewById(R.id.list_view);
         customAdapter = new BookList.CustomAdapter(BookList.this, listViewList);
         listView.setAdapter(customAdapter);
@@ -144,7 +159,7 @@ public class BookList extends AppCompatActivity {
                 Glide.with(context).load(myBook.imageAddressX).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
             }
 
-            //go to each book's own details page when clicked
+            //Books move to their own details page when clicked
             try {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -201,9 +216,9 @@ public class BookList extends AppCompatActivity {
                 return results;
             }
 
-            // Now we have to inform the adapter about the new list filtered
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults results) {
+                // Now we have to inform the adapter about the new list filtered
                 if (results.count == 0) {
                     notifyDataSetInvalidated();
                 } else {
