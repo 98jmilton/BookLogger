@@ -81,7 +81,6 @@ public class BookDetailsEditor extends AppCompatActivity {
         bookRating = findViewById(R.id.bookRating);
         bookGenre = findViewById(R.id.bookGenre);
 
-
         BookRef.child("/Books/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -98,7 +97,6 @@ public class BookDetailsEditor extends AppCompatActivity {
                     NumCopys =      (String) dataSnapshot.child(currentIsbn).child("NumCopys").getValue();
                     imageAddress =  (String) dataSnapshot.child(currentIsbn).child("ImageAddress").getValue();
                     Genre =         (String) dataSnapshot.child(currentIsbn).child("Genre").getValue();
-
 
                     try {
                         if(ISBN != null && Name != null && Author != null && Publisher != null && Description != null && Rating != null && Pages != null && MxCopys != null && NumRating != null && NumCopys != null && imageAddress != null && Genre != null){
@@ -118,11 +116,8 @@ public class BookDetailsEditor extends AppCompatActivity {
                     } catch (MalformedURLException e) {
                         //e.printStackTrace();
                     }
-
-                        Glide.with(BookDetailsEditor.this).load(imageUrl).into(imageView);
-
-
-                }
+                    Glide.with(BookDetailsEditor.this).load(imageUrl).into(imageView);
+            }
 
 
             @Override
@@ -166,8 +161,6 @@ public class BookDetailsEditor extends AppCompatActivity {
                 bookSRating = bookRating.getText().toString();
                 bookSGenre = bookGenre.getText().toString();
                 uploadData();
-
-
         }});
 
         uploadImage.setOnClickListener(new View.OnClickListener() {
@@ -179,7 +172,8 @@ public class BookDetailsEditor extends AppCompatActivity {
                 }
                 else{
                     Toast.makeText(BookDetailsEditor.this,"Please enter a 13 digit ISBN" ,LENGTH_LONG).show();
-                }            }
+                }
+            }
         });
     }
 
@@ -254,8 +248,6 @@ public class BookDetailsEditor extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-
     }
 
     private void chooseImage() {

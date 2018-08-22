@@ -14,7 +14,7 @@ import static com.example.ezmilja.booklogger.BookDetailsEditor.isDeleted;
 
 public class ContentsActivity extends AppCompatActivity {
 
-       static String currentIsbn="";
+    static String currentIsbn="";
     public static Book[] books;
 
    @Override
@@ -38,6 +38,9 @@ public class ContentsActivity extends AppCompatActivity {
         Button btn_bookList = findViewById(R.id.btn_bookList);
         btn_bookList.setTypeface(myTypeFace1);
 
+        Button btn_rqst = findViewById(R.id.btn_rqst);
+        btn_rqst.setTypeface(myTypeFace1);
+
         TextView textView2 = findViewById(R.id.textView2);
         textView2.setTypeface(myTypeFace1);
 
@@ -45,6 +48,15 @@ public class ContentsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent( ContentsActivity.this, BookDetailsAdder.class);
+                startActivity(intent);
+                ContentsActivity.this.finish();
+            }
+        });
+
+        btn_rqst.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(ContentsActivity.this, RequestList.class);
                 startActivity(intent);
                 ContentsActivity.this.finish();
             }
