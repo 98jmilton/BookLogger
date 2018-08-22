@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -33,7 +34,6 @@ public class BookList extends AppCompatActivity {
     SearchView searchView;
     private BookList.CustomAdapter customAdapter;
     public static ArrayList<Book> listViewList =new ArrayList<>();
-    private final Handler handler = new Handler();
     int welp = 0;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,18 +68,20 @@ public class BookList extends AppCompatActivity {
                     }
                     catch (ArrayIndexOutOfBoundsException e){
                         return;
-
                     }
                 }
                 welp++;
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
+
             }
         });
 
         //Search for books
         searchView = findViewById(R.id.search_view);
+        searchView.setIconifiedByDefault(false);
+
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
@@ -92,6 +94,8 @@ public class BookList extends AppCompatActivity {
                 return false;
             }
         });
+
+        searchView.setIconifiedByDefault(true);
     }
     private void doTheRefresh() {
 
@@ -128,10 +132,10 @@ public class BookList extends AppCompatActivity {
         public int getCount() {return showList.size();}
 
         @Override
-        public Object getItem(int position) {return showList.get(position);}
+        public Object getItem (int position) {return showList.get(position);}
 
         @Override
-        public long getItemId(int position) {return showList.get(position).hashCode();}
+        public long getItemId (int position) {return showList.get(position).hashCode();}
 
         //Fill layout with image, name and author
         @Override
@@ -154,7 +158,8 @@ public class BookList extends AppCompatActivity {
                 holder = (ViewHolder) vi.getTag();
             }
 
-            holder.bookDetails.setText(myBook.getName()+"\n\n"+myBook.getAuthor());
+            holder.bookDetails.setText(myBook.getName()+"\n\n"+myBook.getAuthor()+"\n\n"+myBook.getGenre());
+
             if (myBook.imageAddressX != null) {
                 Glide.with(context).load(myBook.imageAddressX).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
             }
@@ -198,7 +203,7 @@ public class BookList extends AppCompatActivity {
                     results.count = showList.size();
                 } else {
                     // We perform filtering operation
-                    List<Book> nBookList = new ArrayList<Book>();
+                    List<Book> nBookList = new ArrayList<>();
 
                     for (Book b : listViewList) {
                         if (b.getName().toUpperCase()
@@ -206,6 +211,14 @@ public class BookList extends AppCompatActivity {
                             nBookList.add(b);
                         } else if (b.getAuthor().toUpperCase()
                                 .contains(constraint.toString().toUpperCase())) {
+                            nBookList.add(b);
+                        }
+                        else if (b.getGenre().toUpperCase()
+                                .contains(constraint.toString().toUpperCase())) {
+                            nBookList.add(b);
+                        }
+                        else if (b.getIsbn()
+                                .contains(constraint.toString())) {
                             nBookList.add(b);
                         }
                     }

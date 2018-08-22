@@ -1,9 +1,6 @@
 package com.example.ezmilja.booklogger;
 
 import android.content.Intent;
-import android.icu.util.IslamicCalendar;
-import android.net.Uri;
-import android.net.UrlQuerySanitizer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;

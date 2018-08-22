@@ -10,6 +10,44 @@
     tools:layout_editor_absoluteY="81dp">
 
     <Button
+        android:id="@+id/btn_bookAdder"
+        android:layout_width="220dp"
+        android:layout_height="65dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="32dp"
+        android:text="Add Book"
+        android:background="@drawable/mybuttonnormal"
+        android:textColor="@android:color/background_light"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2"
+        tools:text="Add Book" />
+
+    <Button
+        android:id="@+id/btn_rqst"
+        android:layout_width="220dp"
+        android:layout_height="65dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="7dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button"
+        android:text="Requests"
+        android:textColor="@android:color/background_light"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.467"
+        tools:text="Requests" />
+
+    <Button
         android:id="@+id/btn_bookList"
         android:layout_width="220dp"
         android:layout_height="65dp"
@@ -17,8 +55,8 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/mybuttonnormal"
         android:text="Book List"
+        android:background="@drawable/mybuttonnormal"
         android:textColor="@android:color/background_light"
         android:textSize="20sp"
         android:textStyle="bold"
@@ -26,25 +64,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btn_bookAdder"
-        app:layout_constraintVertical_bias="0.31"
+        app:layout_constraintVertical_bias="0.673"
         tools:text="Book List" />
-
-    <Button
-        android:id="@+id/btn_bookAdder"
-        android:layout_width="220dp"
-        android:layout_height="65dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginTop="72dp"
-        android:background="@drawable/mybuttonnormal"
-        android:text="Add Book"
-        android:textColor="@android:color/background_light"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.525"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView2"
-        tools:text="Add Book" />
 
     <TextView
         android:id="@+id/textView2"

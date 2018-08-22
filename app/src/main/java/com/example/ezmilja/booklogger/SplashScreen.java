@@ -147,7 +147,7 @@ public class SplashScreen extends AppCompatActivity {
                                         + grantResults[2]
                                         == PackageManager.PERMISSION_GRANTED
                                 )
-                        ){
+                        ) {
                     // Permissions are granted
                     Toast.makeText(mContext,"Permissions granted.",Toast.LENGTH_SHORT).show();
 
@@ -165,8 +165,7 @@ public class SplashScreen extends AppCompatActivity {
                         }
                     };
                     myThread.start();
-                }else
-                    {
+                } else {
                     // Permissions are denied
                     Toast.makeText(mContext,"Permissions denied.",Toast.LENGTH_SHORT).show();
 
