@@ -13,6 +13,9 @@ import static android.widget.Toast.LENGTH_LONG;
 import static com.example.ezmilja.booklogger.BookDetailsEditor.isDeleted;
 
 public class ContentsActivity extends AppCompatActivity {
+    public static boolean listcurrentPage=false;
+    public static boolean detailscurrentPage=false;
+    public static boolean editorcurrentPage=false;
 
     static String currentIsbn="";
     public static Book[] books;
@@ -66,6 +69,7 @@ public class ContentsActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent( ContentsActivity.this, BookList.class);
+                listcurrentPage=true;
                 startActivity(intent);
                 ContentsActivity.this.finish();
             }

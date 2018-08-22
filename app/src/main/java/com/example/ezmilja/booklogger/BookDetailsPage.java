@@ -19,6 +19,9 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
+import static com.example.ezmilja.booklogger.ContentsActivity.detailscurrentPage;
+import static com.example.ezmilja.booklogger.ContentsActivity.editorcurrentPage;
+import static com.example.ezmilja.booklogger.ContentsActivity.listcurrentPage;
 import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 
 
@@ -52,9 +55,10 @@ public class BookDetailsPage extends AppCompatActivity {
         bookImage= findViewById(R.id.bookImage);
         bookGenre = findViewById(R.id.bookGenre);
 
-        BookRef.child("/Books/").addValueEventListener(new ValueEventListener() {
+        BookRef.child("/Books/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                if (detailscurrentPage) {
 
                     ISBN = (String) dataSnapshot.child(currentIsbn).child("ISBN").getValue();
                     Name = (String) dataSnapshot.child(currentIsbn).child("BookName").getValue();
@@ -68,36 +72,32 @@ public class BookDetailsPage extends AppCompatActivity {
                     Genre = (String) dataSnapshot.child(currentIsbn).child("Genre").getValue();
 
 
-                if (Rating != null && NumRating != null) {
-                    done = "Not yet rated";
-                } else {
-                    int maths = Integer.valueOf(Rating) / Integer.valueOf(NumRating);
-                    done = String.valueOf(maths);
-                }
+                    if (Rating != null && NumRating != null) {
+                        done = "Not yet rated";
+                    } else {
+                        int maths = Integer.valueOf(Rating) / Integer.valueOf(NumRating);
+                        done = String.valueOf(maths);
+                    }
 
-                try {
-                        if(ISBN !=null && Name !=null && Author !=null && Publisher !=null&&Description !=null&&Rating !=null&&Pages !=null&&imageAddress !=null&&Genre!=null ){
-                            bookISBN.setText("ISBN: "+ ISBN);
-                            bookName.setText("Title: "+ Name);
-                            bookAuthor.setText("Author: "+ Author);
-                            bookPublisher.setText("Publisher: "+ Publisher);
-                            bookDescription.setText("Description: "+ Description);
-                            bookRating.setText("User Rating: "+ done);
-                            bookPages.setText("Page Count:"+ Pages);
-                            bookGenre.setText("Genre:"+ Genre);
-                            imageUrl =new URL(imageAddress);}
+                    try {
+                        if (ISBN != null && Name != null && Author != null && Publisher != null && Description != null && Rating != null && Pages != null && imageAddress != null && Genre != null) {
+                            bookISBN.setText("ISBN: " + ISBN);
+                            bookName.setText("Title: " + Name);
+                            bookAuthor.setText("Author: " + Author);
+                            bookPublisher.setText("Publisher: " + Publisher);
+                            bookDescription.setText("Description: " + Description);
+                            bookRating.setText("User Rating: " + done);
+                            bookPages.setText("Page Count:" + Pages);
+                            bookGenre.setText("Genre:" + Genre);
+                            imageUrl = new URL(imageAddress);
+                        }
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
-                    try {
                         Glide.with(BookDetailsPage.this).load(imageUrl).into(bookImage);
-                    }
-                    catch (IllegalArgumentException e){
-                      //  e.printStackTrace();
-                        Intent intent = new Intent(BookDetailsPage.this, ContentsActivity.class);
-                        startActivity(intent);
-                    }
+
                 }
+            }
 
 
             @Override
@@ -110,6 +110,8 @@ public class BookDetailsPage extends AppCompatActivity {
         btn_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                detailscurrentPage=false;
+                editorcurrentPage=true;
                 Intent intent = new Intent(BookDetailsPage.this, BookDetailsEditor.class);
                 finish();
                 startActivity(intent);
@@ -120,6 +122,8 @@ public class BookDetailsPage extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
+        detailscurrentPage=false;
+        listcurrentPage=true;
         Intent intent = new Intent( this, BookList.class);
         finish();
         startActivity(intent);

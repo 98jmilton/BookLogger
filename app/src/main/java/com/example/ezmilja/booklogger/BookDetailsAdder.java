@@ -38,6 +38,7 @@ import java.net.URL;
 import java.util.concurrent.ExecutionException;
 import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
+import static com.example.ezmilja.booklogger.ContentsActivity.detailscurrentPage;
 import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 import static com.example.ezmilja.booklogger.SplashScreen.storageReference;
 
@@ -422,7 +423,6 @@ public class BookDetailsAdder extends AppCompatActivity
                     bookGenre.setText("");
 
                     Intent intent = new Intent(BookDetailsAdder.this, ContentsActivity.class);
-
                     finish();
                     startActivity(intent);
 
@@ -444,6 +444,7 @@ public class BookDetailsAdder extends AppCompatActivity
             bookNumRating.setText("");
             bookGenre.setText("");
             Intent intent = new Intent(BookDetailsAdder.this, ContentsActivity.class);
+            finish();
             startActivity(intent);
             Toast.makeText(this,"Book added to database",LENGTH_LONG).show();
             finish();
@@ -472,6 +473,8 @@ public class BookDetailsAdder extends AppCompatActivity
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(BookDetailsAdder.this, BookDetailsPage.class);
+                finish();
+                detailscurrentPage=true;
                 startActivity(intent);
                 //dialog.dismiss();
             }

@@ -37,6 +37,8 @@ import java.net.URL;
 
 import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
+import static com.example.ezmilja.booklogger.ContentsActivity.detailscurrentPage;
+import static com.example.ezmilja.booklogger.ContentsActivity.editorcurrentPage;
 import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 import static com.example.ezmilja.booklogger.SplashScreen.storageReference;
 
@@ -81,43 +83,52 @@ public class BookDetailsEditor extends AppCompatActivity {
         bookRating = findViewById(R.id.bookRating);
         bookGenre = findViewById(R.id.bookGenre);
 
-        BookRef.child("/Books/").addListenerForSingleValueEvent(new ValueEventListener() {
+
+        BookRef.child("/Books/").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                    ISBN =          (String) dataSnapshot.child(currentIsbn).child("ISBN").getValue();
-                    Name =          (String) dataSnapshot.child(currentIsbn).child("BookName").getValue();
-                    Author =        (String) dataSnapshot.child(currentIsbn).child("Author").getValue();
-                    Publisher =     (String) dataSnapshot.child(currentIsbn).child("Publisher").getValue();
-                    Description =   (String) dataSnapshot.child(currentIsbn).child("Description").getValue();
-                    Rating =        (String) dataSnapshot.child(currentIsbn).child("Rating").getValue();
-                    Pages =         (String) dataSnapshot.child(currentIsbn).child("Pages").getValue();
-                    MxCopys =       (String) dataSnapshot.child(currentIsbn).child("MaxCopys").getValue();
-                    NumRating =     (String) dataSnapshot.child(currentIsbn).child("NumRating").getValue();
-                    NumCopys =      (String) dataSnapshot.child(currentIsbn).child("NumCopys").getValue();
-                    imageAddress =  (String) dataSnapshot.child(currentIsbn).child("ImageAddress").getValue();
-                    Genre =         (String) dataSnapshot.child(currentIsbn).child("Genre").getValue();
+               if (editorcurrentPage) {
 
-                    try {
-                        if(ISBN != null && Name != null && Author != null && Publisher != null && Description != null && Rating != null && Pages != null && MxCopys != null && NumRating != null && NumCopys != null && imageAddress != null && Genre != null){
-                            bookName.setText(Name);
-                            bookAuthor.setText(Author);
-                            bookISBN.setText(ISBN);
-                            bookMaxCopys.setText(MxCopys);
-                            bookDescription.setText(Description);
-                            bookNumCopys.setText(NumCopys);
-                            bookPage.setText(Pages);
-                            bookPublisher.setText(Publisher);
-                            bookNumRating.setText(NumRating);
-                            bookRating.setText(Rating);
-                            bookGenre.setText(Genre);
-                            imageUrl =new URL(imageAddress);}
-                            else{makeOopsDialog();}
-                    } catch (MalformedURLException e) {
-                        //e.printStackTrace();
-                    }
-                    Glide.with(BookDetailsEditor.this).load(imageUrl).into(imageView);
-            }
+                   ISBN = (String) dataSnapshot.child(currentIsbn).child("ISBN").getValue();
+                   Name = (String) dataSnapshot.child(currentIsbn).child("BookName").getValue();
+                   Author = (String) dataSnapshot.child(currentIsbn).child("Author").getValue();
+                   Publisher = (String) dataSnapshot.child(currentIsbn).child("Publisher").getValue();
+                   Description = (String) dataSnapshot.child(currentIsbn).child("Description").getValue();
+                   Rating = (String) dataSnapshot.child(currentIsbn).child("Rating").getValue();
+                   Pages = (String) dataSnapshot.child(currentIsbn).child("Pages").getValue();
+                   MxCopys = (String) dataSnapshot.child(currentIsbn).child("MaxCopys").getValue();
+                   NumRating = (String) dataSnapshot.child(currentIsbn).child("NumRating").getValue();
+                   NumCopys = (String) dataSnapshot.child(currentIsbn).child("NumCopys").getValue();
+                   imageAddress = (String) dataSnapshot.child(currentIsbn).child("ImageAddress").getValue();
+                   Genre = (String) dataSnapshot.child(currentIsbn).child("Genre").getValue();
+
+
+                   try {
+                       if (ISBN != null && Name != null && Author != null && Publisher != null && Description != null && Rating != null && Pages != null && MxCopys != null && NumRating != null && NumCopys != null && imageAddress != null && Genre != null) {
+                           bookName.setText(Name);
+                           bookAuthor.setText(Author);
+                           bookISBN.setText(ISBN);
+                           bookMaxCopys.setText(MxCopys);
+                           bookDescription.setText(Description);
+                           bookNumCopys.setText(NumCopys);
+                           bookPage.setText(Pages);
+                           bookPublisher.setText(Publisher);
+                           bookNumRating.setText(NumRating);
+                           bookRating.setText(Rating);
+                           bookGenre.setText(Genre);
+                           imageUrl = new URL(imageAddress);
+                       } else {
+                           makeOopsDialog();
+                       }
+                   } catch (MalformedURLException e) {
+                       //e.printStackTrace();
+                   }
+
+                   Glide.with(BookDetailsEditor.this).load(imageUrl).into(imageView);
+
+               }
+                }
 
 
             @Override
@@ -205,6 +216,7 @@ public class BookDetailsEditor extends AppCompatActivity {
 
                   Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
                   isDeleted = true;
+                  editorcurrentPage=false;
                   finish();
                   startActivity(intent);
               }
@@ -244,6 +256,7 @@ public class BookDetailsEditor extends AppCompatActivity {
             public void onClick(View view) {
                 System.out.println("I AM IN return dialog yes");
                 Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+                editorcurrentPage=false;
                 finish();
                 startActivity(intent);
             }
@@ -350,6 +363,7 @@ public class BookDetailsEditor extends AppCompatActivity {
                     bookGenre.setText("");
 
                     Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+                    editorcurrentPage=false;
                     finish();
                     startActivity(intent);
 
@@ -372,6 +386,7 @@ public class BookDetailsEditor extends AppCompatActivity {
             bookGenre.setText("");
 
             Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+            editorcurrentPage=false;
             startActivity(intent);
             finish();
         }
@@ -380,6 +395,7 @@ public class BookDetailsEditor extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
+        editorcurrentPage=false;
         this.finish();
         Intent intent = new Intent( this, BookList.class);
         startActivity(intent);

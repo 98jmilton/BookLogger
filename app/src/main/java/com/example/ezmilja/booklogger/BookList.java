@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
+import static com.example.ezmilja.booklogger.ContentsActivity.detailscurrentPage;
+import static com.example.ezmilja.booklogger.ContentsActivity.listcurrentPage;
 import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 
 public class BookList extends AppCompatActivity {
@@ -39,15 +41,16 @@ public class BookList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
 
+
         //Pull books from database
         BookRef.child("/Books/").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 int i = 0;
                 int k;
-                listViewList.clear();
+                if(listcurrentPage){
 
-                if (welp == 1)doTheRefresh();
+                    listViewList.clear();
                 for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
                     k = (int) dataSnapshot.getChildrenCount();
 
@@ -71,6 +74,7 @@ public class BookList extends AppCompatActivity {
                     }
                 }
                 welp++;
+                }
             }
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -97,14 +101,7 @@ public class BookList extends AppCompatActivity {
 
         searchView.setIconifiedByDefault(true);
     }
-    private void doTheRefresh() {
 
-        listViewList.clear();
-        welp = 0;
-        Intent intent = new Intent( BookList.this, BookList.class);
-        startActivity(intent);
-
-    }
     private void makeListView(){
 
         ListView listView = findViewById(R.id.list_view);
@@ -172,6 +169,8 @@ public class BookList extends AppCompatActivity {
                         currentIsbn = myBook.isbnX;
                         Context context = view.getContext();
                         Intent intent = new Intent(context, BookDetailsPage.class);
+                        listcurrentPage = false;
+                        detailscurrentPage=true;
                         context.startActivity(intent);
                         BookList.this.finish();
                     }
@@ -246,7 +245,9 @@ public class BookList extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
+        listcurrentPage=false;
         Intent intent = new Intent( this, ContentsActivity.class);
         startActivity(intent);
+        finish();
     }
 }
