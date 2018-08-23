@@ -39,6 +39,7 @@ import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
 import static com.example.ezmilja.booklogger.ContentsActivity.detailscurrentPage;
 import static com.example.ezmilja.booklogger.ContentsActivity.editorcurrentPage;
+import static com.example.ezmilja.booklogger.ContentsActivity.listcurrentPage;
 import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 import static com.example.ezmilja.booklogger.SplashScreen.storageReference;
 
@@ -396,6 +397,7 @@ public class BookDetailsEditor extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         editorcurrentPage=false;
+        listcurrentPage=true;
         this.finish();
         Intent intent = new Intent( this, BookList.class);
         startActivity(intent);

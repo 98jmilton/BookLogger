@@ -7,9 +7,11 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Filter;
 import android.widget.Filterable;
@@ -24,23 +26,30 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
-
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
 import static com.example.ezmilja.booklogger.ContentsActivity.detailscurrentPage;
 import static com.example.ezmilja.booklogger.ContentsActivity.listcurrentPage;
 import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 
+
 public class BookList extends AppCompatActivity {
+
+
+
+
     public static Book book;
     SearchView searchView;
-    private BookList.CustomAdapter customAdapter;
-    public static ArrayList<Book> listViewList =new ArrayList<>();
+    public  ArrayList<Book> listViewList =new ArrayList<Book>();
+    private CustomAdapter customAdapter;
     int welp = 0;
+    Boolean reload;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_list);
-
+        reload=true;
 
         //Pull books from database
         BookRef.child("/Books/").addValueEventListener(new ValueEventListener() {
@@ -51,29 +60,29 @@ public class BookList extends AppCompatActivity {
                 if(listcurrentPage){
 
                     listViewList.clear();
-                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
-                    k = (int) dataSnapshot.getChildrenCount();
+                    for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
+                        k = (int) dataSnapshot.getChildrenCount();
 
-                    String isbn         = (String) BookSnapshot.child("ISBN").getValue();
-                    String bookName     = (String) BookSnapshot.child("BookName").getValue();
-                    String author       = (String) BookSnapshot.child("Author").getValue();
-                    String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
-                    String genre        = (String) BookSnapshot.child("Genre").getValue();
+                        String isbn         = (String) BookSnapshot.child("ISBN").getValue();
+                        String bookName     = (String) BookSnapshot.child("BookName").getValue();
+                        String author       = (String) BookSnapshot.child("Author").getValue();
+                        String imageAddress = (String) BookSnapshot.child("ImageAddress").getValue();
+                        String genre        = (String) BookSnapshot.child("Genre").getValue();
 
-                    try{
-                        if(isbn!=null && bookName!=null && author!=null && imageAddress!=null && genre!=null){
-                            listViewList.add(book= new Book(isbn,bookName,author,imageAddress,genre));
-                            if(i==k-1){
-
-                                makeListView();}
-                            i++;
+                        try{
+                            if(isbn!=null && bookName!=null && author!=null && imageAddress!=null && genre!=null){
+                                listViewList.add(book= new Book(isbn,bookName,author,imageAddress,genre));
+                                if(i==k-1){
+                                    makeListView();
+                                }
+                                i++;
+                            }
+                        }
+                        catch (ArrayIndexOutOfBoundsException e){
+                            return;
                         }
                     }
-                    catch (ArrayIndexOutOfBoundsException e){
-                        return;
-                    }
-                }
-                welp++;
+                    welp++;
                 }
             }
             @Override
@@ -104,9 +113,22 @@ public class BookList extends AppCompatActivity {
 
     private void makeListView(){
 
-        ListView listView = findViewById(R.id.list_view);
+        sortlist(listViewList);
         customAdapter = new BookList.CustomAdapter(BookList.this, listViewList);
+        final ListView listView = findViewById(R.id.list_view);
         listView.setAdapter(customAdapter);
+
+    }
+
+    private void sortlist(List list) {
+        Collections.sort(list, new Comparator() {
+            @Override
+            public int compare(Object o, Object t1) {
+                Book b1 = (Book) o;
+                Book b2 = (Book) t1;
+                return b1.getName().compareTo(b2.getName());
+            }
+        });
     }
 
     class CustomAdapter extends BaseAdapter implements Filterable {
@@ -129,14 +151,14 @@ public class BookList extends AppCompatActivity {
         public int getCount() {return showList.size();}
 
         @Override
-        public Object getItem (int position) {return showList.get(position);}
+        public Object getItem(int position) {return showList.get(position);}
 
         @Override
-        public long getItemId (int position) {return showList.get(position).hashCode();}
+        public long getItemId(int position) {return showList.get(position).hashCode();}
 
         //Fill layout with image, name and author
         @Override
-        public View getView(final int position, final View view, ViewGroup parent) {
+        public View getView (final int position, final View view, ViewGroup parent) {
 
             View vi = view;
             final ViewHolder holder;
@@ -155,19 +177,21 @@ public class BookList extends AppCompatActivity {
                 holder = (ViewHolder) vi.getTag();
             }
 
-            holder.bookDetails.setText(myBook.getName()+"\n\n"+myBook.getAuthor()+"\n\n"+myBook.getGenre());
+            holder.bookDetails.setText(myBook.getName()+"\n\n"+myBook.getAuthor());
 
             if (myBook.imageAddressX != null) {
                 Glide.with(context).load(myBook.imageAddressX).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
             }
 
-            //Books move to their own details page when clicked
-            try {
-                view.setOnClickListener(new View.OnClickListener() {
+            //go to each book's own details page when clicked
+                vi.setOnClickListener(new View.OnClickListener() {
+
                     @Override
+
                     public void onClick(View v) {
+
                         currentIsbn = myBook.isbnX;
-                        Context context = view.getContext();
+                        Context context = v.getContext();
                         Intent intent = new Intent(context, BookDetailsPage.class);
                         listcurrentPage = false;
                         detailscurrentPage=true;
@@ -175,11 +199,13 @@ public class BookList extends AppCompatActivity {
                         BookList.this.finish();
                     }
                 });
-            }
-            catch (NullPointerException e) {
-                e.printStackTrace();
-            }
-            return vi;
+                holder.bookDetails.setText(myBook.getName()+"\n\n"+myBook.getAuthor()+"\n\n"+myBook.getGenre());
+
+                if (myBook.imageAddressX != null) {
+                    Glide.with(context).load(myBook.imageAddressX).diskCacheStrategy(DiskCacheStrategy.ALL).into(holder.image);
+                }
+                return vi;
+
         }
 
         //Filter from search method
@@ -191,6 +217,7 @@ public class BookList extends AppCompatActivity {
         }
 
         class BookFilter extends Filter {
+
             @Override
             protected FilterResults performFiltering(CharSequence constraint) {
                 FilterResults results = new FilterResults();
@@ -211,14 +238,7 @@ public class BookList extends AppCompatActivity {
                         } else if (b.getAuthor().toUpperCase()
                                 .contains(constraint.toString().toUpperCase())) {
                             nBookList.add(b);
-                        }
-                        else if (b.getGenre().toUpperCase()
-                                .contains(constraint.toString().toUpperCase())) {
-                            nBookList.add(b);
-                        }
-                        else if (b.getIsbn()
-                                .contains(constraint.toString())) {
-                            nBookList.add(b);
+
                         }
                     }
                     showList = nBookList;
@@ -228,9 +248,9 @@ public class BookList extends AppCompatActivity {
                 return results;
             }
 
+            // Now we have to inform the adapter about the new list filtered
             @Override
             protected void publishResults(CharSequence charSequence, FilterResults results) {
-                // Now we have to inform the adapter about the new list filtered
                 if (results.count == 0) {
                     notifyDataSetInvalidated();
                 } else {
@@ -240,14 +260,21 @@ public class BookList extends AppCompatActivity {
             }
         }
     }
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
     @Override
     public void onBackPressed() {
         super.onBackPressed();
         this.finish();
-        listcurrentPage=false;
         Intent intent = new Intent( this, ContentsActivity.class);
         startActivity(intent);
-        finish();
     }
 }
