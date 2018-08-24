@@ -244,7 +244,7 @@ public class BookDetailsAdder extends AppCompatActivity
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
                             Number = BookSnapshot.getKey();
-                            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX"+Number);
+
                             if (Number.equals(currentIsbn)){isBook();break;}
                             else isntBook();
                         }
@@ -414,7 +414,6 @@ public class BookDetailsAdder extends AppCompatActivity
                 @Override
                 public void onSuccess(Uri uri) {
                     bookSImg = uri.toString();
-                    System.out.println("qedpqwjdpqwpowj" + bookSImg);
                     BookRef.child("/Books/").child(currentIsbn).child("ImageAddress").setValue(bookSImg);
 
                     bookName.setText("");

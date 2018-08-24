@@ -149,7 +149,7 @@ public class BookDetailsEditor extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                System.out.println("DELETE IS CLICKED");
+
                  makeDeleteDialog();
             }
 
@@ -190,7 +190,7 @@ public class BookDetailsEditor extends AppCompatActivity {
     }
 
     private void makeDeleteDialog(){
-        System.out.println("I AM IN DELETEDIALOG VOID");
+
 
         final Dialog deletedialog = new Dialog(BookDetailsEditor.this);
         deletedialog.setContentView(R.layout.deleterequest);
@@ -213,7 +213,6 @@ public class BookDetailsEditor extends AppCompatActivity {
               @Override
               public void onClick(View view) {
                   String book = currentIsbn;
-                  System.out.println("I AM IN DELETEDIALOG yes");
 
                   BookRef.child("/Books/").child(book).removeValue();
 
@@ -229,7 +228,6 @@ public class BookDetailsEditor extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                System.out.println("I AM IN DELETEDIALOG no");
 
                 deletedialog.dismiss();
             }
@@ -237,7 +235,6 @@ public class BookDetailsEditor extends AppCompatActivity {
     }
 
     private void makeOopsDialog(){
-        System.out.println("I AM IN OopsDialog VOID");
 
         final Dialog deletedialog = new Dialog(BookDetailsEditor.this);
         deletedialog.setContentView(R.layout.oopsdialog);
@@ -257,7 +254,6 @@ public class BookDetailsEditor extends AppCompatActivity {
 
             @Override
             public void onClick(View view) {
-                System.out.println("I AM IN return dialog yes");
                 Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
                 editorcurrentPage=false;
                 finish();
