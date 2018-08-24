@@ -79,12 +79,16 @@ public class RequestList extends AppCompatActivity {
                     String votedby      = (String) BookSnapshotB.child("votedBy").getValue();
 
                     if(votedby!=null) {emails = votedby.split(",");}
+
                     else{votedby="";}
+
+                    //Prevents crashes if database requests has been deleted/new requests added
+                    if (reqvotes==null) {reqvotes="0";}
 
                     int votes = Integer.valueOf(reqvotes);
 
                     try{
-                        if(reqbook!=null && reqauthor!=null && reqvotes!=null && email!=null)originalList.add(requestBook= new RequestBook(reqbook,reqauthor, email, votes,votedby,isUpVoted));
+                        if(reqbook!=null && reqauthor!=null && email!=null)originalList.add(requestBook= new RequestBook(reqbook,reqauthor, email, votes,votedby,isUpVoted));
                         makeListView();
                     }
                     catch (ArrayIndexOutOfBoundsException e){
@@ -218,34 +222,61 @@ public class RequestList extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
+                    final Dialog deletedialog = new Dialog(RequestList.this);
+                    deletedialog.setContentView(R.layout.deleterequest);
+                    deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-                    String[] TO =  myBook.getVotedby().split(",");
-                    String[] CC = {""};
+                    TextView title = deletedialog.findViewById(R.id.title);
+                    title.setTypeface(myTypeFace1);
+                    title.setText("Delete this request and notify users that this book has been added to the library?");
 
-                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                    Button yes= deletedialog.findViewById(R.id.yes);
+                    Button no = deletedialog.findViewById(R.id.no);
 
-                    emailIntent.setData(Uri.parse("mailto:"));
-                    emailIntent.setType("text/plain");
+                    yes.setTypeface(myTypeFace1);
+                    no.setTypeface(myTypeFace1);
+                    deletedialog.show();
 
-                    emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
-                    emailIntent.putExtra(Intent.EXTRA_CC, CC);
-                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Book request added");
-                    emailIntent.putExtra(Intent.EXTRA_TEXT, "The book " + myBook.getBookName() + " by " + myBook.getAuthor() + " has been added to the library.");
+                    yes.setOnClickListener(new View.OnClickListener() {
 
-                    try
-                    {
-                        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
-                    }
-                    catch (android.content.ActivityNotFoundException ex)
-                    {
-                        Toast.makeText(RequestList.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
-                    }
+                        @Override
+                        public void onClick(View view) {
+                            String[] TO =  myBook.getVotedby().split(",");
+                            String[] CC = {""};
 
-                    requestName = myBook.getBookName();
+                            Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
-                    String request = requestName;
-                    BookRef.child("/Requests/").child(request).removeValue();
+                            emailIntent.setData(Uri.parse("mailto:"));
+                            emailIntent.setType("text/plain");
 
+                            emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                            emailIntent.putExtra(Intent.EXTRA_CC, CC);
+                            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Book request added");
+                            emailIntent.putExtra(Intent.EXTRA_TEXT, "The book " + myBook.getBookName() + " by " + myBook.getAuthor() + " has been added to the library.");
+
+                            try
+                            {
+                                startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                            }
+                            catch (android.content.ActivityNotFoundException ex)
+                            {
+                                Toast.makeText(RequestList.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                            }
+
+                            requestName = myBook.getBookName();
+
+                            String request = requestName;
+                            BookRef.child("/Requests/").child(request).removeValue();
+
+                        }
+                    });
+                    no.setOnClickListener(new View.OnClickListener() {
+
+                        @Override
+                        public void onClick(View view) {
+                            deletedialog.dismiss();
+                        }
+                    });
                 }
             });
 
@@ -260,8 +291,8 @@ public class RequestList extends AppCompatActivity {
                     deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                     TextView title = deletedialog.findViewById(R.id.title);
-                    title.setText("Are you sure you want to delete this request?");
                     title.setTypeface(myTypeFace1);
+                    title.setText("Are you sure you want to delete this request from the database?");
 
                     Button yes= deletedialog.findViewById(R.id.yes);
                     Button no = deletedialog.findViewById(R.id.no);
@@ -274,14 +305,12 @@ public class RequestList extends AppCompatActivity {
 
                         @Override
                         public void onClick(View view) {
-
                             String request = requestName;
                             BookRef.child("/Requests/").child(request).removeValue();
                             deletedialog.dismiss();
                             Toast.makeText(RequestList.this,"Request Deleted",Toast.LENGTH_LONG).show();
                         }
                     });
-
                     no.setOnClickListener(new View.OnClickListener() {
 
                         @Override

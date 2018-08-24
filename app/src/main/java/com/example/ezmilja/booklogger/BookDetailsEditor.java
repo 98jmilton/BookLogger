@@ -194,9 +194,11 @@ public class BookDetailsEditor extends AppCompatActivity {
 
         final Dialog deletedialog = new Dialog(BookDetailsEditor.this);
         deletedialog.setContentView(R.layout.deleterequest);
+
         deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
           TextView title = deletedialog.findViewById(R.id.title);
+          title.setText("Are you sure you want to delete this book from the database?");
           title.setTypeface(myTypeFace1);
 
           Button yes= deletedialog.findViewById(R.id.yes);
