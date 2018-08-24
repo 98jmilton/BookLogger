@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
@@ -37,7 +37,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
 import static com.example.ezmilja.booklogger.SplashScreen.BookRef;
 
 public class RequestList extends AppCompatActivity {
@@ -48,10 +47,8 @@ public class RequestList extends AppCompatActivity {
     public static ArrayList<RequestBook> originalList=new ArrayList<>();
     private RequestList.CustomAdapter customAdapter;
     FirebaseUser user;
-    String isbn = "Not found", bookName = "Not found", author = "Not found", imageAddress = "Not found", genre ="Not found";
     boolean isUpVoted;
     String[] emails;
-    String votedby, curUser;
     int k;
     Typeface myTypeFace1;
 
@@ -87,7 +84,7 @@ public class RequestList extends AppCompatActivity {
                     int votes = Integer.valueOf(reqvotes);
 
                     try{
-                        if(reqbook!=null && reqauthor!=null && reqvotes!=null && email!=null)originalList.add(requestBook= new RequestBook(reqbook,reqauthor, email, votes,isUpVoted));
+                        if(reqbook!=null && reqauthor!=null && reqvotes!=null && email!=null)originalList.add(requestBook= new RequestBook(reqbook,reqauthor, email, votes,votedby,isUpVoted));
                         makeListView();
                     }
                     catch (ArrayIndexOutOfBoundsException e){
@@ -158,8 +155,8 @@ public class RequestList extends AppCompatActivity {
             TextView bookName;
             TextView bookVote;
             ImageView image;
-            boolean upVote;
             Button btn_more;
+            Button btn_email;
         }
         @Override
         public int getCount() {
@@ -193,6 +190,7 @@ public class RequestList extends AppCompatActivity {
                 holder.bookName=  vi.findViewById(R.id.tbx_bookName);
                 holder.bookVote = vi.findViewById(R.id.tbx_voteCount);
                 holder.image =  vi.findViewById(R.id.ibnt_vote);
+                holder.btn_email =vi.findViewById(R.id.btn_email);
                 holder.image.setTag(position);
                 holder.btn_more =  vi.findViewById(R.id.btn_more);
                 vi.setTag(holder);
@@ -205,7 +203,7 @@ public class RequestList extends AppCompatActivity {
             holder.bookName.setText(myBook.getBookName());
             holder.bookVote.setText(myBook.getVote()+ "");
 
-            holder.image.setImageResource(R.drawable.ic_baseline_delete_24px);
+            holder.image.setImageResource(R.drawable.delete);
 
             holder.btn_more.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -215,10 +213,45 @@ public class RequestList extends AppCompatActivity {
                             .setMessage("Author: " + "\n" + myBook.getAuthor() + "\n" + "\nRequested by "+myBook.getEmail()).setNeutralButton("Close", null).show();
                 }
             });
+
+            holder.btn_email.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+
+                    String[] TO =  myBook.getVotedby().split(",");
+                    String[] CC = {""};
+
+                    Intent emailIntent = new Intent(Intent.ACTION_SEND);
+
+                    emailIntent.setData(Uri.parse("mailto:"));
+                    emailIntent.setType("text/plain");
+
+                    emailIntent.putExtra(Intent.EXTRA_EMAIL, TO);
+                    emailIntent.putExtra(Intent.EXTRA_CC, CC);
+                    emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Book request added");
+                    emailIntent.putExtra(Intent.EXTRA_TEXT, "The book " + myBook.getBookName() + " by " + myBook.getAuthor() + " has been added to the library.");
+
+                    try
+                    {
+                        startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+                    }
+                    catch (android.content.ActivityNotFoundException ex)
+                    {
+                        Toast.makeText(RequestList.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
+                    }
+
+                    requestName = myBook.getBookName();
+
+                    String request = requestName;
+                    BookRef.child("/Requests/").child(request).removeValue();
+
+                }
+            });
+
             holder.image.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    System.out.println("I AM IN DELETEDIALOG VOID");
 
                     requestName = myBook.getBookName();
 
@@ -227,6 +260,7 @@ public class RequestList extends AppCompatActivity {
                     deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                     TextView title = deletedialog.findViewById(R.id.title);
+                    title.setText("Are you sure you want to delete this request?");
                     title.setTypeface(myTypeFace1);
 
                     Button yes= deletedialog.findViewById(R.id.yes);
