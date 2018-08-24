@@ -49,7 +49,6 @@ public class RequestList extends AppCompatActivity {
     FirebaseUser user;
     boolean isUpVoted;
     String[] emails;
-    String votedby, curUser;
     int k;
     Typeface myTypeFace1;
 
@@ -156,7 +155,6 @@ public class RequestList extends AppCompatActivity {
             TextView bookName;
             TextView bookVote;
             ImageView image;
-            boolean upVote;
             Button btn_more;
             Button btn_email;
         }
@@ -262,6 +260,7 @@ public class RequestList extends AppCompatActivity {
                     deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
                     TextView title = deletedialog.findViewById(R.id.title);
+                    title.setText("Are you sure you want to delete this request?");
                     title.setTypeface(myTypeFace1);
 
                     Button yes= deletedialog.findViewById(R.id.yes);
