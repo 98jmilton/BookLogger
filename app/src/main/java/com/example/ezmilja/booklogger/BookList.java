@@ -44,7 +44,6 @@ public class BookList extends AppCompatActivity {
     SearchView searchView;
     public  ArrayList<Book> listViewList =new ArrayList<Book>();
     private CustomAdapter customAdapter;
-    int welp = 0;
     Boolean reload;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +81,6 @@ public class BookList extends AppCompatActivity {
                             return;
                         }
                     }
-                    welp++;
                 }
             }
             @Override

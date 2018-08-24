@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import static android.widget.Toast.*;
 import static com.example.ezmilja.booklogger.ContentsActivity.currentIsbn;
@@ -61,6 +62,7 @@ public class BookDetailsAdder extends AppCompatActivity
     EditText bookName,bookAuthor,bookMaxCopys,bookDescription,bookNumCopys,bookPage,bookPublisher,bookNumRating,bookRating,bookGenre;
     JSONObject ISBN;
     Typeface myTypeFace1;
+    static long booksfield = 0;
 
     String realPath;
 
@@ -216,43 +218,48 @@ public class BookDetailsAdder extends AppCompatActivity
                     }
 
 
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                } catch (JSONException e) {
-
-                    e.printStackTrace();
-                } catch (MalformedURLException e) {
+                } catch (InterruptedException | MalformedURLException | JSONException | ExecutionException e) {
                     e.printStackTrace();
                 }
 
+                BookRef.addListenerForSingleValueEvent(new ValueEventListener() {
 
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        booksfield = Long.valueOf(dataSnapshot.getChildrenCount());
+
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                });
+
+                if(booksfield!=0){
                 final DatabaseReference BookRef2 = BookRef.child("/Books/");
-
                 BookRef2.addListenerForSingleValueEvent(new ValueEventListener() {
                     String Number;
 
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
                             Number = BookSnapshot.getKey();
-                            System.out.println("qrIsbn:"+currentIsbn  + "\n" + "Number:"+Number + "\n");
-
-                            if (Number.equals(currentIsbn)) {
-                                isBook();
-                                break;
-                            } else {
-                                isntBook();
-                            }
+                            System.out.println("XXXXXXXXXXXXXXXXXXXXXXXXX"+Number);
+                            if (Number.equals(currentIsbn)){isBook();break;}
+                            else isntBook();
                         }
                     }
 
                     @Override
-                    public void onCancelled(DatabaseError databaseError) {
-
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        isntBook();
                     }
-                });
+                });}
+                else{
+                    isntBook();
+                }
+
+
 
             }
 
@@ -380,8 +387,6 @@ public class BookDetailsAdder extends AppCompatActivity
         else if ((Autoimage) && (currentIsbn.length() == 13)){
             bookSubmit = true;
             urlstring = String.valueOf(imageUrl);
-            String BOOKISBNPLEASE = String.valueOf(bookISBN.getText());
-
             makeText(BookDetailsAdder.this, "Uploaded", LENGTH_SHORT).show();
 
         }
@@ -456,7 +461,7 @@ public class BookDetailsAdder extends AppCompatActivity
         final Dialog dialog = new Dialog(BookDetailsAdder.this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.popup);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));;
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         if (!Autoimage){dialog.show();}
 
         TextView title = dialog.findViewById(R.id.title);

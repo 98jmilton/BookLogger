@@ -138,7 +138,7 @@
                     android:layout_marginTop="2dp"
                     android:text="User Rating : "
                     android:textColor="@color/colorPrimary"
-                    android:textSize="24sp" />
+                    android:textSize="18sp" />
 
                 <TextView
                     android:id="@+id/bookPages"
