@@ -235,6 +235,7 @@ public class RequestList extends AppCompatActivity {
 
                     yes.setTypeface(myTypeFace1);
                     no.setTypeface(myTypeFace1);
+                    deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     deletedialog.show();
 
                     yes.setOnClickListener(new View.OnClickListener() {
@@ -299,6 +300,7 @@ public class RequestList extends AppCompatActivity {
 
                     yes.setTypeface(myTypeFace1);
                     no.setTypeface(myTypeFace1);
+                    deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                     deletedialog.show();
 
                     yes.setOnClickListener(new View.OnClickListener() {

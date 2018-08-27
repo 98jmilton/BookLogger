@@ -167,7 +167,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="20"
                     android:text="Edit Book"
-                    android:background="@drawable/mybuttonlarge"
+                    android:background="@drawable/button"
                     android:textColor="#ffffff"
                     />
 

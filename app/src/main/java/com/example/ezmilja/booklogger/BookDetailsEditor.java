@@ -206,7 +206,9 @@ public class BookDetailsEditor extends AppCompatActivity {
 
           yes.setTypeface(myTypeFace1);
           no.setTypeface(myTypeFace1);
-            deletedialog.show();
+        deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+
+        deletedialog.show();
 
           yes.setOnClickListener(new View.OnClickListener() {
 
@@ -236,19 +238,19 @@ public class BookDetailsEditor extends AppCompatActivity {
 
     private void makeOopsDialog(){
 
-        final Dialog deletedialog = new Dialog(BookDetailsEditor.this);
-        deletedialog.setContentView(R.layout.oopsdialog);
-        deletedialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        final Dialog oopsdialog = new Dialog(BookDetailsEditor.this);
+        oopsdialog.setContentView(R.layout.oopsdialog);
+        oopsdialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 
-        TextView title = deletedialog.findViewById(R.id.title);
-        TextView oops = deletedialog.findViewById(R.id.oops);
-        Button back = deletedialog.findViewById(R.id.back);
+        TextView title = oopsdialog.findViewById(R.id.title);
+        TextView oops = oopsdialog.findViewById(R.id.oops);
+        Button back = oopsdialog.findViewById(R.id.back);
 
         back.setTypeface(myTypeFace1);
         title.setTypeface(myTypeFace1);
         oops.setTypeface(myTypeFace1);
 
-        deletedialog.show();
+        oopsdialog.show();
 
         back.setOnClickListener(new View.OnClickListener() {
 

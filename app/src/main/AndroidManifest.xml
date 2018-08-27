@@ -25,13 +25,27 @@
                 <action android:name="android.intent.action.SEARCH" />
             </intent-filter>
         </activity>
-        <activity android:name=".BookDetailsAdder" />
-        <activity android:name=".ContentsActivity" />
-        <activity android:name=".ScanActivity" />
-        <activity android:name=".BookDetailsPage" />
-        <activity android:name=".BookDetailsEditor" />
-        <activity android:name=".BookList" />
-        <activity android:name=".RequestList"></activity>
+        <activity android:name=".BookDetailsAdder"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".ContentsActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".ScanActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".BookDetailsPage"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".BookDetailsEditor"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".BookList"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
+        <activity android:name=".RequestList"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme"/>
     </application>
 
 </manifest>

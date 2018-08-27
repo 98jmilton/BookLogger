@@ -3,7 +3,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="100"
     android:background="@layout/popupbckgrnd"
 
     >
@@ -21,32 +20,26 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:weightSum="100"
         >
     <Button
         android:id="@+id/yes"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginRight="1dp"
-        android:layout_marginLeft="0.5dp"
-        android:layout_marginBottom="0.5dp"
-        android:layout_weight="0.13"
         android:background="@drawable/buttonpopupl"
         android:text="Yes"
         android:textColor="@android:color/background_light"
+        android:layout_weight="50"
         />
 
-        <Button
-            android:id="@+id/no"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_weight="0.13"
-            android:layout_marginLeft="1dp"
-            android:layout_marginRight="0.5dp"
-            android:layout_marginBottom="0.5dp"
-            android:background="@drawable/buttonpopupr"
-            android:text="no"
-            android:textColor="@android:color/background_light" />
+    <Button
+        android:id="@+id/no"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/buttonpopupr"
+        android:text="no"
+        android:layout_weight="50"
+        android:textColor="@android:color/background_light" />
     </LinearLayout>
 </LinearLayout>

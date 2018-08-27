@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="wrap_content"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@android:color/background_light"
     android:orientation="horizontal"
@@ -9,50 +9,56 @@
 
     <TextView
         android:id="@+id/tbx_bookName"
-        android:layout_width="wrap_content"
+        android:layout_width="134dp"
         android:layout_height="wrap_content"
-        android:layout_weight="30"
         android:text="Name"
         android:textSize="20sp"
+        android:layout_weight="60"
+        android:layout_gravity="center"
 
-/>
+        />
     <Button
         android:id="@+id/btn_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="65dp"
+        android:layout_height="55dp"
         android:background="@android:color/background_light"
         android:text="More"
-        android:layout_weight="20"
+        android:layout_weight="10"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
         />
 
 
     <TextView
         android:id="@+id/tbx_voteCount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="72dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="center"
         android:text="TextView"
+        android:layout_weight="10"
         android:textAlignment="center"
-        android:layout_weight="20"
 
         />
     <Button
         android:id="@+id/btn_email"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="20"
+        android:layout_width="65dp"
+        android:layout_height="55dp"
+        android:layout_gravity="center"
         android:background="@android:color/background_light"
-        android:text="email"
+        android:text="Send Emails"
+        android:layout_weight="10"
         />
 
     <ImageButton
         android:id="@+id/ibnt_vote"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_weight="10"
-        android:layout_gravity="center"
+        android:layout_width="65dp"
+        android:layout_height="55dp"
+        android:layout_marginBottom="8dp"
         android:background="@android:color/background_light"
         android:focusable="false"
+        android:layout_gravity="right"
+        android:layout_weight="10"
         android:src="@drawable/delete" />
 
 
