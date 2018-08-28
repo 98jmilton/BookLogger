@@ -119,24 +119,25 @@ public class BookDetailsAdder extends AppCompatActivity
         btnSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                bookSName = bookName.getText().toString();
+                bookSAuthor = bookAuthor.getText().toString();
+                currentIsbn = bookISBN.getText().toString();
+                bookSMaxCopys = bookMaxCopys.getText().toString();
+                bookSDescription = bookDescription.getText().toString();
+                bookSNumCopys = bookNumCopys.getText().toString();
+                bookSPage = bookPage.getText().toString();
+                bookSPublisher = bookPublisher.getText().toString();
+                bookSNumRating = bookNumRating.getText().toString();
+                bookSImg = "oops";
+                bookSRating = bookRating.getText().toString();
+                bookSGenre = bookGenre.getText().toString();
                 currentIsbn = bookISBN.getText().toString();
                 if(!bookSubmit && (currentIsbn.length() == 13)){ Toast.makeText(BookDetailsAdder.this,"Please Submit a book image",LENGTH_LONG).show();}
-                else {
-                    bookSName = bookName.getText().toString();
-                    bookSAuthor = bookAuthor.getText().toString();
-                    currentIsbn = bookISBN.getText().toString();
-                    bookSMaxCopys = bookMaxCopys.getText().toString();
-                    bookSDescription = bookDescription.getText().toString();
-                    bookSNumCopys = bookNumCopys.getText().toString();
-                    bookSPage = bookPage.getText().toString();
-                    bookSPublisher = bookPublisher.getText().toString();
-                    bookSNumRating = bookNumRating.getText().toString();
-                    bookSImg = "oops";
-                    bookSRating = bookRating.getText().toString();
-                    bookSGenre = bookGenre.getText().toString();
-                    uploadData();
+                else if(BookFieldsCompletionCheck(bookSName,bookSAuthor,currentIsbn,bookSMaxCopys,bookSDescription,bookSNumCopys,bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSRating,bookSGenre,currentIsbn)){
 
+                    uploadData();
                 }
+                else Toast.makeText(BookDetailsAdder.this,"Please fill out all fields",LENGTH_LONG).show();
             }
         });
 
@@ -304,7 +305,14 @@ public class BookDetailsAdder extends AppCompatActivity
         }
     }
 
-
+    private boolean BookFieldsCompletionCheck(String bookSName,String bookSAuthor, String currentIsbn, String bookSMaxCopys, String bookSDescription, String bookSNumCopys, String bookSPage, String bookSPublisher, String bookSNumRating, String bookSImg, String bookSRating, String bookSGenre, String isbn ){
+        if(bookSName == null || bookSAuthor == null || currentIsbn == null || bookSMaxCopys == null || bookSDescription == null || bookSNumCopys == null || bookSPage == null || bookSPublisher == null ||bookSNumRating == null || bookSImg == null || bookSRating == null || bookSGenre == null || isbn == null || bookSName == "" || bookSAuthor == "" || currentIsbn == "" || bookSMaxCopys == "" || bookSDescription == "" || bookSNumCopys == "" || bookSPage == "" || bookSPublisher == "" ||bookSNumRating == "" || bookSImg == "" || bookSRating == "" || bookSGenre == ""|| isbn == ""){
+            return true;
+            }
+        else{
+            return false;
+        }
+    }
 
     private void chooseImage() {
         Intent intent = new Intent();
