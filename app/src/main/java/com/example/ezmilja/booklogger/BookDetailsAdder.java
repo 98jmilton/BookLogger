@@ -256,9 +256,6 @@ public class BookDetailsAdder extends AppCompatActivity
                         isntBook();
                     }
                 });}
-                else{
-                    isntBook();
-                }
 
 
 
