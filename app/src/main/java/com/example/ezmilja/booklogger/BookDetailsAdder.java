@@ -131,14 +131,22 @@ public class BookDetailsAdder extends AppCompatActivity
                 bookSImg = "oops";
                 bookSRating = bookRating.getText().toString();
                 bookSGenre = bookGenre.getText().toString();
-                currentIsbn = bookISBN.getText().toString();
-                if(!bookSubmit && (currentIsbn.length() == 13)){ Toast.makeText(BookDetailsAdder.this,"Please Submit a book image",LENGTH_LONG).show();}
-                else if(BookFieldsCompletionCheck(bookSName,bookSAuthor,currentIsbn,bookSMaxCopys,bookSDescription,bookSNumCopys,bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSRating,bookSGenre,currentIsbn)){
 
-                    uploadData();
+                if(!bookSubmit && (currentIsbn.length() == 13)){
+                    Toast.makeText(BookDetailsAdder.this,"Please Submit a book image",LENGTH_LONG).show();
                 }
-                else Toast.makeText(BookDetailsAdder.this,"Please fill out all fields",LENGTH_LONG).show();
-            }
+
+                if(bookSubmit && (currentIsbn.length() == 13))
+                {
+                    if (bookSName.isEmpty() || bookSAuthor.isEmpty() || currentIsbn.isEmpty() || bookSMaxCopys.isEmpty() || bookSDescription.isEmpty() || bookSNumCopys.isEmpty() || bookSPage.isEmpty() || bookSPublisher.isEmpty()
+                            || bookSNumRating.isEmpty() || bookSImg.isEmpty() || bookSRating.isEmpty() || bookSGenre.isEmpty())
+                    {
+                        Toast.makeText(BookDetailsAdder.this, "Please fill out all fields", LENGTH_LONG).show();
+                    }
+                    else { uploadData(); }
+                }
+                }
+
         });
 
         send.setOnClickListener(new View.OnClickListener() {
@@ -302,14 +310,15 @@ public class BookDetailsAdder extends AppCompatActivity
         }
     }
 
-    private boolean BookFieldsCompletionCheck(String bookSName,String bookSAuthor, String currentIsbn, String bookSMaxCopys, String bookSDescription, String bookSNumCopys, String bookSPage, String bookSPublisher, String bookSNumRating, String bookSImg, String bookSRating, String bookSGenre, String isbn ){
-        if(bookSName == null || bookSAuthor == null || currentIsbn == null || bookSMaxCopys == null || bookSDescription == null || bookSNumCopys == null || bookSPage == null || bookSPublisher == null ||bookSNumRating == null || bookSImg == null || bookSRating == null || bookSGenre == null || isbn == null || bookSName == "" || bookSAuthor == "" || currentIsbn == "" || bookSMaxCopys == "" || bookSDescription == "" || bookSNumCopys == "" || bookSPage == "" || bookSPublisher == "" ||bookSNumRating == "" || bookSImg == "" || bookSRating == "" || bookSGenre == ""|| isbn == ""){
-            return true;
-            }
-        else{
-            return false;
-        }
-    }
+//    private boolean BookFieldsCompletionCheck(String bookSName,String bookSAuthor, String currentIsbn, String bookSMaxCopys, String bookSDescription, String bookSNumCopys, String bookSPage, String bookSPublisher, String bookSNumRating, String bookSImg, String bookSRating, String bookSGenre){
+//        if(bookSName == "" || bookSAuthor == "" || currentIsbn == "" || bookSMaxCopys == "" || bookSDescription == "" || bookSNumCopys == "" || bookSPage == "" || bookSPublisher == "" ||bookSNumRating == "" || bookSImg == "" || bookSRating == "" || bookSGenre == "" ||
+//        bookSName == null || bookSAuthor == null || currentIsbn == null || bookSMaxCopys == null || bookSDescription == null || bookSNumCopys == null || bookSPage == null || bookSPublisher == null ||bookSNumRating == null || bookSImg == null || bookSRating == null || bookSGenre == null){
+//            return false;
+//            }
+//        else{
+//            return true;
+//        }
+//    }
 
     private void chooseImage() {
         Intent intent = new Intent();
