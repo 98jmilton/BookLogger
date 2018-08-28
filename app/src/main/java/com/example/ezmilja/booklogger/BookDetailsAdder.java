@@ -55,7 +55,7 @@ public class BookDetailsAdder extends AppCompatActivity
     private final int PICK_IMAGE_REQUEST = 71;
     public static String qrIsbn;
     public static EditText bookISBN;
-    String bookSName,urlstring,bookSAuthor,bookSMaxCopys="0",bookSDescription,bookSNumCopys="0",bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSGenre,bookSRating="";
+    String bookSName,urlstring,bookSAuthor,bookSMaxCopys="0",bookSDescription,bookSNumCopys="0",bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSGenre,bookSRating="",ratedBy="";
     String theISBNNo,a,authors,title,description,publisher,pageCountString;
     int pageCount;
     URL imageUrl;
@@ -412,6 +412,7 @@ public class BookDetailsAdder extends AppCompatActivity
         BookRef.child("/Books/").child(currentIsbn).child("NumRating").setValue(bookSNumRating);
         BookRef.child("/Books/").child(currentIsbn).child("ImageAddress").setValue(urlstring);
         BookRef.child("/Books/").child(currentIsbn).child("Genre").setValue(bookSGenre);
+        BookRef.child("/Books/").child(currentIsbn).child("RatedBy").setValue(ratedBy);
 
 
         if(!Autoimage) {

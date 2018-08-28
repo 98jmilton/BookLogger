@@ -71,7 +71,6 @@ public class BookDetailsPage extends AppCompatActivity {
                     imageAddress = (String) dataSnapshot.child(currentIsbn).child("ImageAddress").getValue();
                     Genre = (String) dataSnapshot.child(currentIsbn).child("Genre").getValue();
 
-
                     if (Rating != null && NumRating != null) {
                         done = "Not yet rated";
                     } else {
@@ -95,10 +94,8 @@ public class BookDetailsPage extends AppCompatActivity {
                         e.printStackTrace();
                     }
                         Glide.with(BookDetailsPage.this).load(imageUrl).into(bookImage);
-
                 }
             }
-
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
