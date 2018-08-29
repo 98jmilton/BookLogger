@@ -236,8 +236,15 @@ public class BookList extends AppCompatActivity {
                         } else if (b.getAuthor().toUpperCase()
                                 .contains(constraint.toString().toUpperCase())) {
                             nBookList.add(b);
-
                         }
+                         else if (b.getGenre().toUpperCase()
+                                    .contains(constraint.toString().toUpperCase())) {
+                                nBookList.add(b);
+                            }
+                         else if (b.getIsbn()
+                                 .contains(constraint.toString())) {
+                             nBookList.add(b);
+                         }
                     }
                     showList = nBookList;
                     results.values = nBookList;

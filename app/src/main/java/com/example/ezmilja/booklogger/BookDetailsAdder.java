@@ -185,8 +185,10 @@ public class BookDetailsAdder extends AppCompatActivity
                 currentIsbn = bookISBN.getText().toString();
                 try {
                     imageUrl = new URL("http://www.piniswiss.com/wp-content/uploads/2013/05/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef-300x199.png");
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
+                }
+                catch (MalformedURLException e)
+                {
+                    //e.printStackTrace();
                 }
 
 
@@ -227,12 +229,13 @@ public class BookDetailsAdder extends AppCompatActivity
                     }
 
 
-                } catch (InterruptedException | MalformedURLException | JSONException | ExecutionException e) {
+                }
+                catch (InterruptedException | MalformedURLException | JSONException | ExecutionException e) {
                     e.printStackTrace();
                 }
 
-                BookRef.addListenerForSingleValueEvent(new ValueEventListener() {
-
+                BookRef.addListenerForSingleValueEvent(new ValueEventListener()
+                {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                         booksfield = Long.valueOf(dataSnapshot.getChildrenCount());
@@ -240,13 +243,11 @@ public class BookDetailsAdder extends AppCompatActivity
                     }
                     @Override
                     public void onCancelled(@NonNull DatabaseError databaseError) {
-
                     }
                 });
 
                 if(booksfield!=0){
-                final DatabaseReference BookRef2 = BookRef.child("/Books/");
-                BookRef2.addListenerForSingleValueEvent(new ValueEventListener() {
+               BookRef.child("/Books/").addListenerForSingleValueEvent(new ValueEventListener() {
                     String Number;
 
                     @Override
@@ -287,7 +288,6 @@ public class BookDetailsAdder extends AppCompatActivity
             makeInfoDialog();
         }
         else{
-
             Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
         }
     }
@@ -306,21 +306,20 @@ public class BookDetailsAdder extends AppCompatActivity
             bookNumCopys.setText("1");
             bookMaxCopys.setText("1");
 
-           if (publisher.equals("") || (publisher == null)){
+           if ((publisher == null)){
                bookPublisher.setText("Not found");
            }
-           if (authors.equals("") || (authors == null)) {
+           if ((authors == null)) {
                bookAuthor.setText("Not found");
            }
-           if (pageCountString.equals("") || (pageCountString == null)){
+           if ((pageCountString == null)){
                bookPage.setText("Not found");
            }
-           if(bookSGenre == null) {
+           if (bookSGenre == null) {
                bookGenre.setText("Not found");
            }
         }
         else{
-
             Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
         }
     }

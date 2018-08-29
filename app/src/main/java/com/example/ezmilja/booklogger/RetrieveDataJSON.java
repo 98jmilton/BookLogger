@@ -33,11 +33,11 @@ public class RetrieveDataJSON extends AsyncTask<String, String, JSONObject> {
             return jsonArray;
         }
 
-    @Override
-    protected void onPostExecute(JSONObject rooms) {
-        Log.e("response", String.valueOf(rooms));
-
-    }
+//    @Override
+//    protected void onPostExecute(JSONObject book) {
+//        Log.e("response", String.valueOf(book));
+//
+//    }
 
 
 
