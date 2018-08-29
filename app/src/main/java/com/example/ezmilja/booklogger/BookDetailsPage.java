@@ -40,7 +40,6 @@ public class BookDetailsPage extends AppCompatActivity {
     private URL imageUrl;
     private String done;
 
-
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bookdetails);

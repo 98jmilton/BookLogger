@@ -33,14 +33,8 @@ public class ScanActivity extends AppCompatActivity implements ZXingScannerView.
 
     @Override
     public void handleResult(Result rawResult) {
-        // Do something with the result here
-       // Log.v("tag", rawResult.getText()); // Prints scan results
-       // Log.v("tag", rawResult.getBarcodeFormat().toString()); // Prints the scan format (qrcode, pdf417 etc.)
-
         BookDetailsAdder.bookISBN.setText(rawResult.getText());
         onBackPressed();
 
-        // If you would like to resume scanning, call this method below:
-        //mScannerView.resumeCameraPreview(this);
     }
 }

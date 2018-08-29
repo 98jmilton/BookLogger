@@ -300,9 +300,24 @@ public class BookDetailsAdder extends AppCompatActivity
             bookDescription.setText(description);
             bookPublisher.setText(publisher);
             bookAuthor.setText(a);
-            bookRating.setText("0");
             bookPage.setText(pageCountString);
+            bookRating.setText("0");
             bookNumRating.setText("0");
+            bookNumCopys.setText("1");
+            bookMaxCopys.setText("1");
+
+           if (publisher.equals("") || (publisher == null)){
+               bookPublisher.setText("Not found");
+           }
+           if (authors.equals("") || (authors == null)) {
+               bookAuthor.setText("Not found");
+           }
+           if (pageCountString.equals("") || (pageCountString == null)){
+               bookPage.setText("Not found");
+           }
+           if(bookSGenre == null) {
+               bookGenre.setText("Not found");
+           }
         }
         else{
 
@@ -310,15 +325,6 @@ public class BookDetailsAdder extends AppCompatActivity
         }
     }
 
-//    private boolean BookFieldsCompletionCheck(String bookSName,String bookSAuthor, String currentIsbn, String bookSMaxCopys, String bookSDescription, String bookSNumCopys, String bookSPage, String bookSPublisher, String bookSNumRating, String bookSImg, String bookSRating, String bookSGenre){
-//        if(bookSName == "" || bookSAuthor == "" || currentIsbn == "" || bookSMaxCopys == "" || bookSDescription == "" || bookSNumCopys == "" || bookSPage == "" || bookSPublisher == "" ||bookSNumRating == "" || bookSImg == "" || bookSRating == "" || bookSGenre == "" ||
-//        bookSName == null || bookSAuthor == null || currentIsbn == null || bookSMaxCopys == null || bookSDescription == null || bookSNumCopys == null || bookSPage == null || bookSPublisher == null ||bookSNumRating == null || bookSImg == null || bookSRating == null || bookSGenre == null){
-//            return false;
-//            }
-//        else{
-//            return true;
-//        }
-//    }
 
     private void chooseImage() {
         Intent intent = new Intent();
@@ -352,8 +358,6 @@ public class BookDetailsAdder extends AppCompatActivity
         else {
             Toast.makeText(this, "Something Went Wrong", Toast.LENGTH_SHORT).show();
         }
-
-
     }
 
     private void uploadImage() {
