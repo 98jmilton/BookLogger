@@ -52,6 +52,8 @@ public class RequestList extends AppCompatActivity {
     int k;
     Typeface myTypeFace1;
 
+    private boolean mailClientOpened = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +140,6 @@ public class RequestList extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int postion, long l) {
-                Toast.makeText(RequestList.this, "Goodbye Dave! Hello Steve!", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -228,7 +229,7 @@ public class RequestList extends AppCompatActivity {
 
                     TextView title = deletedialog.findViewById(R.id.title);
                     title.setTypeface(myTypeFace1);
-                    title.setText("Delete this request and notify users that this book has been added to the library?");
+                    title.setText("Notify users that this book has been added to the library?");
 
                     Button yes= deletedialog.findViewById(R.id.yes);
                     Button no = deletedialog.findViewById(R.id.no);
@@ -258,16 +259,21 @@ public class RequestList extends AppCompatActivity {
                             try
                             {
                                 startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+
+
                             }
                             catch (android.content.ActivityNotFoundException ex)
                             {
                                 Toast.makeText(RequestList.this, "There is no email client installed.", Toast.LENGTH_SHORT).show();
                             }
 
-                            requestName = myBook.getBookName();
 
-                            String request = requestName;
-                            BookRef.child("/Requests/").child(request).removeValue();
+//                            requestName = myBook.getBookName();
+//
+//                            String request = requestName;
+//                            BookRef.child("/Requests/").child(request).removeValue();
+
+
 
                         }
                     });
@@ -398,5 +404,17 @@ public class RequestList extends AppCompatActivity {
         this.finish();
         Intent intent = new Intent( this, ContentsActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mailClientOpened = false;
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mailClientOpened = true;
     }
 }

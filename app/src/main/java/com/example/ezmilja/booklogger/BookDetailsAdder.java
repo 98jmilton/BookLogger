@@ -110,7 +110,8 @@ public class BookDetailsAdder extends AppCompatActivity
                     Glide.with(BookDetailsAdder.this).load(imageUrl).into(imageView);
                     Autoimage = true;
                 }
-                else{
+                else
+                    {
                     Toast.makeText(BookDetailsAdder.this,"Please enter a 13 digit ISBN" ,LENGTH_LONG).show();
 
                 }
