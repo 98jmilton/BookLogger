@@ -216,7 +216,7 @@ public class BookDetailsAdder extends AppCompatActivity
                     imageUrl = new URL((String) customerIDD.getJSONObject("imageLinks").get("thumbnail"));
 
 
-                    // For the ISBN Number
+                    // For the ISBN
                     ISBN = customerIDD.getJSONArray("industryIdentifiers").getJSONObject(0);
                     theISBNNo = (String) ISBN.get("identifier");
 
@@ -306,18 +306,25 @@ public class BookDetailsAdder extends AppCompatActivity
             bookNumCopys.setText("1");
             bookMaxCopys.setText("1");
 
-           if ((publisher == null)){
-               bookPublisher.setText("Not found");
-           }
-           if ((authors == null)) {
-               bookAuthor.setText("Not found");
-           }
-           if ((pageCountString == null)){
-               bookPage.setText("Not found");
-           }
-           if (bookSGenre == null) {
-               bookGenre.setText("Not found");
-           }
+            if ((title == null)){
+                bookName.setText("Not found");
+            }
+            if ((publisher == null)){
+                bookPublisher.setText("Not found");
+            }
+            if ((authors == null)) {
+                bookAuthor.setText("Not found");
+            }
+            if ((pageCountString == null)){
+                bookPage.setText("Not found");
+            }
+            if (bookSGenre == null) {
+                bookGenre.setText("Not found");
+            }
+
+            if ((description == null)){
+                bookDescription.setText("Not found");
+            }
         }
         else{
             Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
