@@ -363,7 +363,9 @@ public class BookDetailsEditor extends AppCompatActivity {
                     bookNumRating.setText("");
                     bookGenre.setText("");
 
-                    Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+                    Toast.makeText(BookDetailsEditor.this,"Book has been updated",LENGTH_LONG).show();
+
+                    Intent intent = new Intent(BookDetailsEditor.this, BookList.class);
                     editorcurrentPage=false;
                     finish();
                     startActivity(intent);
@@ -386,7 +388,8 @@ public class BookDetailsEditor extends AppCompatActivity {
             bookNumRating.setText("");
             bookGenre.setText("");
 
-            Intent intent = new Intent(BookDetailsEditor.this, ContentsActivity.class);
+            Toast.makeText(BookDetailsEditor.this,"Update has been unsuccessful",LENGTH_LONG).show();
+            Intent intent = new Intent(BookDetailsEditor.this, BookList.class);
             editorcurrentPage=false;
             startActivity(intent);
             finish();
