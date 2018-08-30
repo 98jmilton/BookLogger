@@ -34,9 +34,10 @@ public class BookDetailsPage extends AppCompatActivity {
     TextView bookRating;
     TextView bookPages;
     TextView bookGenre;
+    TextView textViewCopies;
     private ImageView bookImage;
 
-    private String ISBN,Name,Author,Publisher,Description ,Rating,NumRating,Pages,imageAddress,Genre;
+    private String ISBN,Name,Author,Publisher,Description ,Rating,NumRating,Pages,imageAddress,Genre,maxCopies = "unknown", availableCopies = "unknown";
     private URL imageUrl;
     private String done;
 
@@ -53,6 +54,7 @@ public class BookDetailsPage extends AppCompatActivity {
         bookPages= findViewById(R.id.bookPages);
         bookImage= findViewById(R.id.bookImage);
         bookGenre = findViewById(R.id.bookGenre);
+        textViewCopies = findViewById(R.id.bookAvailable);
 
         BookRef.child("/Books/").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -69,6 +71,8 @@ public class BookDetailsPage extends AppCompatActivity {
                     Pages = (String) dataSnapshot.child(currentIsbn).child("Pages").getValue();
                     imageAddress = (String) dataSnapshot.child(currentIsbn).child("ImageAddress").getValue();
                     Genre = (String) dataSnapshot.child(currentIsbn).child("Genre").getValue();
+                    availableCopies = (String) dataSnapshot.child(currentIsbn).child("NumCopys").getValue();
+                    maxCopies       = (String) dataSnapshot.child(currentIsbn).child("MaxCopys").getValue();
 
                     if (Rating != null && NumRating != null) {
                         done = "Not yet rated";
@@ -88,6 +92,7 @@ public class BookDetailsPage extends AppCompatActivity {
                             bookPages.setText("Page Count:" + Pages);
                             bookGenre.setText("Genre:" + Genre);
                             imageUrl = new URL(imageAddress);
+                            textViewCopies.setText(availableCopies+" out of "+maxCopies+" have not been checked out");
                         }
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
