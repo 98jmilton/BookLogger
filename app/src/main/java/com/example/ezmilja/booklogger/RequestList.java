@@ -246,6 +246,8 @@ public class RequestList extends AppCompatActivity {
                             String[] TO =  myBook.getVotedby().split(",");
                             String[] CC = {""};
 
+                            deletedialog.dismiss();
+
                             Intent emailIntent = new Intent(Intent.ACTION_SEND);
 
                             emailIntent.setData(Uri.parse("mailto:"));
