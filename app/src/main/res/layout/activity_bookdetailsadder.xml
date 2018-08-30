@@ -236,7 +236,7 @@
                     android:layout_weight="15"
                     android:gravity="center"
                     android:text="Total ratings:"
-                    android:textSize="19dp" />
+                    android:textSize="17sp" />
 
                 <EditText
                     android:id="@+id/bookRating"
@@ -258,7 +258,7 @@
                     android:layout_weight="10"
                     android:gravity="center"
                     android:text="Times rated:"
-                    android:textSize="19dp" />
+                    android:textSize="17sp" />
 
                 <EditText
                     android:id="@+id/bookNumRating"
@@ -285,7 +285,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="5"
                     android:gravity="center"
-                    android:text="No: of Copys:"
+                    android:text="No. of Copies:"
                     android:textSize="19dp" />
 
                 <EditText
@@ -308,7 +308,7 @@
                     android:layout_marginTop="8dp"
                     android:layout_weight="5"
                     android:gravity="center"
-                    android:text="No: available"
+                    android:text="No. available"
                     android:textSize="19dp" />
 
                 <EditText
