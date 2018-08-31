@@ -48,6 +48,7 @@ public class SplashScreen extends AppCompatActivity {
         mContext = getApplicationContext();
         mActivity = SplashScreen.this;
 
+
         checkPermission();
         BookRef.addListenerForSingleValueEvent(new ValueEventListener() {
 

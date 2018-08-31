@@ -35,6 +35,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 import static android.widget.Toast.*;
@@ -47,13 +48,14 @@ import static com.example.ezmilja.booklogger.SplashScreen.storageReference;
 public class BookDetailsAdder extends AppCompatActivity
 {
 
-    Button btn_autofill,Scan,btnSubmit,send,choose, btn_AutoImage;
+    Button btn_scan,isbnsubmit,btnautoimage,btnchoose,btnsend,btn_autofill,btn_submit;
     ImageView imageView;
     private Uri filePath;
     private boolean bookSubmit=false;
     private boolean isScanned=false;
     private final int PICK_IMAGE_REQUEST = 71;
     public static String qrIsbn;
+    ArrayList<String> isbns = new ArrayList<String>();
     public static EditText bookISBN;
     String bookSName,urlstring,bookSAuthor,bookSMaxCopys="0",bookSDescription,bookSNumCopys="0",bookSPage,bookSPublisher,bookSNumRating,bookSImg,bookSGenre,bookSRating="",ratedBy="";
     String theISBNNo,a,authors,title,description,publisher,pageCountString;
@@ -63,6 +65,7 @@ public class BookDetailsAdder extends AppCompatActivity
     JSONObject ISBN;
     Typeface myTypeFace1;
     static long booksfield = 0;
+    long HowManyBooks = 0;
 
     String realPath;
 
@@ -70,38 +73,78 @@ public class BookDetailsAdder extends AppCompatActivity
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_bookdetailsadder);
-        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        setContentView(R.layout.activity_isbn);
         myTypeFace1 = Typeface.createFromAsset(getAssets(),"yourfont.ttf");
 
+        isbnsubmit=findViewById(R.id.isbnsubmit);
+        btn_scan = findViewById(R.id.btn_scan);
+        bookISBN =findViewById(R.id.bookISBNfield);
 
-        imageView      =findViewById(R.id.imgView);
-        send           =findViewById(R.id.send);
-        choose         =findViewById(R.id.btnChoose);
-        btnSubmit      =findViewById(R.id.btn_submit);
-        btn_AutoImage =findViewById(R.id.btncamera);
-        bookName       =findViewById(R.id.bookName);
-        bookAuthor     =findViewById(R.id.bookAuthor);
-        bookISBN       =findViewById(R.id.bookISBN);
-        bookMaxCopys   =findViewById(R.id.bookMaxCpys);
-        bookDescription=findViewById(R.id.bookDescription);
-        bookNumCopys   =findViewById(R.id.bookNumCpys);
-        bookPage       =findViewById(R.id.bookPages);
-        bookPublisher  =findViewById(R.id.bookPublisher);
-        bookNumRating  =findViewById(R.id.bookNumRating);
-        bookRating     =findViewById(R.id.bookRating);
-        bookGenre      =findViewById(R.id.bookGenre);
+        BookRef.child("/Books/").addListenerForSingleValueEvent(new ValueEventListener() {
 
-        if(isScanned){bookISBN.setText(qrIsbn);}
-
-        choose.setOnClickListener(new View.OnClickListener() {
+            int i=0;
             @Override
-            public void onClick(View v) {
-                chooseImage();
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
+                    String temp =BookSnapshot.child("ISBN").getValue().toString();
+                    isbns.add(temp);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
             }
         });
 
-        btn_AutoImage.setOnClickListener(new View.OnClickListener() {
+        btn_scan.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View view) {
+                isScanned = true;
+                Intent intent = new Intent(BookDetailsAdder.this, ScanActivity.class);
+                startActivity(intent);
+
+            }
+        });
+
+        isbnsubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(bookISBN.getText().toString().length() == 13 && bookISBN.getText().toString().matches("[0-9]+")){
+
+                    currentIsbn = bookISBN.getText().toString();
+                    isBookCheck();
+                }
+                else{
+                    Toast.makeText(BookDetailsAdder.this,"Please enter valid ISBN",LENGTH_LONG).show();
+                }
+            }
+        });
+    }
+
+    public void isBookCheck(){
+
+
+        for (int i = 0;i<isbns.size();i++){
+            if (isbns.get(i).equals(currentIsbn)) {
+                makeInfoDialog();
+                i=isbns.size()+10;
+            } else if (i == isbns.size()-1) {
+                autofillpage();
+            }
+        }
+    }
+
+
+    public void imageSubmitter(){
+        setContentView(R.layout.activity_image);
+        btnautoimage=findViewById(R.id.btnautoimage);
+        btnchoose=findViewById(R.id.btnChoose);
+        btnsend=findViewById(R.id.btnsend);
+
+        imageView      =findViewById(R.id.imgView);
+
+        btnautoimage.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View view) {
@@ -110,47 +153,10 @@ public class BookDetailsAdder extends AppCompatActivity
                     Glide.with(BookDetailsAdder.this).load(imageUrl).into(imageView);
                     Autoimage = true;
                 }
-                else
-                    {
-                    Toast.makeText(BookDetailsAdder.this,"Please enter a 13 digit ISBN" ,LENGTH_LONG).show();
 
-                }
             }
         });
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                bookSName = bookName.getText().toString();
-                bookSAuthor = bookAuthor.getText().toString();
-                currentIsbn = bookISBN.getText().toString();
-                bookSMaxCopys = bookMaxCopys.getText().toString();
-                bookSDescription = bookDescription.getText().toString();
-                bookSNumCopys = bookNumCopys.getText().toString();
-                bookSPage = bookPage.getText().toString();
-                bookSPublisher = bookPublisher.getText().toString();
-                bookSNumRating = bookNumRating.getText().toString();
-                bookSImg = "oops";
-                bookSRating = bookRating.getText().toString();
-                bookSGenre = bookGenre.getText().toString();
-
-                if(!bookSubmit && (currentIsbn.length() == 13)){
-                    Toast.makeText(BookDetailsAdder.this,"Please Submit a book image",LENGTH_LONG).show();
-                }
-
-                if(bookSubmit && (currentIsbn.length() == 13))
-                {
-                    if (bookSName.isEmpty() || bookSAuthor.isEmpty() || currentIsbn.isEmpty() || bookSMaxCopys.isEmpty() || bookSDescription.isEmpty() || bookSNumCopys.isEmpty() || bookSPage.isEmpty() || bookSPublisher.isEmpty()
-                            || bookSNumRating.isEmpty() || bookSImg.isEmpty() || bookSRating.isEmpty() || bookSGenre.isEmpty())
-                    {
-                        Toast.makeText(BookDetailsAdder.this, "Please fill out all fields", LENGTH_LONG).show();
-                    }
-                    else { uploadData(); }
-                }
-                }
-
-        });
-
-        send.setOnClickListener(new View.OnClickListener() {
+        btnsend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 currentIsbn = bookISBN.getText().toString();
@@ -163,174 +169,182 @@ public class BookDetailsAdder extends AppCompatActivity
             }
         });
 
-
-
-        Scan = findViewById(R.id.btn_scan);
-        Scan.setOnClickListener(new View.OnClickListener()
-        {
+        btnchoose.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                isScanned = true;
-                Intent intent = new Intent(BookDetailsAdder.this, ScanActivity.class);
-                startActivity(intent);
-
+            public void onClick(View v) {
+                chooseImage();
             }
         });
+    }
+
+    public void autofillpage(){
+        setContentView(R.layout.activity_bookdetailsadder);
+        btn_autofill=findViewById(R.id.btn_autofill);
+        btn_submit=findViewById(R.id.btn_submit);
 
 
-        btn_autofill = findViewById(R.id.btn_autofill);
+        bookName       =findViewById(R.id.bookName);
+        bookAuthor     =findViewById(R.id.bookAuthor);
+        bookMaxCopys   =findViewById(R.id.bookMaxCpys);
+        bookDescription=findViewById(R.id.bookDescription);
+        bookNumCopys   =findViewById(R.id.bookNumCpys);
+        bookPage       =findViewById(R.id.bookPages);
+        bookPublisher  =findViewById(R.id.bookPublisher);
+        bookNumRating  =findViewById(R.id.bookNumRating);
+        bookRating     =findViewById(R.id.bookRating);
+        bookGenre      =findViewById(R.id.bookGenre);
+
         btn_autofill.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                autofill();
+            }
+        });
+        btn_submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
 
-                currentIsbn = bookISBN.getText().toString();
-                try {
-                    imageUrl = new URL("http://www.piniswiss.com/wp-content/uploads/2013/05/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef-300x199.png");
-                }
-                catch (MalformedURLException e)
-                {
-                    //e.printStackTrace();
-                }
+               bookSName = bookName.getText().toString();
+               bookSAuthor =bookAuthor.getText().toString();
+               bookSMaxCopys = bookMaxCopys.getText().toString();
+               bookSDescription = bookDescription.getText().toString();
+               bookSNumCopys = bookNumCopys.getText().toString();
+               bookSPage = bookPage.getText().toString();
+               bookSPublisher = bookPublisher.getText().toString();
+               bookSRating = bookRating.getText().toString();
+               bookSNumRating =bookNumRating.getText().toString();
+               bookSGenre = bookGenre.getText().toString();
+               ratedBy = "";
 
+                imageSubmitter();
+            }
+        });
+    }
 
-                try {
+    public void autofill() {
+        bookISBN.setText(currentIsbn);
 
-                    JSONObject BookInfoObject = new RetrieveDataJSON(BookDetailsAdder.this).execute().get();
-
-                    JSONArray items = BookInfoObject.getJSONArray("items");
-                    JSONObject customerIDD = items.getJSONObject(0).getJSONObject("volumeInfo");
-
-                    // For the Title
-                    title = (String) customerIDD.get("title");
-
-                    // For the description
-                    description = (String) customerIDD.get("description");
-
-                    // For the publisher
-                    publisher = (String) customerIDD.get("publisher");
-
-                    // For the pagCount
-                    pageCount = (int) customerIDD.get("pageCount");
-                    pageCountString = Integer.toString(pageCount);
-
-                    // For the Image link
-                    imageUrl = new URL((String) customerIDD.getJSONObject("imageLinks").get("thumbnail"));
-
-
-                    // For the ISBN
-                    ISBN = customerIDD.getJSONArray("industryIdentifiers").getJSONObject(0);
-                    theISBNNo = (String) ISBN.get("identifier");
+        try {
+            imageUrl = new URL("http://www.piniswiss.com/wp-content/uploads/2013/05/image-not-found-4a963b95bf081c3ea02923dceaeb3f8085e1a654fc54840aac61a57a60903fef-300x199.png");
+        } catch (MalformedURLException e) {
+            //e.printStackTrace();
+        }
 
 
-                    // For printing all the authors
-                    a = "";
-                    authors = (String) customerIDD.getJSONArray("authors").get(0);
-                    for(int i = 0; i < customerIDD.getJSONArray("authors").length(); i++) {
-                        a += (String) customerIDD.getJSONArray("authors").get(i) + " ";
-                    }
+        try {
+
+            JSONObject BookInfoObject = new RetrieveDataJSON(BookDetailsAdder.this).execute().get();
+
+            JSONArray items = BookInfoObject.getJSONArray("items");
+            JSONObject customerIDD = items.getJSONObject(0).getJSONObject("volumeInfo");
+
+            // For the Title
+            title = (String) customerIDD.get("title");
+
+            // For the description
+            description = (String) customerIDD.get("description");
+
+            // For the publisher
+            publisher = (String) customerIDD.get("publisher");
+
+            // For the pagCount
+            pageCount = (int) customerIDD.get("pageCount");
+            pageCountString = Integer.toString(pageCount);
+
+            // For the Image link
+            imageUrl = new URL((String) customerIDD.getJSONObject("imageLinks").get("thumbnail"));
 
 
-                }
-                catch (InterruptedException | MalformedURLException | JSONException | ExecutionException e) {
-                    e.printStackTrace();
-                }
-
-                BookRef.addListenerForSingleValueEvent(new ValueEventListener()
-                {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        booksfield = Long.valueOf(dataSnapshot.getChildrenCount());
-
-                    }
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                    }
-                });
-
-                if(booksfield!=0){
-               BookRef.child("/Books/").addListenerForSingleValueEvent(new ValueEventListener() {
-                    String Number;
-
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
-                            Number = BookSnapshot.getKey();
-
-                            if (Number.equals(currentIsbn)){isBook();break;}
-                            else isntBook();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-                        isntBook();
-                    }
-                });}
+            // For the ISBN
+            ISBN = customerIDD.getJSONArray("industryIdentifiers").getJSONObject(0);
+            theISBNNo = (String) ISBN.get("identifier");
 
 
-
+            // For printing all the authors
+            a = "";
+            authors = (String) customerIDD.getJSONArray("authors").get(0);
+            for (int i = 0; i < customerIDD.getJSONArray("authors").length(); i++) {
+                a += (String) customerIDD.getJSONArray("authors").get(i) + " ";
             }
 
+
+        } catch (InterruptedException | MalformedURLException | JSONException | ExecutionException e) {
+            e.printStackTrace();
+        }
+
+        BookRef.addListenerForSingleValueEvent(new ValueEventListener()
+        {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                booksfield = Long.valueOf(dataSnapshot.getChildrenCount());
+
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
         });
 
+        if(booksfield!=0){
+            BookRef.child("/Books/").addListenerForSingleValueEvent(new ValueEventListener() {
+                String Number;
+
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    for (DataSnapshot BookSnapshot : dataSnapshot.getChildren()) {
+                        Number = BookSnapshot.getKey();
+
+
+                        if (Number.equals(currentIsbn)) {
+                            makeInfoDialog();
+                            break;
+                        } else{
+                            fillIn();
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
+                    fillIn();
+                }
+            });}
+
+        }
+
+    public void fillIn(){
+
+        bookISBN.setText(currentIsbn);
+        bookName.setText(title);
+        bookDescription.setText(description);
+        bookPublisher.setText(publisher);
+        bookAuthor.setText(a);
+        bookPage.setText(pageCountString);
+        bookRating.setText("0");
+        bookNumRating.setText("0");
+        bookNumCopys.setText("1");
+        bookMaxCopys.setText("1");
+
+        if ((title == null)) {
+            bookName.setText("Not found");
+        }
+        if ((publisher == null)) {
+            bookPublisher.setText("Not found");
+        }
+        if ((authors == null)) {
+            bookAuthor.setText("Not found");
+        }
+        if ((pageCountString == null)) {
+            bookPage.setText("Not found");
+        }
+        if (bookSGenre == null) {
+            bookGenre.setText("Not found");
+        }
+
+        if ((description == null)) {
+            bookDescription.setText("Not found");
+        }
     }
 
-    public void isBook() {
-
-        if (currentIsbn.length() == 13) {
-            bookName.setText("");
-            bookDescription.setText("");
-            bookPublisher.setText("");
-            bookAuthor.setText("");
-            bookRating.setText("");
-            bookPage.setText("");
-            bookNumRating.setText("");
-            bookGenre.setText("");
-            makeInfoDialog();
-        }
-        else{
-            Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
-        }
-    }
-
-    public void isntBook(){
-        if(currentIsbn.length() == 13){
-
-            bookISBN.setText(currentIsbn);
-            bookName.setText(title);
-            bookDescription.setText(description);
-            bookPublisher.setText(publisher);
-            bookAuthor.setText(a);
-            bookPage.setText(pageCountString);
-            bookRating.setText("0");
-            bookNumRating.setText("0");
-            bookNumCopys.setText("1");
-            bookMaxCopys.setText("1");
-
-            if ((title == null)){
-                bookName.setText("Not found");
-            }
-            if ((publisher == null)){
-                bookPublisher.setText("Not found");
-            }
-            if ((authors == null)) {
-                bookAuthor.setText("Not found");
-            }
-            if ((pageCountString == null)){
-                bookPage.setText("Not found");
-            }
-            if (bookSGenre == null) {
-                bookGenre.setText("Not found");
-            }
-
-            if ((description == null)){
-                bookDescription.setText("Not found");
-            }
-        }
-        else{
-            Toast.makeText(BookDetailsAdder.this, "Not a valid ISBN please scan barcode or enter one manually", Toast.LENGTH_LONG).show();
-        }
-    }
 
 
     private void chooseImage() {
@@ -413,12 +427,14 @@ public class BookDetailsAdder extends AppCompatActivity
             bookSubmit = true;
             urlstring = String.valueOf(imageUrl);
             makeText(BookDetailsAdder.this, "Uploaded", LENGTH_SHORT).show();
-
+            uploadData();
         }
 
     }
+
     private void uploadData() {
-        findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
+
+
 
         BookRef.child("/Books/").child(currentIsbn).child("BookName").setValue(bookSName);
         BookRef.child("/Books/").child(currentIsbn).child("Author").setValue(bookSAuthor);
@@ -481,43 +497,44 @@ public class BookDetailsAdder extends AppCompatActivity
         }
 
     }
-
     private void makeInfoDialog(){
+        System.out.println("XXXXXXXXXXXXXXXXXXXX");
+
         final Dialog dialog = new Dialog(BookDetailsAdder.this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.popup);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        if (!Autoimage){dialog.show();}
+    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+    dialog.setContentView(R.layout.popup);
+    Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+    if (!Autoimage){dialog.show();}
 
-        TextView title = dialog.findViewById(R.id.title);
-        title.setTypeface(myTypeFace1);
+    TextView title = dialog.findViewById(R.id.title);
+    title.setTypeface(myTypeFace1);
 
-        Button yes= dialog.findViewById(R.id.yes);
-        Button no = dialog.findViewById(R.id.no);
+    Button yes= dialog.findViewById(R.id.yes);
+    Button no = dialog.findViewById(R.id.no);
 
-        yes.setTypeface(myTypeFace1);
-        no.setTypeface(myTypeFace1);
+    yes.setTypeface(myTypeFace1);
+    no.setTypeface(myTypeFace1);
 
-        yes.setOnClickListener(new View.OnClickListener() {
+    yes.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(BookDetailsAdder.this, BookDetailsPage.class);
-                finish();
-                detailscurrentPage=true;
-                startActivity(intent);
-                //dialog.dismiss();
-            }
-        });
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(BookDetailsAdder.this, BookDetailsPage.class);
+            finish();
+            detailscurrentPage=true;
+            startActivity(intent);
+            //dialog.dismiss();
+        }
+    });
 
-        no.setOnClickListener(new View.OnClickListener() {
+    no.setOnClickListener(new View.OnClickListener() {
 
-            @Override
-            public void onClick(View view) {
-                dialog.dismiss();
-            }
-        });
-    }
+        @Override
+        public void onClick(View view) {
+            dialog.dismiss();
+        }
+    });
+}
     @Override
     public void onBackPressed() {
         super.onBackPressed();
@@ -526,3 +543,4 @@ public class BookDetailsAdder extends AppCompatActivity
         startActivity(intent);
     }
 }
+
