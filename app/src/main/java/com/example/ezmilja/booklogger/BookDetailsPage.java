@@ -92,7 +92,7 @@ public class BookDetailsPage extends AppCompatActivity {
                             bookPages.setText("Page Count:" + Pages);
                             bookGenre.setText("Genre:" + Genre);
                             imageUrl = new URL(imageAddress);
-                            textViewCopies.setText(availableCopies+" out of "+maxCopies+" have not been checked out");
+                            textViewCopies.setText(availableCopies+" out of "+ maxCopies +" have not been checked out");
                         }
                     } catch (MalformedURLException e) {
                         e.printStackTrace();

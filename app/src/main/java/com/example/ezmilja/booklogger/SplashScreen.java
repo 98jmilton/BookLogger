@@ -41,8 +41,8 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         Typeface myTypeFace1 = Typeface.createFromAsset(getAssets(), "yourfont.ttf");
-        TextView TextView1 = findViewById(R.id.TextView1);
-        TextView1.setTypeface(myTypeFace1);
+        TextView ericssonText = findViewById(R.id.EricssonText);
+        ericssonText.setTypeface(myTypeFace1);
 
         // Get the application context
         mContext = getApplicationContext();
